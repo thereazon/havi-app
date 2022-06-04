@@ -1,5 +1,5 @@
 {
-  "name": "check-app",
+  "name": "havi-app",
   "version": "0.0.1",
   "scripts": {
     "dev": "vite --host",
