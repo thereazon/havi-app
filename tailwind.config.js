@@ -7,6 +7,7 @@ module.exports = {
         primary: '#086eb6',
         success: '#6dbe5b',
         main: '#0d334e',
+        gray: '#707070 ',
       },
     },
     screens: {},
