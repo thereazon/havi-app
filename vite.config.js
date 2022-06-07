@@ -1,7 +1,7 @@
-import { fileURLToPath, URL } from "url";
-import { defineConfig } from "vite";
-import styleImport, { VantResolve } from "vite-plugin-style-import";
-import vue from "@vitejs/plugin-vue";
+import { fileURLToPath, URL } from 'url'
+import { defineConfig } from 'vite'
+import styleImport, { VantResolve } from 'vite-plugin-style-import'
+import vue from '@vitejs/plugin-vue'
 
 export default defineConfig(() => {
   return {
@@ -13,7 +13,7 @@ export default defineConfig(() => {
     ],
     resolve: {
       alias: {
-        "@": fileURLToPath(new URL("./src", import.meta.url)),
+        '@': fileURLToPath(new URL('./src', import.meta.url)),
       },
     },
     css: {
@@ -26,7 +26,7 @@ export default defineConfig(() => {
       },
     },
     proxy: {
-      "/api": "http://localhost:3002",
+      '/api': 'http://localhost:3002',
     },
-  };
-});
+  }
+})

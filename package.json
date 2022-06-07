@@ -6,7 +6,8 @@
     "build": "vite build",
     "preview": "vite preview --port 5050",
     "test:unit": "vitest --environment jsdom",
-    "lint": "eslint src/. --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
+    "lint": "eslint src/. --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "prettier": "prettier --write ."
   },
   "dependencies": {
     "axios": "^0.26.1",

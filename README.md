@@ -14,8 +14,6 @@ local開發 .env.local
 
 ```
 
-
-
 ## Project Setup
 
 ```sh
