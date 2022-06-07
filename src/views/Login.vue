@@ -21,7 +21,7 @@ const onSubmit = (values) => {
       <h1 class="text-white">logo</h1>
       <div>{{ accountStore?.account?.name }}</div>
     </div>
-    <div @submit="onSubmit" class="w-full">
+    <Form @submit="onSubmit" class="w-full">
       <div>
         <Field
           class="rounded-full"
@@ -59,7 +59,7 @@ const onSubmit = (values) => {
           登入
         </Button>
       </div>
-    </div>
+    </Form>
   </div>
 </template>
 

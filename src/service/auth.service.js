@@ -36,7 +36,7 @@ const mockUserResponse = () =>
 
 export const login = async (account, password) => {
   return await axios
-    .post(`${apiUrl}/api/user/login`, {
+    .post(`/api/user/login`, {
       account: account,
       password: password,
       type: 0,
