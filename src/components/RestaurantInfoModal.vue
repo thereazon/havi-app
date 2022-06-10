@@ -1,24 +1,14 @@
 <script setup>
 import { Popup, Button } from 'vant'
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
-
-const router = useRouter()
+import { ref } from 'vue'
 
 const props = defineProps({
-  store: Object,
+  infoData: Object,
   isShow: Boolean,
 })
-
-const infoData = computed(() => props.store)
-
-const isShow = computed(() => props.isShow)
-
+const isShow = ref(props.isShow)
 const back = () => {
-  // todo: 點擊回到【派工單 –初始進入】
-  // router.push({
-  //    path: `/`,
-  // })
+  isShow.value = false
 }
 </script>
 
