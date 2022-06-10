@@ -1,5 +1,5 @@
 import axios from 'axios'
-const apiUrl = 'http://34.80.81.194'
+// const apiUrl = 'http://34.80.81.194'
 
 const mockUserResponse = () =>
   new Promise((resolve, reject) => {
@@ -40,6 +40,7 @@ export const login = async (account, password) => {
       account: account,
       password: password,
       type: 0,
+      token: 'test-token',
     })
     .then(mockUserResponse)
     .catch(mockUserResponse)
