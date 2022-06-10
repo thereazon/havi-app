@@ -25,8 +25,17 @@ export default defineConfig(() => {
         },
       },
     },
-    proxy: {
-      '/api': 'http://localhost:3002',
+    server: {
+      port: 3000,
+      open: true,
+      https: false,
+      proxy: {
+        '/api': {
+          target: 'http://34.80.81.194/api',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ''),
+        },
+      },
     },
   }
 })
