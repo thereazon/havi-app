@@ -2,10 +2,10 @@
 import { Cell, CellGroup } from 'vant'
 
 const props = defineProps({
-  'ingredientsList': {
+  ingredientsList: {
     type: Array,
-    required: true
-  }
+    required: true,
+  },
 })
 </script>
 
@@ -15,7 +15,7 @@ const props = defineProps({
     <CellGroup>
       <Cell
         v-for="ingredient in props.ingredientsList"
-        class="border-0 border-t border-solid border-neutral-300 "
+        class="border-0 border-t border-solid border-neutral-300"
         title-class="text-primary text-sm font-bold pb-3"
         value-class="text-teal-400 text-sm font-bold"
         center
