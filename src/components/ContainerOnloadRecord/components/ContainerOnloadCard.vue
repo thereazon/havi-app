@@ -86,6 +86,13 @@ const tempCode = {
             <p class="my-0 py-px px-2 rounded-md bg-white text-neutral-500 w-4/12 text-center truncate">{{ st.name }}</p>
           </div>
         </Step>
+        <Step v-for="st in props.store" :key="st.id">
+          <div class="flex justify-start flex-nowrap space-x-2">
+            <p class="my-0 py-px px-2 rounded-md bg-white text-neutral-500 w-1/12 text-center ">{{ st.bu }}</p>
+            <p class="my-0 py-px px-2 rounded-md bg-white text-neutral-500 w-4/12 text-center truncate">{{ st.number }}</p>
+            <p class="my-0 py-px px-2 rounded-md bg-white text-neutral-500 w-4/12 text-center truncate">{{ st.name }}</p>
+          </div>
+        </Step>
       </Steps>
     </div>
   </section>
@@ -102,12 +109,9 @@ const tempCode = {
 
   :deep(.van-step__circle-container) {
     @apply text-sm;
-    .van-icon-checked:before {
-      @apply content-[''] w-3 h-3 bg-primary rounded-xl;
-    }
-
+    .van-icon-checked:before,
     .van-step__circle {
-      @apply content-[''] w-3 h-3 border-4 bg-white border-primary border-solid box-border rounded-xl;
+      @apply content-[''] w-3 h-3 bg-primary rounded-xl;
     }
   }
 
