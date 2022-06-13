@@ -83,17 +83,6 @@ const tempCode = {
             </p>
           </div>
         </Step>
-        <Step v-for="st in props.store" :key="st.id">
-          <div class="flex justify-start flex-nowrap space-x-2">
-            <p class="my-0 py-px px-2 rounded-md bg-white text-neutral-500 w-1/12 text-center">{{ st.bu }}</p>
-            <p class="my-0 py-px px-2 rounded-md bg-white text-neutral-500 w-4/12 text-center truncate">
-              {{ st.number }}
-            </p>
-            <p class="my-0 py-px px-2 rounded-md bg-white text-neutral-500 w-4/12 text-center truncate">
-              {{ st.name }}
-            </p>
-          </div>
-        </Step>
       </Steps>
     </div>
   </section>
