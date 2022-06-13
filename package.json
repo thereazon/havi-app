@@ -12,6 +12,7 @@
   "dependencies": {
     "@egjs/flicking-plugins": "^4.3.0",
     "@egjs/vue3-flicking": "^4.8.0",
+    "@vueuse/core": "^8.6.0",
     "axios": "^0.26.1",
     "dayjs": "^1.11.2",
     "pinia": "^2.0.13",
