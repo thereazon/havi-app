@@ -6,10 +6,8 @@ module.exports = {
   extends: ['plugin:vue/vue3-essential', 'eslint:recommended', '@vue/eslint-config-prettier'],
   env: {
     'vue/setup-compiler-macros': true,
-    env: {
-      node: true,
-      commonjs: true,
-    },
+    node: true,
+    commonjs: true,
   },
   plugins: ['prettier'],
   rules: {
