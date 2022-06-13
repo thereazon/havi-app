@@ -3,6 +3,7 @@ import { reactive, ref } from 'vue'
 import { currentTempData, TempForm } from '@/utils/mock'
 import { Checkbox, CheckboxGroup } from 'vant'
 import SignatureComponent from './SignatureComponent.vue'
+import SecurityCodeDialog from './SecurityCodeDialog.vue'
 
 const checked = ref([])
 const isCelsiusTemp = ref(false)
@@ -10,6 +11,10 @@ const state = reactive({
   freezing: '',
   refrigeration: ''
 })
+const isSecurityCodeDialog = ref(false)
+const confirm = () => {
+  isSecurityCodeDialog.value = true
+}
 </script>
 
 <template>
@@ -78,9 +83,12 @@ const state = reactive({
 
     <div
       class="h-11 mt-7 text-white font-bold text-[1.0625rem] flex justify-center items-center bg-success rounded-full"
+      @click="confirm()"
     >
       完成
     </div>
+
+    <SecurityCodeDialog v-model:isShowDialog="isSecurityCodeDialog" :isCloseOnClickOverlay="true" />
   </div>
 </template>
 
