@@ -1,5 +1,8 @@
 <script setup>
 import { Step, Steps } from 'vant'
+import { computed } from 'vue'
+import { splitFullDateTimeAsDateAndTime } from '@/utils/date'
+import { tempCode } from './helper'
 
 const props = defineProps({
   id: {
@@ -11,10 +14,6 @@ const props = defineProps({
     required: true,
   },
   temp_zone: {
-    type: String,
-    required: true,
-  },
-  departure_date: {
     type: String,
     required: true,
   },
@@ -32,11 +31,8 @@ const props = defineProps({
   },
 })
 
-const tempCode = {
-  D: { name: '常溫', color: 'text-primary', markerColor: 'marker:text-primary' },
-  C: { name: '冷藏', color: 'text-success', markerColor: 'marker:text-success' },
-  F: { name: '冷凍', color: 'text-sky-800', markerColor: 'marker:text-sky-800' },
-}
+const departureDt = computed(() => splitFullDateTimeAsDateAndTime(props.departure_time))
+const tempZones = computed(() => props.temp_zone.split(','))
 </script>
 
 <template>
@@ -45,7 +41,7 @@ const tempCode = {
     <div class="flex justify-around items-baseline pt-1 px-7">
       <p class="text-primary text-[13px] mb-2"><b class="font-bold">單號 </b>{{ props.no }}</p>
       <ul class="list-disc flex flex-nowrap mt-4 mb-2 list-inside justify-center font-bold text-[10px]">
-        <li v-for="(temp, index) in props.temp_zone.split(',')" :key="index" :class="tempCode[temp].markerColor">
+        <li v-for="(temp, index) in tempZones" :key="index" :class="tempCode[temp].markerColor">
           <small class="relative -left-3 whitespace-nowrap" :class="tempCode[temp].color">
             {{ tempCode[temp].name }}
           </small>
@@ -58,11 +54,11 @@ const tempCode = {
     <div class="flex justify-around px-7 py-1 my-1">
       <div>
         <img src="dispatching_calendar.png" class="h-4 align-sub px-1" alt="calanderIcon" />
-        <spna class="bg-zinc-100 text-[13px] px-1 py-px text-neutral-500">{{ props.departure_date }}</spna>
+        <span class="bg-zinc-100 text-[13px] px-1 py-px text-neutral-500">{{ departureDt.date }}</span>
       </div>
       <div>
         <img src="dispatching_clock.png" class="h-4 align-sub px-1" alt="clockIcon" />
-        <span class="bg-zinc-100 text-[13px] px-1 py-px text-neutral-500">{{ props.departure_time }}</span>
+        <span class="bg-zinc-100 text-[13px] px-1 py-px text-neutral-500">{{ departureDt.time }}</span>
       </div>
       <div>
         <img src="dispatching_box.png" class="h-4 align-sub px-1" alt="boxIcon" />
