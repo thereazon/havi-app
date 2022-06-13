@@ -8,6 +8,7 @@ module.exports = {
         success: '#6dbe5b',
         main: '#0d334e',
         gray: '#707070 ',
+        warning: '#eb5e55',
       },
     },
     screens: {},
