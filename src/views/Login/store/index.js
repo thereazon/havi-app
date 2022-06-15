@@ -2,9 +2,24 @@ import { defineStore } from 'pinia'
 import { StatusType } from '@/views/Login/helper'
 import { login, postSecurityCode } from '@/views/Login/service'
 
+const mockAccount = {
+  id: 'DM605b050589e38',
+  fleet: '夏暉車隊',
+  fleet_id: 'FM5fdc96995092e', //車隊id
+  name: '威寶456',
+  number: '456',
+  car_id: '',
+  container_id: '',
+  dc: [
+    { code: 'NDC', tel: '(03)322-3550' },
+    { code: 'CDC', tel: '(04)894-1868' },
+    { code: 'VDC', tel: '' },
+  ],
+}
+
 const useAccountInfo = defineStore('account', {
   state: () => ({
-    account: null,
+    account: mockAccount,
     status: StatusType.INIT,
     isLoading: false,
     error: {
