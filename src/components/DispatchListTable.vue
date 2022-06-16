@@ -18,7 +18,7 @@ defineProps({
         <div class="text-gray bg-[#f2f2f2] px-2 py-1">{{ dispatchDate }}</div>
       </div>
     </div>
-    <div class="rounded-b-lg bg-white shadow-[0_2px_5px_0_gray]" v-for="item in dispatchListData">
+    <div class="rounded-b-lg bg-white shadow-[0_2px_5px_0_gray]" v-for="item in dispatchListData" :key="item.id">
       <div class="grid grid-cols-11 gap-1 p-3 shadow-[0_-1px_2px_0_gray]">
         <div class="col-span-3">
           <div class="text-[#044d80]">{{ item.name }}</div>
