@@ -19,7 +19,7 @@ onMounted(async () => {
 
 const handleOnChange = (e) => {
   const currentDispatchNo = e.target.value
-  filteredContainer.value = containersStore.filterContainers(currentDispatchNo)
+  filteredContainer.value = containersStore.filteredContainerGetter(currentDispatchNo)
 }
 
 const onClickLeft = () => {
