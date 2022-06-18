@@ -13,12 +13,6 @@ module.exports = {
       },
     },
   ],
-  'prettier/prettier': [
-    'error',
-    {
-      endOfLine: 'auto',
-    },
-  ],
   arrowParens: 'always',
   trailingComma: 'all',
   useTabs: false,
