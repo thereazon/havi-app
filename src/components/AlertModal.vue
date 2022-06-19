@@ -71,7 +71,7 @@ const isShow = computed({
   <Button @click="showErrorDialog"> 錯誤</Button>
 
   # error === false 藍色
-  <AlertModal v-model:show="isAlertModal">
+  <AlertModal v-model:show="isAlertModal" :error="false">
     <template v-slot:titleContent>
       <div>提示(自訂標題)</div>
     </template>
@@ -81,7 +81,7 @@ const isShow = computed({
   </AlertModal>
 
   # error === true 紅色
-  <AlertModal v-model:show="isErrorDialog" error="true">
+  <AlertModal v-model:show="isErrorDialog" :error="true">
     <template v-slot:titleContent>
       <div>錯誤(自訂標題)</div>
     </template>
