@@ -1,12 +1,18 @@
 <script setup>
 import { Popup, Button } from 'vant'
-import { ref } from 'vue'
+import { computed } from 'vue'
 
 const props = defineProps({
   infoData: Object,
   isShow: Boolean,
 })
-const isShow = ref(props.isShow)
+const emit = defineEmits(['update:isShow'])
+
+const isShow = computed({
+  get: () => props.isShow,
+  set: (val) => emit('update:isShow', val),
+})
+
 const back = () => {
   isShow.value = false
 }
