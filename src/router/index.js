@@ -4,6 +4,7 @@ import Cars from '@/views/Cars/index.vue'
 import Temperature from '@/views/Temperature/index.vue'
 import Containers from '@/views/Containers/index.vue'
 import Dispatch from '@/views/Dispatch/index.vue'
+import EntryRecord from '@/views/EntryRecord/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,6 +28,10 @@ const router = createRouter({
     {
       path: '/dispatch',
       component: Dispatch,
+    },
+    {
+      path: '/entryRecord',
+      component: EntryRecord,
     },
   ],
 })
