@@ -11,7 +11,7 @@ const route = useRoute()
 const { car_id, container_id } = route.query
 const containersStore = useContainers()
 const selectOptions = computed(() => containersStore.containers.map((container) => container.no))
-const filteredContainer = ref([])
+const filteredContainer = ref({})
 
 onMounted(async () => {
   await containersStore.getContainersAction(car_id, container_id)
