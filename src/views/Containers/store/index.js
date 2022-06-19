@@ -34,7 +34,6 @@ const useContainers = defineStore('containers', {
           this.containers = response.data
           this.status = StatusType.SUCCESS
         }
-        console.log(response)
       } catch (err) {
         this.status = StatusType.FAIL
         this.message = err.message
