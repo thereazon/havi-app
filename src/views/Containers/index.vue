@@ -11,16 +11,16 @@ const route = useRoute()
 const { car_id, container_id } = route.query
 const containersStore = useContainers()
 const selectOptions = computed(() => containersStore.containers.map((container) => container.no))
-const filteredContainer = ref({})
+const currentContainer = ref({})
 
 onMounted(async () => {
   await containersStore.getContainersAction(car_id, container_id)
-  filteredContainer.value = containersStore.containers[0]
+  currentContainer.value = containersStore.containers[0]
 })
 
 const handleOnChange = (e) => {
   const currentDispatchNo = e.target.value
-  filteredContainer.value = containersStore.findContainerGetter(currentDispatchNo)
+  currentContainer.value = containersStore.findContainerGetter(currentDispatchNo)
 }
 
 const onClickLeft = () => {
@@ -48,9 +48,9 @@ const onClickLeft = () => {
       <Loading v-if="containersStore.isLoading === true" class="mt-10" />
       <DispatchListTable
         v-if="containersStore.isLoading === false && containersStore.status === StatusType.SUCCESS"
-        :dispatchNo="filteredContainer?.no"
-        :dispatchListData="filteredContainer?.data"
-        :dispatchDate="filteredContainer?.date"
+        :dispatchNo="currentContainer?.no"
+        :dispatchListData="currentContainer?.data"
+        :dispatchDate="currentContainer?.date"
       />
       <div
         v-if="containersStore.status === StatusType.FAIL || containersStore.status === StatusType.CAR_ID_MISSING"
