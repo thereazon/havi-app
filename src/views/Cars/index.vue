@@ -16,28 +16,37 @@ const containersStore = useContainersInfo()
 
 const selectCarId = ref()
 const selectContainerId = ref()
+const errorMessage = ref()
 
 const comfirmDispatch = () => {
   dispatchStore.getDispatchAction(selectCarId.value, selectContainerId.value).then(() => {
-    router.push({
-      path: `/dispatch`,
-      query: {
-        car_id: selectCarId.value,
-        container_id: selectContainerId.value,
-      },
-    })
+    if (dispatchStore.dispatchs.length > 0) {
+      router.push({
+        path: `/dispatch`,
+        query: {
+          car_id: selectCarId.value,
+          container_id: selectContainerId.value,
+        },
+      })
+    } else {
+      errorMessage.value = '您的出車資訊與系統不符</br>請與值班人員進行聯繫'
+    }
   })
 }
 
 const getContainers = () => {
   containersStore.getContainersAction(selectCarId.value, selectContainerId.value).then(() => {
-    router.push({
-      path: `/containers`,
-      query: {
-        car_id: selectCarId.value,
-        container_id: selectContainerId.value,
-      },
-    })
+    if (containersStore.containers.length > 0) {
+      router.push({
+        path: `/containers`,
+        query: {
+          car_id: selectCarId.value,
+          container_id: selectContainerId.value,
+        },
+      })
+    } else {
+      errorMessage.value = '您的出車資訊與系統不符</br>請與值班人員進行聯繫'
+    }
   })
 }
 
@@ -70,6 +79,7 @@ onMounted(() => {
         </option>
       </select>
     </div>
+    <div class="text-warning mt-3 text-center" v-html="errorMessage"></div>
 
     <Button
       loading-type="spinner"
