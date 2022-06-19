@@ -15,42 +15,38 @@ const isShow = computed({
 </script>
 
 <template>
-  <van-dialog v-model:show="isShow" class="rounded w-3/4" teleport="body">
-    <template v-slot:title>
-      <div class="text-center text-white p-[16px]" :class="[error ? 'bg-red-400' : 'bg-blue-400']">
-        <van-icon class="text-[2.5rem]" :name="[error ? 'close' : 'info-o']" />
+  <div>
+    <van-dialog v-model:show="isShow" class="rounded w-3/4">
+      <template v-slot:title>
+        <div class="text-center text-white p-[24px]" :class="[error ? 'bg-red-400' : 'bg-blue-400']">
+          <van-icon class="text-[2.5rem]" :name="error ? 'close' : 'info-o'" />
+        </div>
+      </template>
+
+      <div class="text-[1rem] font-bold text-center bg-white p-[8px]">
+        <slot name="titleContent">標題</slot>
       </div>
-    </template>
 
-    <div class="text-[1rem] font-bold text-center bg-white p-[8px]">
-      <slot name="titleContent">標題</slot>
-    </div>
-
-    <div class="text-left mb-[18px] bg-white p-[8px]">
-      <slot name="content">說明文字</slot>
-    </div>
-
-    <template v-slot:footer>
-      <div class="bg-white flex p-[8px]">
-        <button
-          class="flex-auto bg-transparent text-[{theme}]-400 py-2 px-4 border rounded-md border-[{theme}]-400"
-          :class="[error ? 'text-red-400 border-red-400' : 'text-blue-400 border-blue-400']"
-          @click="emit('update:show', false)"
-        >
-          OK
-        </button>
+      <div class="text-left mb-[18px] bg-white p-[8px]">
+        <slot name="content">說明文字</slot>
       </div>
-    </template>
-  </van-dialog>
+
+      <template v-slot:footer>
+        <div class="bg-white flex p-[8px]">
+          <button
+            class="flex-auto bg-transparent text-[{theme}]-400 py-2 px-4 border rounded-md border-[{theme}]-400"
+            :class="error ? 'text-red-400 border-red-400' : 'text-blue-400 border-blue-400'"
+            @click="emit('update:show', false)"
+          >
+            OK
+          </button>
+        </div>
+      </template>
+    </van-dialog>
+  </div>
 </template>
 
 <style scoped>
-:deep(.van-dialog) {
-  padding-top: 44px;
-  padding-bottom: 45px;
-}
-
-/* 需要把var(--van-dialog-header-padding-top)改成0 */
 :deep(.van-dialog__header) {
   padding-top: 0;
 }
@@ -58,8 +54,7 @@ const isShow = computed({
 
 <!-- 使用 -->
 <!-- 
-  ### script ########################################################################
-  import { ref } from 'vue'
+  ### script ###
   import AlertModal from '@/components/AlertModal.vue'
 
   const isAlertModal = ref(false)
@@ -71,11 +66,11 @@ const isShow = computed({
     isErrorDialog.value = true
   }
 
-  ### template ######################################################################
+  ### template ###
   <Button @click="showAlertModal"> 提示</Button>
   <Button @click="showErrorDialog"> 錯誤</Button>
 
-  # 若沒傳error，dialog是藍色
+  # error === false 藍色
   <AlertModal v-model:show="isAlertModal">
     <template v-slot:titleContent>
       <div>提示(自訂標題)</div>
@@ -85,7 +80,7 @@ const isShow = computed({
     </template>
   </AlertModal>
 
-  # 若有傳error，dialog是紅色
+  # error === true 紅色
   <AlertModal v-model:show="isErrorDialog" error="true">
     <template v-slot:titleContent>
       <div>錯誤(自訂標題)</div>
