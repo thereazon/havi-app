@@ -1,20 +1,30 @@
 import { defineStore } from 'pinia'
-import ContainersApiCaller from '@/views/Containers/service'
+import ApiCaller from '../service/index'
 import useAccountInfo from '@/views/Login/store'
+import { StatusType } from '../helper'
 
-const useContainersInfo = defineStore('containers', {
+const useContainers = defineStore('containers', {
   state: () => ({
-    containers: null,
-    status: 'init',
+    containers: [],
+    status: StatusType.INIT,
     isLoading: false,
     message: '',
   }),
+  getters: {
+    filteredContainerGetter: (state) => {
+      return (dispatch_no) => state.containers.filter((container) => container.no === dispatch_no)
+    },
+  },
   actions: {
     async getContainersAction(car_id, container_id) {
+      if (!car_id) {
+        this.status = StatusType.CAR_ID_MISSING
+        return
+      }
       const accountStore = useAccountInfo()
       this.isLoading = true
       try {
-        const response = await ContainersApiCaller.getContainers(
+        const response = await ApiCaller.getContainers(
           accountStore.account.id,
           accountStore.account.fleet_id,
           car_id,
@@ -22,10 +32,10 @@ const useContainersInfo = defineStore('containers', {
         )
         if (response.status === 'success') {
           this.containers = response.data
-          this.status = response.status
+          this.status = StatusType.SUCCESS
         }
       } catch (err) {
-        this.status = err.status
+        this.status = StatusType.FAIL
         this.message = err.message
       } finally {
         this.isLoading = false
@@ -34,4 +44,4 @@ const useContainersInfo = defineStore('containers', {
   },
 })
 
-export default useContainersInfo
+export default useContainers
