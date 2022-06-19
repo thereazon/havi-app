@@ -16,23 +16,23 @@ const isShow = computed({
 
 <template>
   <div>
-    <van-dialog v-model:show="isShow" class="rounded w-3/4">
+    <van-dialog v-model:show="isShow" class="rounded-md w-3/4">
       <template v-slot:title>
         <div class="text-center text-white p-[24px]" :class="[error ? 'bg-red-400' : 'bg-blue-400']">
           <van-icon class="text-[2.5rem]" :name="error ? 'close' : 'info-o'" />
         </div>
       </template>
 
-      <div class="text-[1rem] font-bold text-center bg-white p-[8px]">
+      <div class="text-[1rem] font-bold text-center bg-white py-[8px] px-[16px]">
         <slot name="titleContent">標題</slot>
       </div>
 
-      <div class="text-left mb-[18px] bg-white p-[8px]">
+      <div class="text-left mb-[18px] bg-white py-[8px] px-[16px]">
         <slot name="content">說明文字</slot>
       </div>
 
       <template v-slot:footer>
-        <div class="bg-white flex p-[8px]">
+        <div class="bg-white flex py-[8px] px-[16px]">
           <button
             class="flex-auto bg-transparent text-[{theme}]-400 py-2 px-4 border rounded-md border-[{theme}]-400"
             :class="error ? 'text-red-400 border-red-400' : 'text-blue-400 border-blue-400'"
