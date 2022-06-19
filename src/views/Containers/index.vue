@@ -5,6 +5,7 @@ import { NavBar, Loading } from 'vant'
 import useContainers from './store'
 import DispatchListTable from '@/components/DispatchListTable.vue'
 import router from '../../router'
+import { StatusType } from './helper'
 
 const route = useRoute()
 const { car_id, container_id } = route.query
@@ -46,13 +47,17 @@ const onClickLeft = () => {
       </div>
       <Loading v-if="containersStore.isLoading === true" class="mt-10" />
       <DispatchListTable
-        v-if="containersStore.isLoading === false && containersStore.status === 'success'"
+        v-if="containersStore.isLoading === false && containersStore.status === StatusType.SUCCESS"
         :dispatchNo="filteredContainer?.no"
         :dispatchListData="filteredContainer?.data"
         :dispatchDate="filteredContainer?.date"
       />
-      <div v-if="containersStore.status === 'fail'" class="text-[#eb5e55] mt-10">
-        {{ containersStore.message }}
+      <div
+        v-if="containersStore.status === StatusType.FAIL || containersStore.status === StatusType.CAR_ID_MISSING"
+        class="text-[#eb5e55] mt-10"
+      >
+        {{ containersStore.status === StatusType.CAR_ID_MISSING ? '車號遺失' : '' }}
+        {{ containersStore.status === StatusType.FAIL ? containersStore.message : '' }}
       </div>
     </div>
   </div>
