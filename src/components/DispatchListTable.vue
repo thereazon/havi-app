@@ -19,7 +19,7 @@ defineProps({
         <div class="text-gray bg-[#f2f2f2] px-2 py-1">{{ dispatchDate }}</div>
       </div>
     </div>
-    <div v-for="item in dispatchListData" :key="item.name">
+    <div v-for="item in dispatchListData" :key="item.id">
       <Divider class="m-0" />
       <div class="grid grid-cols-11 gap-1 p-3">
         <div class="col-span-3">
