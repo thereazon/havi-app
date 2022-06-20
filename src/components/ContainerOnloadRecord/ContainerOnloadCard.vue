@@ -1,6 +1,7 @@
 <script setup>
-import { Step, Steps } from 'vant'
-import { computed } from 'vue'
+import { Step, Steps, Button } from 'vant'
+import RestaurantInfoModal from '@/components/RestaurantInfoModal.vue'
+import { computed, ref } from 'vue'
 import { splitFullDateTimeAsDateAndTime } from '@/utils/date'
 import { tempCode } from './helper'
 
@@ -31,8 +32,23 @@ const props = defineProps({
   },
 })
 
-const departureDt = computed(() => splitFullDateTimeAsDateAndTime(props.departure_time))
+const departureDt = computed(() =>
+  splitFullDateTimeAsDateAndTime(props.departure_time, { dateFormat: 'DD/MM/YYYY', timeFormat: 'HH:mm' }),
+)
 const tempZones = computed(() => props.temp_zone.split(','))
+
+const isShow = ref(false)
+const infoData = ref({
+  bu: null,
+  number: null,
+  name: null,
+  address: null,
+  tel: null,
+})
+const restaurantInfoBtn = (info) => {
+  infoData.value = { ...info }
+  isShow.value = true
+}
 </script>
 
 <template>
@@ -70,18 +86,30 @@ const tempZones = computed(() => props.temp_zone.split(','))
       <Steps direction="vertical" :active="0" class="bg-zinc-100 mt-2">
         <Step v-for="st in props.store" :key="st.id">
           <div class="flex justify-start flex-nowrap space-x-2">
-            <p class="my-0 py-px px-2 rounded-md bg-white text-neutral-500 w-1/12 text-center">{{ st.bu }}</p>
-            <p class="my-0 py-px px-2 rounded-md bg-white text-neutral-500 w-4/12 text-center truncate">
-              {{ st.number }}
-            </p>
-            <p class="my-0 py-px px-2 rounded-md bg-white text-neutral-500 w-4/12 text-center truncate">
-              {{ st.name }}
-            </p>
+            <Button
+              class="h-auto my-0 px-4 py-px rounded-md bg-white text-neutral-500 text-center"
+              @click="restaurantInfoBtn(st)"
+              >{{ st.bu }}</Button
+            >
+            <Button
+              class="h-auto my-0 px-4 py-px rounded-md bg-white text-neutral-500 text-center truncate w-4/12"
+              @click="restaurantInfoBtn(st)"
+              >{{ st.number }}</Button
+            >
+            <Button
+              class="h-auto my-0 px-4 py-px rounded-md bg-white text-neutral-500 text-center truncate w-6/12"
+              @click="restaurantInfoBtn(st)"
+              >{{ st.name }}</Button
+            >
           </div>
         </Step>
       </Steps>
     </div>
+
+    <slot></slot>
   </section>
+
+  <RestaurantInfoModal :infoData="infoData" v-model:isShow="isShow" />
 </template>
 
 <style lang="scss" scoped>
