@@ -11,8 +11,8 @@ const useContainers = defineStore('containers', {
     message: '',
   }),
   getters: {
-    filteredContainerGetter: (state) => {
-      return (dispatch_no) => state.containers.filter((container) => container.no === dispatch_no)
+    findContainerGetter: (state) => {
+      return (dispatch_no) => state.containers.find((container) => container.no === dispatch_no)
     },
   },
   actions: {
