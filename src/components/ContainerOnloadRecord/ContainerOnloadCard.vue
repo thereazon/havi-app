@@ -69,15 +69,15 @@ const restaurantInfoBtn = (info) => {
     <!-- info -->
     <div class="flex justify-around px-7 py-1 my-1">
       <div>
-        <img src="dispatching_calendar.png" class="h-4 align-sub px-1" alt="calanderIcon" />
+        <img src="/dispatching_calendar.png" class="h-4 align-sub px-1" alt="calanderIcon" />
         <span class="bg-zinc-100 text-[13px] px-1 py-px text-neutral-500">{{ departureDt.date }}</span>
       </div>
       <div>
-        <img src="dispatching_clock.png" class="h-4 align-sub px-1" alt="clockIcon" />
+        <img src="/dispatching_clock.png" class="h-4 align-sub px-1" alt="clockIcon" />
         <span class="bg-zinc-100 text-[13px] px-1 py-px text-neutral-500">{{ departureDt.time }}</span>
       </div>
       <div>
-        <img src="dispatching_box.png" class="h-4 align-sub px-1" alt="boxIcon" />
+        <img src="/dispatching_box.png" class="h-4 align-sub px-1" alt="boxIcon" />
         <span class="bg-zinc-100 text-[13px] px-1 py-px text-neutral-500">{{ props.cube }}</span>
       </div>
     </div>
