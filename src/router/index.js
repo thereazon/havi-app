@@ -4,6 +4,7 @@ import Cars from '@/views/Cars/index.vue'
 import Temperature from '@/views/Temperature/index.vue'
 import Containers from '@/views/Containers/index.vue'
 import Dispatch from '@/views/Dispatch/index.vue'
+import Group from '@/views/Group/index.vue'
 import EntryRecord from '@/views/EntryRecord/index.vue'
 
 const router = createRouter({
@@ -18,16 +19,24 @@ const router = createRouter({
       component: Cars,
     },
     {
-      path: '/temperature',
-      component: Temperature,
+      path: '/group',
+      component: Group,
+      children: [
+        {
+          path: 'temperature',
+          component: Temperature,
+          alias: '/temperature',
+        },
+        {
+          path: 'dispatch',
+          component: Dispatch,
+          alias: '/dispatch',
+        },
+      ],
     },
     {
       path: '/containers',
       component: Containers,
-    },
-    {
-      path: '/dispatch',
-      component: Dispatch,
     },
     {
       path: '/entryRecord',
