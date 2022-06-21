@@ -14,7 +14,7 @@ const isContainerIdExist = () => !!container_id
 
 onMounted(() => {
   if (!isContainerIdExist()) {
-    router.push({ path: '/car' })
+    router.push({ path: '/cars' })
   }
 
   dispatchStore.getDispatchAction(car_id, container_id) // 需要先判斷container_id是否存在，若不存在請把它彈回車次選擇頁面 /cars
