@@ -5,6 +5,7 @@ import Temperature from '@/views/Temperature/index.vue'
 import Containers from '@/views/Containers/index.vue'
 import Dispatch from '@/views/Dispatch/index.vue'
 import Group from '@/views/Group/index.vue'
+import EntryRecord from '@/views/EntryRecord/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -36,6 +37,10 @@ const router = createRouter({
     {
       path: '/containers',
       component: Containers,
+    },
+    {
+      path: '/entryRecord',
+      component: EntryRecord,
     },
   ],
 })

@@ -3,8 +3,7 @@ import axios from 'axios'
 const getTemperature = async (id, container) => {
   return await axios
     .get(`/api/car/${id}/temperature`, {
-      data: {
-        id,
+      params: {
         container,
       },
     })
