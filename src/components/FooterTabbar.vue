@@ -2,16 +2,16 @@
 import { Tabbar, TabbarItem } from 'vant'
 
 const temperature = {
-  active: '/public/images/footer/menu_temperature_icon2.png',
-  inactive: '/public/images/footer/menu_temperature_icon1.png',
+  active: '/images/footer/menu_temperature_icon2.png',
+  inactive: '/images/footer/menu_temperature_icon1.png',
 }
 const dispatching = {
-  active: '/public/images/footer/menu_dispatching_icon2.png',
-  inactive: '/public/images/footer/menu_dispatching_icon1.png',
+  active: '/images/footer/menu_dispatching_icon2.png',
+  inactive: '/images/footer/menu_dispatching_icon1.png',
 }
 const gear = {
-  active: '/public/images/footer/menu_gear_icon2.png',
-  inactive: '/public/images/footer/menu_gear_icon1.png',
+  active: '/images/footer/menu_gear_icon2.png',
+  inactive: '/images/footer/menu_gear_icon1.png',
 }
 </script>
 
