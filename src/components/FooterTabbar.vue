@@ -1,8 +1,6 @@
 <script setup>
-import { ref } from 'vue'
 import { Tabbar, TabbarItem } from 'vant'
 
-const active = ref('temperature')
 const temperature = {
   active: '/public/images/footer/menu_temperature_icon2.png',
   inactive: '/public/images/footer/menu_temperature_icon1.png',
@@ -19,7 +17,7 @@ const gear = {
 
 <template>
   <div>
-    <Tabbar v-model="active" route fixed active-color="#086eb6" inactive-color="#707070">
+    <Tabbar route fixed active-color="#086eb6" inactive-color="#707070">
       <TabbarItem to="/temperature">
         <span>即時溫度</span>
         <template #icon="props">
