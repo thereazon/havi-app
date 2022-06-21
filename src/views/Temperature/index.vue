@@ -8,7 +8,7 @@ const router = useRouter()
 
 onMounted(() => {
   if (!route.query.container_id) {
-    router.push({ path: '/car' })
+    router.push({ path: '/cars' })
   } else {
     tempStore.getTemperatureAction(route.query.car_id, route.query.container_id)
   }
