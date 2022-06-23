@@ -2,10 +2,10 @@
 import { onMounted, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { NavBar, Loading } from 'vant'
-import useContainers from './store'
+import useContainers from '@/views/Containers/store'
 import DispatchListTable from '@/components/DispatchListTable.vue'
-import router from '../../router'
-import { StatusType } from './helper'
+import router from '@/router'
+import { StatusType } from '@/views/Containers/helper'
 
 const route = useRoute()
 const { car_id, container_id } = route.query
@@ -30,7 +30,6 @@ const onClickLeft = () => {
 <template>
   <div class="bg-[#F2F8FB] h-screen">
     <NavBar safe-area-inset-top fixed left-arrow @click-left="onClickLeft" title="容器對點單數量" />
-
     <div class="flex flex-col justify-center items-center bg-[#F2F8FB]">
       <div class="mt-28">
         <label for="dispatch-no" class="block mb-2 text-[13px] font-medium text-gray-900"

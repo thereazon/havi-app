@@ -1,5 +1,5 @@
 <script setup>
-import { Button } from 'vant'
+import { Button, NavBar } from 'vant'
 import { onMounted } from 'vue'
 import useDispatchInfo from '@/views/Dispatch/store'
 import { useRoute, useRouter } from 'vue-router'
@@ -22,6 +22,7 @@ onMounted(() => {
 </script>
 
 <template>
+  <NavBar safe-area-inset-top fixed title="派工單" />
   <div class="bg-main bg-opacity-5 h-screen">
     <ContainerOnloadCard v-for="dispatch in dispatchStore.dispatchs" :key="dispatch.id" v-bind="dispatch">
       <div class="flex justify-around w-100 bg-white p-4">
