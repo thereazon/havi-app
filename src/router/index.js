@@ -4,7 +4,7 @@ import Cars from '@/views/Cars/index.vue'
 import Temperature from '@/views/Temperature/index.vue'
 import Containers from '@/views/Containers/index.vue'
 import Dispatch from '@/views/Dispatch/index.vue'
-import Group from '@/views/Group/index.vue'
+import Main from '@/views/Main/index.vue'
 import EntryRecord from '@/views/EntryRecord/index.vue'
 import DeliveryNoteDetails from '@/components/DeliveryNoteDetails.vue'
 
@@ -20,8 +20,8 @@ const router = createRouter({
       component: Cars,
     },
     {
-      path: '/group',
-      component: Group,
+      path: '/main',
+      component: Main,
       children: [
         {
           path: 'temperature',
