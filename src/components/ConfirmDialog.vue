@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { Dialog } from 'vant'
 
 const VanDialog = Dialog.Component
@@ -15,10 +15,6 @@ const isShow = computed({
     emit('update:isShowDialog', val)
   }
 })
-
-const closeDialog = () => {
-  emit('update:isShowDialog', false)
-}
 </script>
 
 <template>
@@ -29,16 +25,16 @@ const closeDialog = () => {
       :closeOnClickOverlay="props.isCloseOnClickOverlay"
     >
       <template v-slot:title>
-        <div class="text-gray text-[1.25rem] font-bold text-center mb-[36px]">
+        <div class="text-gray text-[1.25rem] font-bold text-center">
           <slot name="title">
             {{ props.title }}
           </slot>
         </div>
       </template>
 
-      <template v-slot:content>
+      <div>
         <slot></slot>
-      </template>
+      </div>
 
       <template v-slot:footer>
         <slot name="footer">
