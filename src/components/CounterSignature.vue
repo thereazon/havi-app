@@ -4,6 +4,7 @@ import { currentTempData, TempForm } from '@/utils/mock'
 import { Checkbox, CheckboxGroup } from 'vant'
 import SignatureComponent from './SignatureComponent.vue'
 import SecurityCodeDialog from './SecurityCodeDialog.vue'
+import UploadImage from './uploadImage.vue'
 
 const checked = ref([])
 const isCelsiusTemp = ref(false)
@@ -79,6 +80,7 @@ const confirm = () => {
       </CheckboxGroup>
     </div>
 
+    <UploadImage />
 		<SignatureComponent />
 
     <div

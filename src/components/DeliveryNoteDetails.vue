@@ -263,13 +263,6 @@ watch(
   padding-left: 1rem;
   padding-right: 1rem;
 }
-:deep(.van-hairline--top-bottom) {
-  position: static;
-}
-:deep(.van-collapse-item) {
-  border-bottom: 1px solid #f2f2f2;
-  position: static;
-}
 :deep(.van-collapse-item:last-child) {
   border-bottom: 0;
 }

@@ -6,7 +6,7 @@ import Containers from '@/views/Containers/index.vue'
 import Dispatch from '@/views/Dispatch/index.vue'
 import Main from '@/views/Main/index.vue'
 import EntryRecord from '@/views/EntryRecord/index.vue'
-import DeliveryNoteDetails from '@/components/DeliveryNoteDetails.vue'
+import Restaurant from '@/views/Restaurant/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,8 +44,8 @@ const router = createRouter({
       component: EntryRecord,
     },
     {
-      path: '/deliveryNoteDetails',
-      component: DeliveryNoteDetails,
+      path: '/restaurant',
+      component: Restaurant,
     },
   ],
 })
