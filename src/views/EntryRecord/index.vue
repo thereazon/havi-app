@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import dayjs from 'dayjs'
 import { NavBar, Button, ActionSheet } from 'vant'
 import { VueScrollPicker } from 'vue-scroll-picker'
@@ -9,10 +9,10 @@ import useEntryRecord from './store'
 
 const router = useRouter()
 const route = useRoute()
-const { id } = route.query
+const { dispatch_id, car_id, container_id } = route.query
 const entryRecordStore = useEntryRecord()
-
 const accountStore = useAccountInfo()
+
 const temperature = reactive({
   integer: 34,
   decimal: 0,
@@ -24,11 +24,23 @@ const decimalOptions = Array.from({ length: 10 }, (_, index) => index)
 const computedTemperature = computed(() => temperature.integer + temperature.decimal / 10)
 const openActionSheet = ref(false)
 
+onMounted(() => {
+  if (!dispatch_id || !car_id || !container_id) {
+    router.push({ path: '/cars' })
+  }
+})
+
 const userCheckIn = async () => {
-  await entryRecordStore.userCheckInAction(id, computedTemperature.value)
+  await entryRecordStore.userCheckInAction(dispatch_id, computedTemperature.value)
 
   if (entryRecordStore.status === 'success') {
-    router.push({ path: '/dispatch' }) // 返回派工單頁面, 需要帶 car_id, container_id
+    router.push({
+      path: '/dispatch',
+      query: {
+        car_id,
+        container_id,
+      },
+    })
   }
 }
 
@@ -85,7 +97,7 @@ const onClickLeft = () => {
             class="bg-[#fffcf6] border-dashed border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 px-4 h-[48px]"
             disabled
           >
-            <option>{{ id }}</option>
+            <option>{{ dispatch_id }}</option>
           </select>
         </div>
         <div class="mt-8 temperature">
