@@ -245,7 +245,7 @@ describe('resturantByStatus', () => {
   test('resturantByStatus should be null when stores is null', () => {
     expect(resturantByStatus(null)).toEqual(null)
   })
-  test('should be null when dispatch is empty', () => {
+  test('should be null when stores is empty', () => {
     expect(resturantByStatus([])).toEqual(null)
   })
   test('should be categorized correctly', () => {
