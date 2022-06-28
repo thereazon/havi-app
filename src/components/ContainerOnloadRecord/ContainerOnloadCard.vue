@@ -52,7 +52,7 @@ const restaurantInfoBtn = (info) => {
 </script>
 
 <template>
-  <section class="rounded-[20px] max-w-5xl shadow-lg overflow-hidden bg-white">
+  <section class="rounded-[20px] max-w-5xl shadow-lg overflow-hidden bg-white" v-bind="$attrs">
     <!-- card header -->
     <div class="flex justify-around items-baseline pt-1 px-7">
       <p class="text-primary text-[13px] mb-2"><b class="font-bold">單號 </b>{{ props.no }}</p>
