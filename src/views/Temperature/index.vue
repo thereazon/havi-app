@@ -7,7 +7,7 @@ const route = useRoute()
 const router = useRouter()
 
 onMounted(() => {
-  if (!route.query.container_id) {
+  if (!route.query.car_id) {
     router.push({ path: '/cars' })
   } else {
     tempStore.getTemperatureAction(route.query.car_id, route.query.container_id)
@@ -24,11 +24,11 @@ onMounted(() => {
       <div class="text-[22px]">
         <div class="mb-[25px]">
           <div>車號</div>
-          <div class="text-[#828282]">123</div>
+          <div class="text-[#828282]">{{ route.query?.car_number }}</div>
         </div>
         <div>
           <div>櫃號</div>
-          <div class="text-[#828282]">123</div>
+          <div class="text-[#828282]">{{ router.query?.container_number }}</div>
         </div>
       </div>
     </div>
@@ -41,8 +41,8 @@ onMounted(() => {
         <div class="w-full">
           <div class="text-primary font-bold mb-2">冷凍品溫</div>
           <div class="grid grid-cols-2 gap-2">
-            <div class="bg-[#f3f3f3] text-center rounded py-1">{{ tempStore.temperature?.c.frozen }}</div>
-            <div class="bg-[#f3f3f3] text-center rounded py-1">{{ tempStore.temperature?.f.frozen }}</div>
+            <div class="bg-[#f3f3f3] text-center rounded py-1">{{ tempStore.temperature?.c.frozen }}°C</div>
+            <div class="bg-[#f3f3f3] text-center rounded py-1">{{ tempStore.temperature?.f.frozen }}°F</div>
           </div>
         </div>
       </div>
@@ -53,8 +53,8 @@ onMounted(() => {
         <div class="w-full">
           <div class="text-[#858585] font-bold mb-2">冷藏品溫</div>
           <div class="grid grid-cols-2 gap-2">
-            <div class="bg-white text-center rounded py-1">{{ tempStore.temperature?.c.cold }}</div>
-            <div class="bg-white text-center rounded py-1">{{ tempStore.temperature?.f.cold }}</div>
+            <div class="bg-white text-center rounded py-1">{{ tempStore.temperature?.c.cold }}°C</div>
+            <div class="bg-white text-center rounded py-1">{{ tempStore.temperature?.f.cold }}°F</div>
           </div>
         </div>
       </div>
@@ -65,8 +65,8 @@ onMounted(() => {
         <div class="w-full">
           <div class="text-primary font-bold mb-2">冷凍廂溫</div>
           <div class="grid grid-cols-2 gap-2">
-            <div class="bg-[#f3f3f3] text-center rounded py-1">{{ tempStore.temperature?.c.frozen_storage }}</div>
-            <div class="bg-[#f3f3f3] text-center rounded py-1">{{ tempStore.temperature?.f.frozen_storage }}</div>
+            <div class="bg-[#f3f3f3] text-center rounded py-1">{{ tempStore.temperature?.c.frozen_storage }}°C</div>
+            <div class="bg-[#f3f3f3] text-center rounded py-1">{{ tempStore.temperature?.f.frozen_storage }}°F</div>
           </div>
         </div>
       </div>
@@ -77,8 +77,8 @@ onMounted(() => {
         <div class="w-full">
           <div class="text-[#858585] font-bold mb-2">冷藏廂溫</div>
           <div class="grid grid-cols-2 gap-2">
-            <div class="bg-white text-center rounded py-1">{{ tempStore.temperature?.c.cold_storage }}</div>
-            <div class="bg-white text-center rounded py-1">{{ tempStore.temperature?.f.cold_storage }}</div>
+            <div class="bg-white text-center rounded py-1">{{ tempStore.temperature?.c.cold_storage }}°C</div>
+            <div class="bg-white text-center rounded py-1">{{ tempStore.temperature?.f.cold_storage }}°F</div>
           </div>
         </div>
       </div>
