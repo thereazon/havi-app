@@ -1,12 +1,18 @@
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import dayjs from 'dayjs'
 import { NavBar, Button, ActionSheet } from 'vant'
 import { VueScrollPicker } from 'vue-scroll-picker'
 import useAccountInfo from '@/views/Login/store'
-import router from '@/router'
+import { useRoute, useRouter } from 'vue-router'
+import useEntryRecord from './store'
 
+const router = useRouter()
+const route = useRoute()
+const { dispatch_id, car_id, container_id } = route.query
+const entryRecordStore = useEntryRecord()
 const accountStore = useAccountInfo()
+
 const temperature = reactive({
   integer: 34,
   decimal: 0,
@@ -17,6 +23,26 @@ const integerOptions = Array.from({ length: 30 }, (_, index) => index + 20)
 const decimalOptions = Array.from({ length: 10 }, (_, index) => index)
 const computedTemperature = computed(() => temperature.integer + temperature.decimal / 10)
 const openActionSheet = ref(false)
+
+onMounted(() => {
+  if (!dispatch_id || !car_id || !container_id) {
+    router.push({ path: '/cars' })
+  }
+})
+
+const userCheckIn = async () => {
+  await entryRecordStore.userCheckInAction(dispatch_id, computedTemperature.value)
+
+  if (entryRecordStore.status === 'success') {
+    router.push({
+      path: '/dispatch',
+      query: {
+        car_id,
+        container_id,
+      },
+    })
+  }
+}
 
 const toggleTemperatureSheet = () => {
   openActionSheet.value = !openActionSheet.value
@@ -67,13 +93,11 @@ const onClickLeft = () => {
         <div class="mt-8">
           <label for="dispatch-no" class="block mb-2 text-[13px] font-medium text-gray-900">選擇派工單號</label>
           <select
-            name=""
             id="dispatch-no"
             class="bg-[#fffcf6] border-dashed border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 px-4 h-[48px]"
-            @change="handleOnChange"
+            disabled
           >
-            <!-- <option v-for="dispatchNo in selectOptions" :value="dispatchNo" :key="dispatchNo">{{ dispatchNo }}</option> -->
-            <option>ABC-192374-2983</option>
+            <option>{{ dispatch_id }}</option>
           </select>
         </div>
         <div class="mt-8 temperature">
@@ -88,9 +112,19 @@ const onClickLeft = () => {
             {{ computedTemperature }}
           </div>
         </div>
-        <Button class="bg-success mt-28" loading-type="spinner" round block type="success" native-type="submit"
+        <Button
+          class="bg-success mt-28"
+          loading-type="spinner"
+          round
+          block
+          type="success"
+          native-type="submit"
+          @click.prevent="userCheckIn"
           >報到</Button
         >
+        <div v-if="entryRecordStore.status === 'fail'" class="text-[#eb5e55] mt-4 text-center">
+          {{ entryRecordStore.message }}
+        </div>
       </form>
     </div>
     <ActionSheet v-model:show="openActionSheet" title="體溫">
