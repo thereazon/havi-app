@@ -7,8 +7,7 @@ const { account } = useAccountInfo()
 
 <template>
   <div class="bg-[#F2F8FB] h-screen font-sans pb-24">
-    <NavBar safe-area-inset-top fixed left-arrow title="設定" />
-
+    <NavBar safe-area-inset-top fixed title="設定" />
     <div class="flex flex-col justify-center items-center">
       <div class="mt-28 bg-[#fff] border border-gray text-gray border-dashed h-[210px] w-[315px] relative">
         <div class="flex-col absolute -top-[32px] inset-x-0 text-center">
