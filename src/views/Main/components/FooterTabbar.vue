@@ -3,7 +3,7 @@ import { Tabbar, TabbarItem } from 'vant'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const { car_id, container_id } = route.query
+const { car_id, container_id, car_number, container_number } = route.query
 
 const temperature = {
   active: '/images/footer/menu_temperature_icon2.png',
@@ -22,14 +22,24 @@ const gear = {
 <template>
   <div>
     <Tabbar route fixed active-color="#086eb6" inactive-color="#707070">
-      <TabbarItem :to="{ path: '/temperature', query: { car_id: car_id, container_id: container_id } }">
+      <TabbarItem
+        :to="{
+          path: '/temperature',
+          query: { car_id: car_id, container_id: container_id, car_number, container_number },
+        }"
+      >
         <span>即時溫度</span>
         <template #icon="props">
           <img :src="props.active ? temperature.active : temperature.inactive" />
         </template>
       </TabbarItem>
 
-      <TabbarItem :to="{ path: '/dispatch', query: { car_id: car_id, container_id: container_id } }">
+      <TabbarItem
+        :to="{
+          path: '/dispatch',
+          query: { car_id: car_id, container_id: container_id, car_number, container_number },
+        }"
+      >
         <span>派工單</span>
         <template #icon="props">
           <img :src="props.active ? dispatching.active : dispatching.inactive" />
