@@ -54,7 +54,12 @@ const checkInBtn = () => {
     <!-- 本日工作塊 -->
     <div class="px-[26px]">
       <p class="text-center text-primary">本日工作</p>
-      <ContainerOnloadCard v-for="dispatch in mockData" :key="dispatch.id" v-bind="dispatch" class="mb-6">
+      <ContainerOnloadCard
+        v-for="dispatch in dispatchStore.dispatchs"
+        :key="dispatch.id"
+        v-bind="dispatch"
+        class="mb-6"
+      >
         <div class="flex justify-around w-100 bg-white p-4">
           <Button
             size="mini"
