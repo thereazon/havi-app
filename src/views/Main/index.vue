@@ -1,5 +1,5 @@
 <script setup>
-import FooterTabbar from '@/components/FooterTabbar.vue'
+import FooterTabbar from './components/FooterTabbar.vue'
 </script>
 
 <template>

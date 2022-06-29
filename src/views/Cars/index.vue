@@ -20,12 +20,16 @@ const errorMessage = ref()
 
 const comfirmDispatch = () => {
   dispatchStore.getDispatchAction(selectCarId.value, selectContainerId.value).then(() => {
+    const car = carsStore.cars.find((v) => v.id === selectCarId.value)
+    const container = carsStore.containers.find((v) => v.id === selectContainerId.value)
     if (dispatchStore.dispatchs.length > 0) {
       router.push({
         path: `/dispatch`,
         query: {
           car_id: selectCarId.value,
           container_id: selectContainerId.value,
+          car_number: car ? car.number : null,
+          container_number: container ? container.number : null,
         },
       })
     } else {
@@ -45,7 +49,7 @@ const getContainers = () => {
         },
       })
     } else {
-      errorMessage.value = '您的出車資訊與系統不符</br>請與值班人員進行聯繫'
+      errorMessage.value = '沒有容器對點單資料'
     }
   })
 }
@@ -67,14 +71,23 @@ onMounted(() => {
       </div>
       <div>
         <div class="text-gray mb-2">選擇車號</div>
-
-        <select v-model="selectCarId" class="w-full border-dashed p-5 bg-[#fffcf6] mb-4" name="選擇車號" id="">
+        <select
+          v-model="selectCarId"
+          class="w-full border-dashed p-5 bg-[#fffcf6] mb-4"
+          name="選擇車號"
+          id="select-car-number"
+        >
           <option v-for="car in carsStore.cars" :key="car.id" :value="car.id">{{ car.number }}</option>
         </select>
       </div>
       <div>
         <div class="text-gray mb-2">選擇櫃號</div>
-        <select v-model="selectContainerId" class="w-full border-dashed p-5 bg-[#fffcf6]" name="選擇櫃號" id="">
+        <select
+          v-model="selectContainerId"
+          class="w-full border-dashed p-5 bg-[#fffcf6]"
+          name="選擇櫃號"
+          id="select-container-number"
+        >
           <option v-for="container in carsStore.containers" :key="container.id" :value="container.id">
             {{ container.number }}
           </option>
