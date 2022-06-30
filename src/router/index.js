@@ -58,13 +58,17 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach(async (from, to) => {
+router.beforeEach(async (to, from) => {
   const accountStore = useAccountInfo()
   const isAccountStored = !!accountStore.account
 
-  if (!isAccountStored) return { name: 'Login' }
+  if (!isAccountStored) {
+    if (to.name === 'Login') return true
 
-  if (to.name === 'Login' && isAccountStored) {
+    return { name: 'Login' }
+  }
+
+  if (to.name === 'Login') {
     return { name: 'Dispatch' }
   }
 })
