@@ -8,6 +8,7 @@ import Main from '@/views/Main/index.vue'
 import EntryRecord from '@/views/EntryRecord/index.vue'
 import Restaurant from '@/views/Restaurant/index.vue'
 import Pallet from '@/views/Pallet/index.vue'
+import PreCool from '@/views/PreCool/index.vue'
 import Setting from '@/views/Setting/index.vue'
 
 const router = createRouter({
@@ -57,6 +58,10 @@ const router = createRouter({
     {
       path: '/pallet',
       component: Pallet,
+    },
+    {
+      path: '/precool',
+      component: PreCool,
     },
   ],
 })
