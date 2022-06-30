@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { StatusType, StorageKeys } from '@/views/Login/helper'
 import { login, postSecurityCode } from '@/views/Login/service'
-import { getItem, setItem } from '@/utils/storage.js'
+import { getItem, setItem, removeItem } from '@/utils/storage.js'
 
 // const mockAccount = {
 //   id: 'DM605b050589e38',
@@ -78,6 +78,13 @@ const useAccountInfo = defineStore('account', {
       } finally {
         this.isLoading = false
       }
+    },
+    handleLogout() {
+      this.isLoading = true
+      this.account = null
+      this.status = StatusType.INIT
+      removeItem(StorageKeys.ACCOUNT)
+      this.isLoading = false
     },
   },
 })
