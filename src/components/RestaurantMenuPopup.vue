@@ -54,7 +54,13 @@ const goto = (path) => {
         class="grid grid-cols-3 pr-[30px] text-[17px]"
         @click="goto(item.path)"
       >
-        <Checkbox v-model="item.check" disabled checked-color="#6dbe5b" class="mx-[25px]"></Checkbox>
+        <Checkbox
+          v-model="item.check"
+          disabled
+          checked-color="#6dbe5b"
+          class="mx-[25px]"
+          :class="{ finish: item.check }"
+        ></Checkbox>
         <div
           :class="{ 'text-success': item.check }"
           class="py-[10px] col-span-2 border-t-0 border-x-0 border-solid border-white flex justify-between w-full"
@@ -70,5 +76,10 @@ const goto = (path) => {
 <style lang="scss" scoped>
 .active {
   @apply text-gray bg-white;
+}
+.finish {
+  :deep(.van-checkbox__icon--disabled .van-icon) {
+    background-color: #6dbe5b;
+  }
 }
 </style>
