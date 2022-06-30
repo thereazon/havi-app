@@ -2,10 +2,12 @@
 import { Button, NavBar } from 'vant'
 import { onMounted } from 'vue'
 import useDispatchInfo from '@/views/Dispatch/store'
+import usePallet from '@/views/Pallet/store'
 import { useRoute, useRouter } from 'vue-router'
 import ContainerOnloadCard from '@/components/ContainerOnloadRecord/ContainerOnloadCard.vue'
 
 const dispatchStore = useDispatchInfo()
+const palletStore = usePallet()
 const route = useRoute()
 const router = useRouter()
 
@@ -20,15 +22,26 @@ onMounted(() => {
 })
 
 const checkInBtn = () => {
-  if (!dispatchStore.dispatchs || dispatchStore.dispatchs.length == 0) {
-    console.warn('dispaths is not exist')
-  }
   const { id: dispatch_id, no: dispatch_no } = dispatchStore.dispatchs[0]
   router.push({
     path: '/entryRecord',
     query: {
       dispatch_id,
       dispatch_no,
+      car_id,
+      container_id,
+      container_number,
+      car_number,
+    },
+  })
+}
+const handleToPallet = async (dispatch) => {
+  await palletStore.setCurrentDispath(dispatch)
+  router.push({
+    path: '/pallet',
+    query: {
+      dispatch_id: dispatch.id,
+      dispatch_no: dispatch.no,
       car_id,
       container_id,
       container_number,
@@ -76,7 +89,7 @@ const checkInBtn = () => {
           <Button
             size="mini"
             round
-            disabled
+            @click="handleToPallet(dispatch)"
             class="border-2 border-solid border-emerald-500 bg-emerald-500 text-white px-3 py-1"
           >
             容器裝車紀錄

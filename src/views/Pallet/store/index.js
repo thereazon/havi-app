@@ -1,18 +1,22 @@
 import { defineStore } from 'pinia'
 import ApiCaller from '../service'
 
-const useEntryRecord = defineStore('entryRecord', {
+const usePallet = defineStore('pollet', {
   state: () => ({
     status: 'init',
     isLoading: false,
     message: '',
-    data: null,
+    dispatch: null,
+    data: [],
   }),
   actions: {
+    async setCurrentDispath(dispatch) {
+      this.dispatch = dispatch
+    },
     async getPalletAuction(id) {
       try {
         this.isLoading = true
-        const response = await ApiCaller.get(id)
+        const response = await ApiCaller.getPallet(id)
         if (response.status === 'success') {
           this.data = response.data
           this.status = response.status
@@ -24,7 +28,6 @@ const useEntryRecord = defineStore('entryRecord', {
       } finally {
         this.isLoading = false
       }
-    },
     },
     async postPalletAction(id) {
       try {
@@ -44,4 +47,4 @@ const useEntryRecord = defineStore('entryRecord', {
   },
 })
 
-export default useEntryRecord
+export default usePallet
