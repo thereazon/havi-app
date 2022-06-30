@@ -17,7 +17,7 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-col items-stretch bg-primary bg-opacity-[0.05] px-[40px]">
-    <div class="flex items-center mb-[60px] mt-[50px] ml-5">
+    <div class="flex items-center mb-[60px] mt-[50px]">
       <div class="mr-[35px]">
         <img src="/login_car.png" alt="icon" />
       </div>
@@ -28,7 +28,7 @@ onMounted(() => {
         </div>
         <div>
           <div>櫃號</div>
-          <div class="text-[#828282]">{{ router.query?.container_number }}</div>
+          <div class="text-[#828282]">{{ route.query?.container_number }}</div>
         </div>
       </div>
     </div>

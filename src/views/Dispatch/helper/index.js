@@ -126,7 +126,8 @@ export const mockData = [
 export const mockQuery = {
   container_id: 'container_id',
   car_id: 'car_id',
-  
+}
+
 export const RestaurantStatusType = {
   PENDING_DELIVERY: 'PENDING_DELIVERY',
   DELIVERING: 'DELIVERING',
@@ -145,6 +146,21 @@ export const RestaurantStatusNumberToType = {
   4: RestaurantStatusType.DELIVERY_COMPLETED,
   11: RestaurantStatusType.DELAY,
   12: RestaurantStatusType.UNABLE_DELIVERY,
+}
+
+export const DispatchStatusType = {
+  NO_CHECK_IN: 'NO_CHECK_IN',
+  NO_CHECK_OUT: 'NO_CHECK_OUT',
+  PRE_COOLING: 'PRE_COOLING',
+  CHECK_OUT: 'CHECK_OUT',
+}
+
+//	狀態 0:未報到 1:未出車 2:完成預冷 3:已出車
+export const DispatchStatusNumberToType = {
+  0: DispatchStatusType.NO_CHECK_IN,
+  1: DispatchStatusType.NO_CHECK_OUT,
+  2: DispatchStatusType.PRE_COOLING,
+  3: DispatchStatusType.CHECK_OUT,
 }
 
 export const dispatchToDict = (dispatchs) => {

@@ -9,14 +9,13 @@ const dispatchStore = useDispatchInfo()
 const route = useRoute()
 const router = useRouter()
 
-const { car_id, container_id } = route.query
+const { car_id, container_id, container_number, car_number } = route.query
 const isCarIdExist = () => !!car_id
 
 onMounted(() => {
   if (!isCarIdExist()) {
     router.push({ path: '/cars' })
   }
-
   dispatchStore.getDispatchAction(car_id, container_id)
 })
 
@@ -24,14 +23,16 @@ const checkInBtn = () => {
   if (!dispatchStore.dispatchs || dispatchStore.dispatchs.length == 0) {
     console.warn('dispaths is not exist')
   }
-
-  const { id: dispatch_id } = dispatchStore.dispatchs[0]
-
+  const { id: dispatch_id, no: dispatch_no } = dispatchStore.dispatchs[0]
   router.push({
-    path: '/checkin',
+    path: '/entryRecord',
     query: {
       dispatch_id,
-      dispatch_name: '',
+      dispatch_no,
+      car_id,
+      container_id,
+      container_number,
+      car_number,
     },
   })
 }
@@ -66,6 +67,8 @@ const checkInBtn = () => {
             round
             plain
             type="primary"
+            icon="checked"
+            icon-position="right"
             class="border-2 border-solid border-primary text-primary px-3 py-1"
           >
             預冷溫度
@@ -73,6 +76,7 @@ const checkInBtn = () => {
           <Button
             size="mini"
             round
+            disabled
             class="border-2 border-solid border-emerald-500 bg-emerald-500 text-white px-3 py-1"
           >
             容器裝車紀錄
@@ -80,6 +84,7 @@ const checkInBtn = () => {
           <Button
             size="mini"
             round
+            disabled
             class="border-2 border-solid border-neutral-500 bg-neutral-500 text-white px-3 py-1"
           >
             餐廳明細

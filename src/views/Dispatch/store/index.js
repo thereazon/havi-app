@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import DispatchApiCaller from '@/views/Dispatch/service'
+import { DispatchStatusNumberToType } from '@/views/Dispatch/helper'
 import useAccountInfo from '@/views/Login/store'
 
 const useDispatchInfo = defineStore('dispatch', {
@@ -21,7 +22,11 @@ const useDispatchInfo = defineStore('dispatch', {
           container_id,
         )
         if (response.status === 'success') {
-          this.dispatchs = response.data
+          this.dispatchs = response.data.map((v) => ({
+            ...v,
+            is_loading: Boolean(v.is_loading),
+            status: DispatchStatusNumberToType[v.status],
+          }))
           this.status = response.status
         }
       } catch (err) {

@@ -9,7 +9,7 @@ import useEntryRecord from './store'
 
 const router = useRouter()
 const route = useRoute()
-const { dispatch_id, car_id, container_id } = route.query
+const { dispatch_id, car_id, container_id, dispatch_no } = route.query
 const entryRecordStore = useEntryRecord()
 const accountStore = useAccountInfo()
 
@@ -25,7 +25,7 @@ const computedTemperature = computed(() => temperature.integer + temperature.dec
 const openActionSheet = ref(false)
 
 onMounted(() => {
-  if (!dispatch_id || !car_id || !container_id) {
+  if (!dispatch_id) {
     router.push({ path: '/cars' })
   }
 })
@@ -78,13 +78,13 @@ const onClickLeft = () => {
           <div class="flex justify-between">
             <label class="block text-[13px] text-success">車號</label>
             <div class="w-[222px] h-[24px] text-gray text-center text-[13px] bg-[#f2f2f2] leading-relaxed">
-              A26-8839-2222
+              {{ route.query.car_number }}
             </div>
           </div>
           <div class="flex justify-between">
             <label class="block text-[13px] text-success">櫃號</label>
             <div class="w-[222px] h-[24px] text-gray text-center text-[13px] bg-[#f2f2f2] leading-relaxed">
-              B27-BGD-233432
+              {{ route.query.container_number }}
             </div>
           </div>
         </div>
@@ -97,7 +97,7 @@ const onClickLeft = () => {
             class="bg-[#fffcf6] border-dashed border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 px-4 h-[48px]"
             disabled
           >
-            <option>{{ dispatch_id }}</option>
+            <option>{{ dispatch_no }}</option>
           </select>
         </div>
         <div class="mt-8 temperature">
