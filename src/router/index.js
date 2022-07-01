@@ -3,6 +3,7 @@ import Login from '@/views/Login/index.vue'
 import Cars from '@/views/Cars/index.vue'
 import Temperature from '@/views/Temperature/index.vue'
 import Containers from '@/views/Containers/index.vue'
+import ExceptionRegistration from '@/views/ExceptionRegistration/index.vue'
 import Dispatch from '@/views/Dispatch/index.vue'
 import Main from '@/views/Main/index.vue'
 import EntryRecord from '@/views/EntryRecord/index.vue'
@@ -21,6 +22,10 @@ const router = createRouter({
     {
       path: '/cars',
       component: Cars,
+    },
+    {
+      path: '/ExceptionRegistration',
+      component: ExceptionRegistration,
     },
     {
       path: '/main',
