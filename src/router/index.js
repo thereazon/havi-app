@@ -5,6 +5,7 @@ import Temperature from '@/views/Temperature/index.vue'
 import Containers from '@/views/Containers/index.vue'
 import ExceptionRegistration from '@/views/ExceptionRegistration/index.vue'
 import Dispatch from '@/views/Dispatch/index.vue'
+import RestaurantList from '@/views/Dispatch/RestaurantList/index.vue'
 import Main from '@/views/Main/index.vue'
 import EntryRecord from '@/views/EntryRecord/index.vue'
 import Restaurant from '@/views/Restaurant/index.vue'
@@ -63,6 +64,10 @@ const router = createRouter({
     {
       path: '/pallet',
       component: Pallet,
+    },
+    {
+      path: '/restaurantlist',
+      component: RestaurantList,
     },
     {
       path: '/precool',

@@ -49,6 +49,21 @@ const handleToPallet = async (dispatch) => {
     },
   })
 }
+
+// 待修改
+const fakeHandleToRestaurantList = async (dispatch) => {
+  router.push({
+    path: '/restaurantlist',
+    query: {
+      dispatch_id: dispatch.id,
+      dispatch_no: dispatch.no,
+      car_id,
+      container_id,
+      container_number,
+      car_number,
+    },
+  })
+}
 </script>
 
 <template>
@@ -97,8 +112,8 @@ const handleToPallet = async (dispatch) => {
           <Button
             size="mini"
             round
-            disabled
             class="border-2 border-solid border-neutral-500 bg-neutral-500 text-white px-3 py-1"
+            @click="fakeHandleToRestaurantList(dispatch)"
           >
             餐廳明細
           </Button>
