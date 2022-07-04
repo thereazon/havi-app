@@ -11,6 +11,7 @@ import Restaurant from '@/views/Restaurant/index.vue'
 import Pallet from '@/views/Pallet/index.vue'
 import PreCool from '@/views/PreCool/index.vue'
 import Setting from '@/views/Setting/index.vue'
+import RestaurantTemperatureConfirm from '@/views/RestaurantTemperatureConfirm/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -67,6 +68,10 @@ const router = createRouter({
     {
       path: '/precool',
       component: PreCool,
+    },
+    {
+      path: '/restaurantTemperatureConfirm',
+      component: RestaurantTemperatureConfirm,
     },
   ],
 })
