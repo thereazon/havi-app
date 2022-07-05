@@ -17,24 +17,32 @@ const showPopup = () => {
   isShowPopup.value = true
 }
 
+const computeTemp = (data) => {
+  let temp = null
+
+  switch (data.sign) {
+    case '+':
+      temp = Math.abs(data.integer + data.decimal / 10)
+      break
+    case '-':
+      temp = Math.abs(data.integer + data.decimal / 10) * -1
+      break
+
+    default:
+      temp = Math.abs(data.integer + data.decimal / 10)
+      break
+  }
+
+  return temp
+}
 // 冷凍溫度邏輯
 const isShowFreezing = ref(false)
 const showFreezingActionSheet = () => {
   isShowFreezing.value = true
 }
-const confirmFreezingTemperature = (data) => {
-  switch (data.sign) {
-    case '+':
-      temperature.freezing = Math.abs(data.integer + data.decimal / 10)
-      break
-    case '-':
-      temperature.freezing = Math.abs(data.integer + data.decimal / 10) * -1
-      break
 
-    default:
-      temperature.freezing = Math.abs(data.integer + data.decimal / 10)
-      break
-  }
+const confirmFreezingTemperature = (data) => {
+  temperature.freezing = computeTemp(data)
   isShowFreezing.value = false
 }
 
@@ -44,18 +52,7 @@ const showRefrigerationActionSheet = () => {
   isShowRefrigeration.value = true
 }
 const confirmRefrigerationTemperature = (data) => {
-  switch (data.sign) {
-    case '+':
-      temperature.refrigeration = Math.abs(data.integer + data.decimal / 10)
-      break
-    case '-':
-      temperature.refrigeration = Math.abs(data.integer + data.decimal / 10) * -1
-      break
-
-    default:
-      temperature.refrigeration = Math.abs(data.integer + data.decimal / 10)
-      break
-  }
+  temperature.refrigeration = computeTemp(data)
   isShowRefrigeration.value = false
 }
 
