@@ -14,11 +14,12 @@ const temperature = reactive({
   integer: 0,
   decimal: 0,
 })
+const isCelsiusTemp = ref(false)
 const signOptions = ['+', '-']
 const integerOptions = Array.from({ length: 100 }, (_, index) => index)
 const decimalOptions = Array.from({ length: 10 }, (_, index) => index)
-const isShowPopup = ref(false)
 
+const isShowPopup = ref(false)
 const showPopup = () => {
   isShowPopup.value = true
 }
@@ -86,19 +87,54 @@ const toggleTemperatureSheet = () => {
         </div>
       </div>
       <UploadImage title="實測溫度" />
-      <Button
-        class="bg-success mt-8"
-        loading-type="spinner"
-        round
-        block
-        type="success"
-        native-type="submit"
-        @click="toggleTemperatureSheet"
+      <Button class="bg-success mt-8" loading-type="spinner" round block type="success" native-type="submit"
         >完成</Button
       >
     </div>
   </div>
-  <Popup v-model:show="isShowPopup" class="w-[325px] h-[366px] rounded-[20px]"> </Popup>
+  <Popup v-model:show="isShowPopup" class="w-[325px] h-[366px] rounded-[20px]">
+    <div class="py-[26px] px-[28px]">
+      <h1 class="text-center text-[#707070] text-[17px] mb-0">實測溫度</h1>
+      <h2 class="text-center text-[#a4a4a4] text-[12px]">請填寫實際溫度</h2>
+      <div>
+        <div
+          class="w-[30%] h-[14px] text-[0.75rem] rounded-md bg-primary border-[3px] border-solid border-primary flex items-center ml-auto"
+          @click="isCelsiusTemp = !isCelsiusTemp"
+        >
+          <span
+            class="w-[50%] h-full flex justify-center items-center"
+            :class="[isCelsiusTemp ? 'text-white' : 'text-primary bg-white rounded-l-md']"
+            >°C</span
+          >
+          <span
+            class="w-[50%] h-full flex justify-center items-center"
+            :class="[isCelsiusTemp ? 'text-primary bg-white rounded-r-md' : 'text-white']"
+            >°F</span
+          >
+        </div>
+      </div>
+      <form class="flex flex-col mt-5">
+        <div class="flex justify-between">
+          <span class="text-[12px] text-center text-[#086eb6] flex items-center">冷凍品溫</span>
+          <div class="w-[205px] h-[37px] bg-[#f2f2f2] rounded-md" @click="toggleTemperatureSheet"></div>
+        </div>
+        <div class="flex justify-between mt-4">
+          <span class="text-[12px] text-center text-[#086eb6] flex items-center">冷藏品溫</span>
+          <div class="w-[205px] h-[37px] bg-[#f2f2f2] rounded-md" @click="toggleTemperatureSheet"></div>
+        </div>
+        <Button
+          class="bg-success mt-8"
+          loading-type="spinner"
+          round
+          block
+          type="success"
+          native-type="submit"
+          @click.prevent="toggleTemperatureSheet"
+          >確認</Button
+        >
+      </form>
+    </div>
+  </Popup>
   <ActionSheet v-model:show="openActionSheet" title="溫度">
     <div class="h-[251px] py-3 px-4">
       <div class="flex">
