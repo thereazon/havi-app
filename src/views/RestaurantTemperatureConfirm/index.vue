@@ -1,27 +1,62 @@
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
-import { NavBar, Button, Popup, Toast, ActionSheet } from 'vant'
-import { useRoute, useRouter } from 'vue-router'
-import { VueScrollPicker } from 'vue-scroll-picker'
+import { ref, reactive } from 'vue'
+import { NavBar, Button, Popup, Toast } from 'vant'
+import { useRouter } from 'vue-router'
 import UploadImage from '@/components/uploadImage.vue'
-
-import { currentTempData, TempForm } from '@/utils/mock'
+import TemperatureActionSheet from './components/TemperatureActionSheet.vue'
 
 const router = useRouter()
 
 const temperature = reactive({
-  sign: 'plus', //plus: 正, minus: 負
-  integer: 0,
-  decimal: 0,
+  refrigeration: null,
+  freezing: null,
 })
 const isCelsiusTemp = ref(false)
-const signOptions = ['+', '-']
-const integerOptions = Array.from({ length: 100 }, (_, index) => index)
-const decimalOptions = Array.from({ length: 10 }, (_, index) => index)
-
 const isShowPopup = ref(false)
 const showPopup = () => {
   isShowPopup.value = true
+}
+
+// 冷凍溫度邏輯
+const isShowFreezing = ref(false)
+const showFreezingActionSheet = () => {
+  isShowFreezing.value = true
+}
+const confirmFreezingTemperature = (data) => {
+  switch (data.sign) {
+    case '+':
+      temperature.freezing = Math.abs(data.integer + data.decimal / 10)
+      break
+    case '-':
+      temperature.freezing = Math.abs(data.integer + data.decimal / 10) * -1
+      break
+
+    default:
+      temperature.freezing = Math.abs(data.integer + data.decimal / 10)
+      break
+  }
+  isShowFreezing.value = false
+}
+
+// 冷藏溫度邏輯
+const isShowRefrigeration = ref(false)
+const showRefrigerationActionSheet = () => {
+  isShowRefrigeration.value = true
+}
+const confirmRefrigerationTemperature = (data) => {
+  switch (data.sign) {
+    case '+':
+      temperature.refrigeration = Math.abs(data.integer + data.decimal / 10)
+      break
+    case '-':
+      temperature.refrigeration = Math.abs(data.integer + data.decimal / 10) * -1
+      break
+
+    default:
+      temperature.refrigeration = Math.abs(data.integer + data.decimal / 10)
+      break
+  }
+  isShowRefrigeration.value = false
 }
 
 const onClickLeft = () => {
@@ -30,9 +65,8 @@ const onClickLeft = () => {
 
 const onClickRight = () => Toast('按钮')
 
-const openActionSheet = ref(false)
-const toggleTemperatureSheet = () => {
-  openActionSheet.value = !openActionSheet.value
+const submitTemperature = () => {
+  isShowPopup.value = false
 }
 </script>
 
@@ -69,18 +103,30 @@ const toggleTemperatureSheet = () => {
           <div class="w-[18%] h-[50%] flex justify-center items-center text-gray">櫃台溫度</div>
         </div>
         <div
-          v-for="(item, index) in currentTempData"
-          :key="index"
           class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
         >
-          <span class="w-[16%] text-primary">{{ item.title }}</span>
+          <span class="w-[16%] text-primary">冷凍品溫</span>
           <div class="w-[42%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
-            {{ item.currentTempe }}
+            -12.2°C / -30.1°F
           </div>
           <div class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
-            {{ item.counterTempe }}
+            <!-- 冷凍品溫 -->
+            {{ temperature.freezing ? temperature.freezing : '-' }}
           </div>
         </div>
+        <div
+          class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
+        >
+          <span class="w-[16%] text-primary">冷藏品溫</span>
+          <div class="w-[42%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
+            -12.2°C / -30.1°F
+          </div>
+          <div class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
+            <!-- 冷藏品溫 -->
+            {{ temperature.refrigeration ? temperature.refrigeration : '-' }}
+          </div>
+        </div>
+
         <div class="flex justify-around mt-10">
           <Button class="rounded-full h-[36px] w-[134px]" type="danger">鎖定溫度</Button>
           <Button class="rounded-full h-[36px] w-[134px] bg-primary text-white" @click="showPopup">實測溫度</Button>
@@ -116,11 +162,21 @@ const toggleTemperatureSheet = () => {
       <form class="flex flex-col mt-5">
         <div class="flex justify-between">
           <span class="text-[12px] text-center text-[#086eb6] flex items-center">冷凍品溫</span>
-          <div class="w-[205px] h-[37px] bg-[#f2f2f2] rounded-md" @click="toggleTemperatureSheet"></div>
+          <div
+            class="w-[205px] h-[37px] bg-[#f2f2f2] rounded-md flex justify-center items-center"
+            @click="showFreezingActionSheet"
+          >
+            {{ temperature.freezing }}
+          </div>
         </div>
         <div class="flex justify-between mt-4">
           <span class="text-[12px] text-center text-[#086eb6] flex items-center">冷藏品溫</span>
-          <div class="w-[205px] h-[37px] bg-[#f2f2f2] rounded-md" @click="toggleTemperatureSheet"></div>
+          <div
+            class="w-[205px] h-[37px] bg-[#f2f2f2] rounded-md flex justify-center items-center"
+            @click="showRefrigerationActionSheet"
+          >
+            {{ temperature.refrigeration }}
+          </div>
         </div>
         <Button
           class="bg-success mt-8"
@@ -129,24 +185,20 @@ const toggleTemperatureSheet = () => {
           block
           type="success"
           native-type="submit"
-          @click.prevent="toggleTemperatureSheet"
+          @click.prevent="submitTemperature"
           >確認</Button
         >
       </form>
     </div>
   </Popup>
-  <ActionSheet v-model:show="openActionSheet" title="溫度">
-    <div class="h-[251px] py-3 px-4">
-      <div class="flex">
-        <VueScrollPicker :options="signOptions" v-model="temperature.sign" />
-        <VueScrollPicker :options="integerOptions" v-model="temperature.integer" />
-        <VueScrollPicker :options="decimalOptions" v-model="temperature.decimal" />
-      </div>
-      <Button class="bg-success mt-8" round block type="success" @click="toggleTemperatureSheet">確認</Button>
-    </div>
-  </ActionSheet>
+  <TemperatureActionSheet
+    title="冷藏品溫"
+    v-model:isShow="isShowRefrigeration"
+    @confirm="confirmRefrigerationTemperature"
+  />
+  <TemperatureActionSheet title="冷凍品溫" v-model:isShow="isShowFreezing" @confirm="confirmFreezingTemperature" />
 </template>
-<style src="vue-scroll-picker/lib/style.css"></style>
+
 <style scoped>
 :deep(.van-icon-arrow-left) {
   color: gray;
