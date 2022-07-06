@@ -4,7 +4,7 @@ import AppDivide from '@/components/ui/AppDivide.vue'
 import RestaurantInfoModal from '@/components/RestaurantInfoModal.vue'
 import { computed, ref } from 'vue'
 import { splitFullDateTimeAsDateAndTime } from '@/utils/date'
-import { tempCode } from './helper'
+import { tempCode } from '@/helpers'
 
 const props = defineProps({
   id: {
