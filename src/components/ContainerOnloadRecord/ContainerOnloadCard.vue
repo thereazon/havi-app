@@ -3,7 +3,7 @@ import { Step, Steps, Button } from 'vant'
 import RestaurantInfoModal from '@/components/RestaurantInfoModal.vue'
 import { computed, ref } from 'vue'
 import { splitFullDateTimeAsDateAndTime } from '@/utils/date'
-import { tempCode } from './helper'
+import { tempCode } from '@/helpers'
 
 const props = defineProps({
   id: {
