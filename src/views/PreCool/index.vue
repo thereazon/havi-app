@@ -89,7 +89,7 @@ const confirm = () => {
         </CheckboxGroup>
       </div>
 
-      <UploadImage />
+      <UploadImage title="車機溫度" />
       <SignatureComponent />
 
       <div
