@@ -2,12 +2,11 @@
 import { Button, NavBar } from 'vant'
 import { onMounted } from 'vue'
 import useDispatchInfo from '@/views/Dispatch/store'
-import usePallet from '@/views/Pallet/store'
 import { useRoute, useRouter } from 'vue-router'
+import { showPreCoolChecked } from '@/views/Dispatch/helper'
 import ContainerOnloadCard from '@/components/ContainerOnloadRecord/ContainerOnloadCard.vue'
 
 const dispatchStore = useDispatchInfo()
-const palletStore = usePallet()
 const route = useRoute()
 const router = useRouter()
 
@@ -36,12 +35,22 @@ const checkInBtn = () => {
   })
 }
 const handleToPallet = async (dispatch) => {
-  await palletStore.setCurrentDispath(dispatch)
+  await dispatchStore.setCurrentDispath(dispatch)
   router.push({
     path: '/pallet',
     query: {
-      dispatch_id: dispatch.id,
-      dispatch_no: dispatch.no,
+      car_id,
+      container_id,
+      container_number,
+      car_number,
+    },
+  })
+}
+const handleToPreCool = async (dispatch) => {
+  await dispatchStore.setCurrentDispath(dispatch)
+  router.push({
+    path: '/precool',
+    query: {
       car_id,
       container_id,
       container_number,
@@ -95,8 +104,9 @@ const fakeHandleToRestaurantList = async (dispatch) => {
             round
             plain
             type="primary"
-            icon="checked"
+            :icon="showPreCoolChecked(dispatch.status) ? 'checked' : ''"
             icon-position="right"
+            @click="handleToPreCool(dispatch)"
             class="border-2 border-solid border-primary text-primary px-3 py-1"
           >
             預冷溫度

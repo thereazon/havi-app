@@ -163,6 +163,9 @@ export const DispatchStatusNumberToType = {
   3: DispatchStatusType.CHECK_OUT,
 }
 
+export const showPreCoolChecked = (status) =>
+  status === DispatchStatusType.PRE_COOLING || status === DispatchStatusType.CHECK_OUT
+
 export const dispatchToDict = (dispatchs) => {
   if (!dispatchs || dispatchs.length === 0) return null
   return dispatchs.reduce(

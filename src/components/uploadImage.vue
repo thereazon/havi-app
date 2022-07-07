@@ -19,14 +19,15 @@ const clickUpload = () => {
   }
 }
 const uploadImage = (e) => {
+  const reader = new FileReader()
   let file = e.target.files[0]
   imageFile.value = file
-  const reader = new FileReader()
   reader.readAsDataURL(file)
   reader.onload = (e) => {
     previewImage.value = e.target.result
   }
 }
+
 const deletePreviewImage = () => {
   previewImage.value = ''
 }
@@ -45,9 +46,9 @@ const deletePreviewImage = () => {
     </div>
 
     <input hidden type="file" accept="image/*" capture="camera" ref="camera" @change="uploadImage" />
-    <div class="divide w-full h-28 border-1 border-solid border-transparent" @click="clickUpload()">
+    <div class="divide flex justify-center w-full h-28 border-1 border-solid border-transparent" @click="clickUpload()">
       <div class="w-full h-full" v-if="previewImage === ''"></div>
-      <img v-else class="w-full h-full" :src="previewImage" />
+      <img v-else class="h-full" :src="previewImage" />
     </div>
 
     <Popup v-model:show="showImage">

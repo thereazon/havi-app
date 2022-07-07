@@ -7,11 +7,28 @@ const usePallet = defineStore('pollet', {
     isLoading: false,
     message: '',
     dispatch: null,
+    temperature: null,
+    currentTemp: null,
     data: [],
   }),
   actions: {
     async setCurrentDispath(dispatch) {
       this.dispatch = dispatch
+    },
+    async getTemperatureAction(carId, containerId) {
+      this.isLoading = true
+      try {
+        const response = await ApiCaller.getTemperature(carId, containerId)
+        if (response.status === 'success') {
+          this.temperature = response.data
+          this.status = response.status
+        }
+      } catch (err) {
+        this.status = err.status
+        this.message = err.message
+      } finally {
+        this.isLoading = false
+      }
     },
     async getPalletAuction(id) {
       try {

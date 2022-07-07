@@ -1,15 +1,13 @@
 <script setup>
 import dayjs from 'dayjs'
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref, onMounted, computed } from 'vue'
 import { Checkbox, CheckboxGroup, NavBar, Button } from 'vant'
 import { useRoute, useRouter } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
 import usePreCoolInfo from '@/views/PreCool/store'
 import { TempForm } from '@/utils/mock'
-import ContainerOnloadCard from '@/components/ContainerOnloadRecord/ContainerOnloadCard.vue'
 import SignatureComponent from '@/components/SignatureComponent.vue'
 import SecurityCodeDialog from '@/components/SecurityCodeDialog.vue'
-import UploadImage from '@/components/uploadImage.vue'
 
 const checked = ref([])
 const isCelsiusTemp = ref(false)
@@ -38,31 +36,27 @@ const onClickLeft = () => {
   router.back()
 }
 
-const handleFetchTemp = () => {
-  if (route.query.car_id) {
-    preCoolStore.getTemperatureAction(route.query.car_id)
-  }
+const handleFinished = () => {
+  console.log(checked.value.length)
 }
 
 const currentDate = dayjs().format('MM/DD/YYYY')
 const currentTime = dayjs().format('HH:mm')
 
-const routeToSignPage = () => {
-  router.push({
-    path: '/precool/sign',
-    query: {
-      ...route.query,
-    },
-  })
-}
+const isDisabled = computed(() => {
+  if (checked.value.length !== 2) {
+    return true
+  } else {
+    return false
+  }
+})
 </script>
 
 <template>
   <div class="bg-primary/[.05] min-h-screen h-full pt-[46px] pb-[78px] box-border">
     <!-- 導航列 -->
-    <NavBar safe-area-inset-top left-arrow @click-left="onClickLeft" fixed title="預冷溫度"> </NavBar>
+    <NavBar safe-area-inset-top left-arrow @click-left="onClickLeft" fixed title="櫃檯簽名"> </NavBar>
     <div class="px-[26px]">
-      <ContainerOnloadCard v-bind="dispatchStore.dispatch" class="mb-6"> </ContainerOnloadCard>
       <div class="text-primary flex flex-col">
         <div class="text-[0.9375rem] mb-[4px] flex items-center">
           <span class="mr-[5px]">當前溫度</span>
@@ -94,35 +88,49 @@ const routeToSignPage = () => {
           }}
         </div>
       </div>
-      <div class="w-full flex mt-20 mb-5">
-        <Button
-          round
-          plain
-          type="primary"
-          v-on:click="handleFetchTemp"
-          class="mr-2 border-2 border-solid border-primary text-primary px-3 py-1 flex-1"
+      <div class="mt-[37px] mb-4 flex justify-between items-center">
+        <span class="text-primary text-[0.9375rem]">填寫溫度</span>
+        <div
+          class="w-[30%] h-[14px] text-[0.75rem] rounded-md bg-primary border-[3px] border-solid border-primary flex items-center"
+          @click="isCelsiusTemp = !isCelsiusTemp"
         >
-          擷取目前溫度
-        </Button>
-        <Button
-          round
-          plain
-          :disabled="preCoolStore.temperature ? false : true"
-          v-on:click="routeToSignPage"
-          type="primary"
-          class="ml-2 border-2 border-solid border-success bg-success text-white px-3 py-1 flex-1"
-        >
-          櫃檯簽名
-        </Button>
+          <span
+            class="w-[50%] h-full flex justify-center items-center"
+            :class="[isCelsiusTemp ? 'text-white' : 'text-primary bg-white rounded-l-md']"
+            >°C</span
+          >
+          <span
+            class="w-[50%] h-full flex justify-center items-center"
+            :class="[isCelsiusTemp ? 'text-primary bg-white rounded-r-md' : 'text-white']"
+            >°F</span
+          >
+        </div>
       </div>
-
-      <UploadImage title="車機溫度" />
+      <div
+        v-for="item in TempForm"
+        :key="item.key"
+        class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
+      >
+        <span class="w-[16%] text-primary">{{ item.title }}</span>
+        <input
+          class="w-[60%] h-[24px] py-0 px-1 border-0 text-center bg-[#f2f2f2] rounded-md text-[#242424]"
+          v-model="state[item.key]"
+        />
+      </div>
+      <div class="w-full h-[42px] rounded-xl shadow-md bg-white flex items-center text-[0.75rem] font-bold">
+        <CheckboxGroup v-model="checked" direction="horizontal">
+          <Checkbox shape="square" name="pest">蟲鼠害確認</Checkbox>
+          <Checkbox shape="square" name="clean">車廂清潔確認</Checkbox>
+        </CheckboxGroup>
+      </div>
       <SignatureComponent />
-
-      <Button class="w-full h-11 mt-7 text-white font-bold text-[1.0625rem] bg-success rounded-full" @click="confirm()">
+      <Button
+        class="w-full mt-7 text-white font-bold text-[1.0625rem] bg-success rounded-full"
+        :disabled="isDisabled"
+        @click="handleFinished"
+      >
         完成
       </Button>
-
       <SecurityCodeDialog v-model:isShowDialog="isSecurityCodeDialog" :isCloseOnClickOverlay="true" />
     </div>
   </div>
