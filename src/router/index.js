@@ -11,6 +11,7 @@ import EntryRecord from '@/views/EntryRecord/index.vue'
 import Restaurant from '@/views/Restaurant/index.vue'
 import Pallet from '@/views/Pallet/index.vue'
 import PreCool from '@/views/PreCool/index.vue'
+import Sign from '@/views/PreCool/sign.vue'
 import Setting from '@/views/Setting/index.vue'
 import RestaurantTemperatureConfirm from '@/views/RestaurantTemperatureConfirm/index.vue'
 
@@ -73,6 +74,10 @@ const router = createRouter({
     {
       path: '/precool',
       component: PreCool,
+    },
+    {
+      path: '/precool/sign',
+      component: Sign,
     },
     {
       path: '/restaurantTemperatureConfirm',

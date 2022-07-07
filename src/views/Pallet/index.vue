@@ -2,19 +2,20 @@
 import { Button, NavBar } from 'vant'
 import { onMounted } from 'vue'
 import usePallet from '@/views/Pallet/store'
-import { useRoute, useRouter } from 'vue-router'
+import useDispatchInfo from '@/views/Dispatch/store'
+import { useRouter } from 'vue-router'
 import ContainerOnloadCard from '@/components/ContainerOnloadRecord/ContainerOnloadCard.vue'
 import ContainerOnloadList from '@/components/ContainerOnloadRecord/ContainerOnloadList.vue'
 
 const palletStore = usePallet()
-const route = useRoute()
+const dispatchStore = useDispatchInfo()
 const router = useRouter()
 
 onMounted(() => {
-  if (!palletStore.dispatch) {
+  if (!dispatchStore.dispatch) {
     router.back()
   }
-  palletStore.getPalletAuction(palletStore.dispatch.id)
+  palletStore.getPalletAuction(dispatchStore.dispatch.id)
 })
 
 const onClickLeft = () => {
@@ -22,7 +23,7 @@ const onClickLeft = () => {
 }
 
 const handleSubmit = () => {
-  palletStore.postPalletAction(palletStore.dispatch.id).then(() => router.back())
+  palletStore.postPalletAction(dispatchStore.dispatch.id).then(() => router.back())
 }
 </script>
 
@@ -31,7 +32,7 @@ const handleSubmit = () => {
     <!-- 導航列 -->
     <NavBar safe-area-inset-top left-arrow @click-left="onClickLeft" fixed title="容器裝車紀錄"> </NavBar>
     <div class="px-[26px]">
-      <ContainerOnloadCard v-bind="palletStore.dispatch" class="mb-6"> </ContainerOnloadCard>
+      <ContainerOnloadCard v-bind="dispatchStore.dispatch" class="mb-6"> </ContainerOnloadCard>
       <ContainerOnloadList :ingredientsList="palletStore.data" />
       <Button
         class="bg-success mt-28"

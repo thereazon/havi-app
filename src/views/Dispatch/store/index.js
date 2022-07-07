@@ -6,11 +6,15 @@ import useAccountInfo from '@/views/Login/store'
 const useDispatchInfo = defineStore('dispatch', {
   state: () => ({
     dispatchs: null,
+    dispatch: null, //current dispatch
     status: 'init',
     isLoading: false,
     message: '',
   }),
   actions: {
+    async setCurrentDispath(dispatch) {
+      this.dispatch = dispatch
+    },
     async getDispatchAction(car_id, container_id) {
       const accountStore = useAccountInfo()
       this.isLoading = true
