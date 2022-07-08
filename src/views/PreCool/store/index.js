@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import ApiCaller from '../service'
 
-const usePallet = defineStore('pollet', {
+const usePreCool = defineStore('precool', {
   state: () => ({
     status: 'init',
     isLoading: false,
@@ -9,9 +9,13 @@ const usePallet = defineStore('pollet', {
     dispatch: null,
     temperature: null,
     currentTemp: null,
+    signImage: null,
     data: [],
   }),
   actions: {
+    setSignImage(img) {
+      this.signImage = img
+    },
     async setCurrentDispath(dispatch) {
       this.dispatch = dispatch
     },
@@ -64,4 +68,4 @@ const usePallet = defineStore('pollet', {
   },
 })
 
-export default usePallet
+export default usePreCool
