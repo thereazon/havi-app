@@ -1,22 +1,14 @@
 <script setup>
 import dayjs from 'dayjs'
-import { reactive, ref, onMounted } from 'vue'
-import { Checkbox, CheckboxGroup, NavBar, Button } from 'vant'
+import { ref, onMounted } from 'vue'
+import { NavBar, Button } from 'vant'
 import { useRoute, useRouter } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
 import usePreCoolInfo from '@/views/PreCool/store'
-import { TempForm } from '@/utils/mock'
 import ContainerOnloadCard from '@/components/ContainerOnloadRecord/ContainerOnloadCard.vue'
-import SignatureComponent from '@/components/SignatureComponent.vue'
 import SecurityCodeDialog from '@/components/SecurityCodeDialog.vue'
 import UploadImage from '@/components/uploadImage.vue'
 
-const checked = ref([])
-const isCelsiusTemp = ref(false)
-const state = reactive({
-  freezing: '',
-  refrigeration: '',
-})
 const isSecurityCodeDialog = ref(false)
 const confirm = () => {
   isSecurityCodeDialog.value = true
@@ -62,7 +54,8 @@ const routeToSignPage = () => {
     <!-- 導航列 -->
     <NavBar safe-area-inset-top left-arrow @click-left="onClickLeft" fixed title="預冷溫度"> </NavBar>
     <div class="px-[26px]">
-      <ContainerOnloadCard v-bind="dispatchStore.dispatch" class="mb-6"> </ContainerOnloadCard>
+      <ContainerOnloadCard v-if="dispatchStore.dispatch" v-bind="dispatchStore.dispatch" class="mb-6">
+      </ContainerOnloadCard>
       <div class="text-primary flex flex-col">
         <div class="text-[0.9375rem] mb-[4px] flex items-center">
           <span class="mr-[5px]">當前溫度</span>
@@ -117,12 +110,19 @@ const routeToSignPage = () => {
       </div>
 
       <UploadImage title="車機溫度" />
-      <SignatureComponent />
+
+      <div class="w-full">
+        <div class="mt-8 mb-[5px] text-[#959595] flex items-center justify-center relative">
+          <div class="text-center text-[0.8125rem] font-bold">櫃台簽名</div>
+        </div>
+        <div class="divide w-full h-28 border-1 border-solid border-transparent">
+          <img :src="preCoolStore.signImage" />
+        </div>
+      </div>
 
       <Button class="w-full h-11 mt-7 text-white font-bold text-[1.0625rem] bg-success rounded-full" @click="confirm()">
         完成
       </Button>
-
       <SecurityCodeDialog v-model:isShowDialog="isSecurityCodeDialog" :isCloseOnClickOverlay="true" />
     </div>
   </div>
@@ -145,5 +145,10 @@ const routeToSignPage = () => {
 }
 :deep(.van-checkbox__icon--checked .van-icon) {
   color: #6dbe5b;
+}
+
+.divide {
+  background: linear-gradient(#fffcf6, #fffcf6) padding-box,
+    repeating-linear-gradient(-45deg, #707070 0, #707070 0.6rem, #fffcf6 0, #fffcf6 1rem);
 }
 </style>

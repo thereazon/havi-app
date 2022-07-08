@@ -2,20 +2,23 @@
 import dayjs from 'dayjs'
 import { reactive, ref, onMounted, computed } from 'vue'
 import { Checkbox, CheckboxGroup, NavBar, Button } from 'vant'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
 import usePreCoolInfo from '@/views/PreCool/store'
-import { TempForm } from '@/utils/mock'
 import SignatureComponent from '@/components/SignatureComponent.vue'
 import SecurityCodeDialog from '@/components/SecurityCodeDialog.vue'
+import { useAlertModal } from '@/components/store/AlertModalStore'
+import { isCanvasEmpty, getCanvasToImage } from '@/utils/canvas'
 
+const modal = useAlertModal()
 const checked = ref([])
 const isCelsiusTemp = ref(false)
 const state = reactive({
   freezing: '',
-  refrigeration: '',
 })
+
 const isSecurityCodeDialog = ref(false)
+
 const confirm = () => {
   isSecurityCodeDialog.value = true
 }
@@ -23,7 +26,6 @@ const confirm = () => {
 const preCoolStore = usePreCoolInfo()
 const dispatchStore = useDispatchInfo()
 
-const route = useRoute()
 const router = useRouter()
 
 onMounted(() => {
@@ -37,7 +39,17 @@ const onClickLeft = () => {
 }
 
 const handleFinished = () => {
-  console.log(checked.value.length)
+  const canvas = document.getElementById('canvas')
+  if (isCanvasEmpty(canvas)) {
+    modal.open({
+      type: 'error',
+      title: '錯誤',
+      content: '櫃檯簽名為必填',
+    })
+  } else {
+    preCoolStore.setSignImage(getCanvasToImage(canvas))
+    router.back()
+  }
 }
 
 const currentDate = dayjs().format('MM/DD/YYYY')
@@ -107,14 +119,12 @@ const isDisabled = computed(() => {
         </div>
       </div>
       <div
-        v-for="item in TempForm"
-        :key="item.key"
         class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
       >
-        <span class="w-[16%] text-primary">{{ item.title }}</span>
+        <span class="w-[16%] text-primary">冷凍品溫</span>
         <input
           class="w-[60%] h-[24px] py-0 px-1 border-0 text-center bg-[#f2f2f2] rounded-md text-[#242424]"
-          v-model="state[item.key]"
+          v-model="state.freezing"
         />
       </div>
       <div class="w-full h-[42px] rounded-xl shadow-md bg-white flex items-center text-[0.75rem] font-bold">

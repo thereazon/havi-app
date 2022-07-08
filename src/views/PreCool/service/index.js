@@ -25,10 +25,20 @@ const postPallet = async (id, data) => {
     .catch((err) => Promise.reject(err.response.data))
 }
 
+const postSecurityCode = async (code) => {
+  return await axios
+    .post(`/api/user/security_code`, {
+      code,
+    })
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
+}
+
 const ApiCaller = {
   getPallet,
   postPallet,
   getTemperature,
+  postSecurityCode,
 }
 
 export default ApiCaller
