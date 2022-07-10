@@ -1,20 +1,51 @@
 import { defineStore } from 'pinia'
+import { TempModule } from '@/utils/common'
 import ApiCaller from '../service'
+import dayjs from 'dayjs'
 
 const usePreCool = defineStore('precool', {
   state: () => ({
-    status: 'init',
     isLoading: false,
+    status: 'init',
     message: '',
     dispatch: null,
     temperature: null,
     currentTemp: null,
     signImage: null,
     data: [],
+    checked: [],
+    degree_type: 'C',
   }),
   actions: {
-    setSignImage(img) {
-      this.signImage = img
+    setSignData(data) {
+      const { degree_type, checked, currentTemp, signImage } = data
+      this.signImage = signImage
+      this.checked = checked
+      this.degree_type = degree_type
+      this.currentTemp = currentTemp
+    },
+    cleanSignImage() {
+      this.signImage = null
+    },
+    async postTemperature() {
+      const data = {
+        temp_type: 1,
+        degree_type: 'f',
+        temp_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+        cold_c: this.degree_type === 'C' ? this.currentTemp : TempModule.toCelsius(this.currentTemp),
+        cold_storage_c: this.degree_type === 'C' ? this.currentTemp : TempModule.toCelsius(this.currentTemp),
+        frozen_c: this.degree_type === 'C' ? this.currentTemp : TempModule.toCelsius(this.currentTemp),
+        frozen_storage_c: this.degree_type === 'C' ? this.currentTemp : TempModule.toCelsius(this.currentTemp),
+        cold_f: this.degree_type === 'F' ? this.currentTemp : TempModule.toFahrenheit(this.currentTemp),
+        cold_storage_f: this.degree_type === 'F' ? this.currentTemp : TempModule.toFahrenheit(this.currentTemp),
+        frozen_f: this.degree_type === 'F' ? this.currentTemp : TempModule.toFahrenheit(this.currentTemp),
+        frozen_storage_f: this.degree_type === 'F' ? this.currentTemp : TempModule.toFahrenheit(this.currentTemp),
+        temp_photo: '@temp_photo.jpeg',
+        signature_photo: this.signImage,
+        is_clean: 1,
+        is_bug: 1,
+      }
+      console.log(data)
     },
     async setCurrentDispath(dispatch) {
       this.dispatch = dispatch

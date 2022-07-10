@@ -11,7 +11,8 @@ import UploadImage from '@/components/uploadImage.vue'
 
 const isSecurityCodeDialog = ref(false)
 const confirm = () => {
-  isSecurityCodeDialog.value = true
+  // isSecurityCodeDialog.value = true
+  preCoolStore.postTemperature()
 }
 
 const preCoolStore = usePreCoolInfo()
@@ -80,11 +81,7 @@ const routeToSignPage = () => {
           }}
         </div>
         <div class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
-          {{
-            preCoolStore.currentTemp
-              ? `${preCoolStore.temperature.c.frozen}°C/${preCoolStore.temperature.f.frozen}°F`
-              : '-'
-          }}
+          {{ preCoolStore.currentTemp ? `${preCoolStore.currentTemp}°${preCoolStore.degree_type}` : '-' }}
         </div>
       </div>
       <div class="w-full flex mt-20 mb-5">
@@ -116,7 +113,7 @@ const routeToSignPage = () => {
           <div class="text-center text-[0.8125rem] font-bold">櫃台簽名</div>
         </div>
         <div class="divide w-full h-28 border-1 border-solid border-transparent">
-          <img :src="preCoolStore.signImage" />
+          <img v-if="preCoolStore.signImage" alt="sign" class="w-full h-full" :src="preCoolStore.signImage" />
         </div>
       </div>
 

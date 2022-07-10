@@ -1,7 +1,7 @@
 <script setup>
 import dayjs from 'dayjs'
 import { reactive, ref, onMounted, computed } from 'vue'
-import { Checkbox, CheckboxGroup, NavBar, Button } from 'vant'
+import { Checkbox, CheckboxGroup, NavBar, Button, Field } from 'vant'
 import { useRouter } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
 import usePreCoolInfo from '@/views/PreCool/store'
@@ -13,9 +13,7 @@ import { isCanvasEmpty, getCanvasToImage } from '@/utils/canvas'
 const modal = useAlertModal()
 const checked = ref([])
 const isCelsiusTemp = ref(false)
-const state = reactive({
-  freezing: '',
-})
+const currentTemp = ref('')
 
 const isSecurityCodeDialog = ref(false)
 
@@ -32,6 +30,9 @@ onMounted(() => {
   if (!dispatchStore.dispatch) {
     router.back()
   }
+  checked.value = preCoolStore.checked
+  currentTemp.value = preCoolStore.currentTemp
+  isCelsiusTemp.value = preCoolStore.degree_type === 'F'
 })
 
 const onClickLeft = () => {
@@ -47,7 +48,13 @@ const handleFinished = () => {
       content: '櫃檯簽名為必填',
     })
   } else {
-    preCoolStore.setSignImage(getCanvasToImage(canvas))
+    const data = {
+      degree_type: isCelsiusTemp.value ? 'F' : 'C',
+      checked: checked.value,
+      currentTemp: currentTemp.value,
+      signImage: getCanvasToImage(canvas),
+    }
+    preCoolStore.setSignData(data)
     router.back()
   }
 }
@@ -93,11 +100,7 @@ const isDisabled = computed(() => {
           }}
         </div>
         <div class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
-          {{
-            preCoolStore.currentTemp
-              ? `${preCoolStore.temperature.c.frozen}°C/${preCoolStore.temperature.f.frozen}°F`
-              : '-'
-          }}
+          {{ preCoolStore.currentTemp ? `${preCoolStore.currentTemp}°${preCoolStore.degree_type}` : '-' }}
         </div>
       </div>
       <div class="mt-[37px] mb-4 flex justify-between items-center">
@@ -122,9 +125,10 @@ const isDisabled = computed(() => {
         class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
       >
         <span class="w-[16%] text-primary">冷凍品溫</span>
-        <input
+        <Field
           class="w-[60%] h-[24px] py-0 px-1 border-0 text-center bg-[#f2f2f2] rounded-md text-[#242424]"
-          v-model="state.freezing"
+          type="number"
+          v-model="currentTemp"
         />
       </div>
       <div class="w-full h-[42px] rounded-xl shadow-md bg-white flex items-center text-[0.75rem] font-bold">
