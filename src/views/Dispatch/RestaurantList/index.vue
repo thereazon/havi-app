@@ -4,6 +4,7 @@ import { onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
 import { RestaurantStatusTypeToZh, RestaurantTab } from '@/views/Dispatch/helper'
+import RestaurantDetailTable from '@/components/RestaurantDetailTable.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -121,7 +122,12 @@ const mockStoreByStatus = {
     <div class="pt-4 px-[26px] text-[13px]">
       <Tabs :swipeable="true">
         <Tab v-for="item in RestaurantTab" :title="RestaurantStatusTypeToZh[item]" :key="item">
-          <div class="h-screen py-10">{{ RestaurantStatusTypeToZh[item] }} 内容</div>
+          <div class="h-screen py-10">
+            <RestaurantDetailTable
+              :title="RestaurantStatusTypeToZh[item]"
+              :resturant="mockStoreByStatus.DELIVERING[0]"
+            />
+          </div>
         </Tab>
       </Tabs>
     </div>

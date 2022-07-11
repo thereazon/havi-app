@@ -1,12 +1,13 @@
 import { defineStore } from 'pinia'
 import DispatchApiCaller from '@/views/Dispatch/service'
-import { DispatchStatusNumberToType } from '@/views/Dispatch/helper'
+import { DispatchStatusNumberToType, resturantByStatus } from '@/views/Dispatch/helper'
 import useAccountInfo from '@/views/Login/store'
 
 const useDispatchInfo = defineStore('dispatch', {
   state: () => ({
     dispatchs: null,
     dispatch: null, //current dispatch
+    resturant: null,
     status: 'init',
     isLoading: false,
     message: '',
@@ -14,6 +15,7 @@ const useDispatchInfo = defineStore('dispatch', {
   actions: {
     async setCurrentDispath(dispatch) {
       this.dispatch = dispatch
+      this.resturant = resturantByStatus(dispatch.stores)
     },
     async getDispatchAction(car_id, container_id) {
       const accountStore = useAccountInfo()
