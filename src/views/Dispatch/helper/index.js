@@ -191,7 +191,7 @@ export const dispatchToDict = (dispatchs) => {
   )
 }
 
-export const resturantByStatus = (resturants) => {
+export const restaurantByStatus = (resturants) => {
   if (!resturants || resturants.length === 0) return null
   return resturants.reduce((prev, curr) => {
     const type = RestaurantStatusNumberToType[curr.status]
