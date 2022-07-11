@@ -10,10 +10,6 @@ import SecurityCodeDialog from '@/components/SecurityCodeDialog.vue'
 import UploadImage from '@/components/uploadImage.vue'
 
 const isSecurityCodeDialog = ref(false)
-const confirm = () => {
-  // isSecurityCodeDialog.value = true
-  preCoolStore.postTemperature()
-}
 
 const preCoolStore = usePreCoolInfo()
 const dispatchStore = useDispatchInfo()
@@ -21,6 +17,10 @@ const dispatchStore = useDispatchInfo()
 const route = useRoute()
 const router = useRouter()
 
+const confirm = () => {
+  // isSecurityCodeDialog.value = true
+  preCoolStore.postTemperature(dispatchStore.dispatch.id)
+}
 onMounted(() => {
   if (!dispatchStore.dispatch) {
     router.back()

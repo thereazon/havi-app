@@ -27,7 +27,12 @@ const usePreCool = defineStore('precool', {
     cleanSignImage() {
       this.signImage = null
     },
-    async postTemperature() {
+    async postTemperature(id) {
+      // const formData = new FormData()
+      // const blob = this.signImage.blob()
+      // console.log(this.signImage.blob())
+      // formData.append('signature_photo', jpg)
+      // formData.append('temp_photo', jpg)
       const data = {
         temp_type: 1,
         degree_type: 'f',
@@ -40,12 +45,27 @@ const usePreCool = defineStore('precool', {
         cold_storage_f: this.degree_type === 'F' ? this.currentTemp : TempModule.toFahrenheit(this.currentTemp),
         frozen_f: this.degree_type === 'F' ? this.currentTemp : TempModule.toFahrenheit(this.currentTemp),
         frozen_storage_f: this.degree_type === 'F' ? this.currentTemp : TempModule.toFahrenheit(this.currentTemp),
-        temp_photo: '@temp_photo.jpeg',
-        signature_photo: this.signImage,
         is_clean: 1,
         is_bug: 1,
+        signature_photo: this.signImage,
+        temp_photo: this.signImage,
       }
-      console.log(data)
+      // for (let key in data) {
+      //   formData.append(key, data[key])
+      // }
+      try {
+        this.isLoading = true
+        const response = await ApiCaller.postPreCool(id, data)
+        if (response.status === 'success') {
+          this.status = response.status
+          this.message = response.message
+        }
+      } catch (err) {
+        this.status = err.status
+        this.message = err.message
+      } finally {
+        this.isLoading = false
+      }
     },
     async setCurrentDispath(dispatch) {
       this.dispatch = dispatch

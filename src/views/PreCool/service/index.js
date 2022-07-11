@@ -18,9 +18,9 @@ const getPallet = async (id) => {
     .catch((err) => Promise.reject(err.response.data))
 }
 
-const postPallet = async (id, data) => {
+const postPreCool = async (id, data) => {
   return await axios
-    .post(`/api/dispatch/${id}/pallet`, data)
+    .post(`/api/dispatch/${id}/temperature`, data)
     .then((res) => res.data)
     .catch((err) => Promise.reject(err.response.data))
 }
@@ -36,7 +36,7 @@ const postSecurityCode = async (code) => {
 
 const ApiCaller = {
   getPallet,
-  postPallet,
+  postPreCool,
   getTemperature,
   postSecurityCode,
 }
