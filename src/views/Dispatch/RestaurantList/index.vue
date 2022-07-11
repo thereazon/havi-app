@@ -1,19 +1,20 @@
 <script setup>
 import { NavBar, Tab, Tabs } from 'vant'
 import { onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
+import { RestaurantStatusTypeToZh, RestaurantTab } from '@/views/Dispatch/helper'
+
+const route = useRoute()
+const router = useRouter()
 
 const dispatchStore = useDispatchInfo()
 onMounted(() => {
   console.log(dispatchStore)
+  if (!dispatchStore.dispatch) {
+    router.back()
+  }
 })
-
-const mockTabStatus = {
-  DELIVERING: '配送中', //配送中(1) 已抵達(2)
-  PENDING_DELIVERY: '待配送', //待配送(0) 延後配送(11)
-  DELIVERY_COMPLETED: '配送完成', //配送完成(4) 攜回配銷中心(3)
-  UNABLE_DELIVERY: '無法配送', //無法配送(12)
-}
 
 // 無配送資料時，渲染tab
 // const mockStoreByStatusEmpty = {
@@ -116,11 +117,11 @@ const mockStoreByStatus = {
 <template>
   <div class="bg-primary/[.05] min-h-screen pt-[46px] box-border">
     <!-- 導航列 -->
-    <NavBar safe-area-inset-top left-arrow fixed title="餐廳明細"></NavBar>
+    <NavBar safe-area-inset-top left-arrow fixed :title="dispatchStore?.dispatch?.no"></NavBar>
     <div class="pt-4 px-[26px] text-[13px]">
       <Tabs :swipeable="true">
-        <Tab v-for="(item, index) in mockStoreByStatus" :title="mockTabStatus[index]" :key="index">
-          <div class="h-screen py-10">{{ mockTabStatus[index] }} 内容</div>
+        <Tab v-for="item in RestaurantTab" :title="RestaurantStatusTypeToZh[item]" :key="item">
+          <div class="h-screen py-10">{{ RestaurantStatusTypeToZh[item] }} 内容</div>
         </Tab>
       </Tabs>
     </div>

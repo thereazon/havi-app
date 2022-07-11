@@ -59,13 +59,11 @@ const handleToPreCool = async (dispatch) => {
   })
 }
 
-// 待修改
-const fakeHandleToRestaurantList = async (dispatch) => {
+const handleToRestaurantList = async (dispatch) => {
+  await dispatchStore.setCurrentDispath(dispatch)
   router.push({
     path: '/restaurantlist',
     query: {
-      dispatch_id: dispatch.id,
-      dispatch_no: dispatch.no,
       car_id,
       container_id,
       container_number,
@@ -123,7 +121,7 @@ const fakeHandleToRestaurantList = async (dispatch) => {
             size="mini"
             round
             class="border-2 border-solid border-neutral-500 bg-neutral-500 text-white px-3 py-1"
-            @click="fakeHandleToRestaurantList(dispatch)"
+            @click="handleToRestaurantList(dispatch)"
           >
             餐廳明細
           </Button>

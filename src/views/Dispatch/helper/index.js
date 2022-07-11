@@ -148,6 +148,20 @@ export const RestaurantStatusNumberToType = {
   12: RestaurantStatusType.UNABLE_DELIVERY,
 }
 
+export const RestaurantTab = {
+  DELIVERING: RestaurantStatusType.DELIVERING,
+  PENDING_DELIVERY: RestaurantStatusType.PENDING_DELIVERY,
+  DELIVERY_COMPLETED: RestaurantStatusType.DELIVERY_COMPLETED,
+  UNABLE_DELIVERY: RestaurantStatusType.UNABLE_DELIVERY,
+}
+
+export const RestaurantStatusTypeToZh = {
+  DELIVERING: '配送中', //配送中(1) 已抵達(2)
+  PENDING_DELIVERY: '待配送', //待配送(0) 延後配送(11)
+  DELIVERY_COMPLETED: '配送完成', //配送完成(4) 攜回配銷中心(3)
+  UNABLE_DELIVERY: '無法配送', //無法配送(12)
+}
+
 export const DispatchStatusType = {
   NO_CHECK_IN: 'NO_CHECK_IN',
   NO_CHECK_OUT: 'NO_CHECK_OUT',
