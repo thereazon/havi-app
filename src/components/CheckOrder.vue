@@ -2,7 +2,9 @@
 import { computed, onMounted, reactive, ref } from 'vue'
 import { Collapse, CollapseItem } from 'vant'
 import ConfirmDialog from './ConfirmDialog.vue'
+import { Dialog } from 'vant'
 
+const VanDialog = Dialog.Component
 const isConfirmDialog = ref(false)
 const collapseActiveNames = ref([])
 const pageSize = 5
@@ -17,50 +19,81 @@ const state = reactive({
     currentPage: 1,
     list: [
       {
-        id: 12345,
+        id: '12345',
         name: '統一鮮乳籃',
         orderAmount: 24,
-        BackingQty: 3,
-        purchaseTotal: 23,
-        returnTotal: 21,
+        backingQty: 0,
+        purchaseTotal: 24,
+        returnTotal: 0,
         item: {
-          shortQty: 1,
-          backingQty: 3,
-          returnQty: 20,
-          recycleQty: 1,
+          shortQty: 0,
+          backingQty: 0,
+          returnQty: 0,
+          recycleQty: 0,
         },
       },
       {
-        id: 12346,
+        id: '12346',
         name: '三加侖糖漿桶',
         orderAmount: 24,
-        BackingQty: 3,
-        purchaseTotal: 23,
-        returnTotal: 21,
+        backingQty: 0,
+        purchaseTotal: 24,
+        returnTotal: 0,
         item: {
-          shortQty: 1,
-          backingQty: 3,
-          returnQty: 20,
-          recycleQty: 1,
+          shortQty: 0,
+          backingQty: 0,
+          returnQty: 0,
+          recycleQty: 0,
         },
       },
       {
-        id: 12347,
+        id: '12347',
         name: 'CO2桶（大）',
         orderAmount: 24,
-        BackingQty: 3,
-        purchaseTotal: 23,
-        returnTotal: 21,
+        backingQty: 0,
+        purchaseTotal: 24,
+        returnTotal: 0,
         item: {
-          shortQty: 1,
-          backingQty: 3,
-          returnQty: 20,
-          recycleQty: 1,
+          shortQty: 0,
+          backingQty: 0,
+          returnQty: 0,
+          recycleQty: 0,
         },
       },
     ],
   },
 })
+const showInputDialog = ref(false)
+const inputDialogTitle = ref('')
+const containerForm = reactive({
+  id: '',
+  backingQty: 0,
+  shortQty: 0,
+  recycleQty: 0,
+  returnQty: 0,
+})
+const openInputDialog = (container) => {
+  showInputDialog.value = true
+  inputDialogTitle.value = container.name
+  containerForm.id = container.id
+  containerForm.backingQty = container.item.backingQty
+  containerForm.shortQty = container.item.shortQty
+  containerForm.recycleQty = container.item.recycleQty
+  containerForm.returnQty = container.item.returnQty
+}
+const submitContainerCount = () => {
+  state.mockData.list.forEach((content) => {
+    if (content.id === containerForm.id) {
+      content.backingQty = containerForm.backingQty
+      content.item.backingQty = containerForm.backingQty
+      content.item.shortQty = containerForm.shortQty
+      content.item.recycleQty = containerForm.recycleQty
+      content.item.returnQty = containerForm.returnQty
+    }
+  })
+  showInputDialog.value = false
+}
+const closeInputDialog = () => {}
 const prevPage = () => {
   if (currentPage.value === 1) {
     return
@@ -108,7 +141,7 @@ onMounted(() => {
     <div class="w-[50%] h-8 flex justify-between items-center mb-5">
       <div class="w-8 h-full rounded-full bg-white" @click="prevPage()"></div>
       <div
-        class="w-16 h-6 text-[0.875rem] rounded-full bg-white text-primary border border-solid border-primary flex justify-center items-center"
+        class="w-16 h-5 text-[0.875rem] rounded-full bg-white text-primary border border-solid border-primary flex justify-center items-center"
       >
         {{ currentPage }} / {{ pageTotal }}
       </div>
@@ -137,7 +170,7 @@ onMounted(() => {
               </div>
               <div class="w-[50%] flex justify-between items-center">
                 <div class="flex flex-col items-center text-gray">
-                  <span class="text-[0.8125rem] font-bold">{{ container.BackingQty }}</span>
+                  <span class="text-[0.8125rem] font-bold">{{ container.backingQty }}</span>
                   <span class="text-[0.75rem]">墊底</span>
                 </div>
                 <div class="flex flex-col items-center text-primary">
@@ -152,7 +185,10 @@ onMounted(() => {
             </div>
           </template>
 
-          <div class="h-9 flex items-center mx-4 border-0 border-b border-solid border-gray">
+          <div
+            class="h-9 flex items-center mx-4 border-0 border-b border-solid border-gray"
+            @click="openInputDialog(container)"
+          >
             <div class="h-5 pl-2 mr-5 font-bold text-primary flex items-center">
               <span class="text-[0.8125rem] mr-1">墊底</span>
               <div class="w-12 h-full bg-white text-[0.75rem] rounded-md flex justify-center items-center">
@@ -188,6 +224,46 @@ onMounted(() => {
       <button class="w-[48%] h-[43px] bg-success rounded-full border-0">完成</button>
       <button class="w-[48%] h-[43px] bg-warning rounded-full border-0" @click="isConfirmDialog = true">發送</button>
     </div>
+
+    <!-- 輸入容器數量的彈窗 -->
+    <van-dialog v-model:show="showInputDialog" closeOnClickOverlay :showConfirmButton="false" @close="closeInputDialog">
+      <div class="text-gray text-[1.25rem] font-bold text-center">{{ inputDialogTitle }}</div>
+      <div class="text-gray text-[0.875rem] text-center mb-3">請填寫數據</div>
+      <div class="border-0 border-b border-solid border-gray">
+        <div class="h-7 font-bold text-primary flex items-center justify-center mb-1">
+          <span class="text-[1rem] mr-5">墊底</span>
+          <div class="w-1/2 h-full bg-white text-[0.75rem] rounded-md flex justify-center items-center">
+            <input class="w-full h-full py-0 px-1 border border-solid border-gray" v-model="containerForm.backingQty" />
+          </div>
+        </div>
+        <div class="h-7 font-bold text-warning flex items-center justify-center mb-3">
+          <span class="text-[1rem] mr-5">短收</span>
+          <div class="w-1/2 h-full bg-white text-[0.75rem] rounded-md flex justify-center items-center">
+            <input class="w-full h-full py-0 px-1 border border-solid border-gray" v-model="containerForm.shortQty" />
+          </div>
+        </div>
+      </div>
+      <div class="mt-3">
+        <div class="h-7 font-bold text-success flex items-center justify-center mb-1">
+          <span class="text-[1rem] mr-5">回收</span>
+          <div class="w-1/2 h-full bg-white text-[0.75rem] rounded-md flex justify-center items-center">
+            <input class="w-full h-full py-0 px-1 border border-solid border-gray" v-model="containerForm.recycleQty" />
+          </div>
+        </div>
+        <div class="h-7 font-bold text-warning flex items-center justify-center">
+          <span class="text-[1rem] mr-5">退貨</span>
+          <div class="w-1/2 h-full bg-white text-[0.75rem] rounded-md flex justify-center items-center">
+            <input class="w-full h-full py-0 px-1 border border-solid border-gray" v-model="containerForm.returnQty" />
+          </div>
+        </div>
+      </div>
+      <button
+        class="w-full h-[43px] bg-success rounded-full border-0 font-bold text-white text-[1rem] mt-3"
+        @click="submitContainerCount()"
+      >
+        確認
+      </button>
+    </van-dialog>
 
     <ConfirmDialog v-model:isShowDialog="isConfirmDialog" :isCloseOnClickOverlay="true">
       <template v-slot:title>
@@ -235,5 +311,8 @@ onMounted(() => {
 }
 .detail-list:last-child {
   border-bottom: 0;
+}
+:deep(.van-dialog) {
+  padding: 1rem;
 }
 </style>
