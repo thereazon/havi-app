@@ -1,7 +1,8 @@
 <script setup>
 import { Button } from 'vant'
-import { onMounted, computed } from 'vue'
+import { onMounted, watch, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useAlertModal } from '@/components/store/AlertModalStore'
 import useDispatchInfo from '@/views/Dispatch/store'
 import { RestaurantStatusTypeToZh } from '@/views/Dispatch/helper'
 import RestaurantDetailTable from '@/components/RestaurantDetailTable.vue'
@@ -9,36 +10,40 @@ import RestaurantDetailTable from '@/components/RestaurantDetailTable.vue'
 const route = useRoute()
 const router = useRouter()
 
+const modal = useAlertModal()
 const { dispatch, restaurant } = useDispatchInfo()
 
-// 無配送資料時，渲染tab
-// const mockStoreByStatusEmpty = {
-//   DELIVERING: [],
-//   PENDING_DELIVERY: [],
-//   DELIVERY_COMPLETED: [],
-//   UNABLE_DELIVERY: [],
-// }
-
-// 有配送資料時，依照status分成四種狀態，渲染tab
-
-const cuurentRestaurant = computed(() => {
+const currentRestaurant = computed(() => {
   const arrival = restaurant?.ARRIVAL ? restaurant.ARRIVAL : []
   const delivering = restaurant?.DELIVERING ? restaurant.DELIVERING : []
   const list = [...arrival, ...delivering]
   return list[0]
 })
+
+watch(restaurant, (a, b) => {
+  console.log(a)
+  console.log('hello')
+})
+onMounted(() => {
+  if (!currentRestaurant.value) {
+    modal.open({
+      type: 'hint', //required
+      title: '提示',
+      content: '沒有訂單需配送',
+    })
+  }
+})
 </script>
 
 <template>
-  <div class="h-screen py-10">
+  <div class="h-screen py-10" v-if="currentRestaurant">
     <RestaurantDetailTable
       :title="RestaurantStatusTypeToZh.DELIVERING"
       :dispatch="dispatch"
-      :restaurant="cuurentRestaurant"
+      :restaurant="currentRestaurant"
     />
-
     <Button
-      v-if="cuurentRestaurant?.status === 0"
+      v-if="currentRestaurant?.status === 0"
       round
       type="primary"
       class="w-full bg-warning border-none text-white px-[43px] mt-20"
@@ -46,12 +51,12 @@ const cuurentRestaurant = computed(() => {
       抵達餐廳
     </Button>
     <Button
-      v-if="cuurentRestaurant?.arrival_time"
+      v-if="currentRestaurant?.arrival_time"
       round
       type="primary"
       class="w-full bg-white border-none text-warning px-[43px] mt-20"
     >
-      已抵達 {{ cuurentRestaurant?.arrival_time }}</Button
+      已抵達 {{ currentRestaurant?.arrival_time }}</Button
     >
     <Button round type="primary" class="w-full bg-primary border-none text-white rounded-full px-[43px] mt-10">
       預先查看作業明細

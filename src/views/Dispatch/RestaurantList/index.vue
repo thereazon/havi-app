@@ -5,6 +5,9 @@ import { useRouter } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
 import { RestaurantStatusTypeToZh, RestaurantTab } from '@/views/Dispatch/helper'
 import DeliveringTab from './DeliveringTab.vue'
+import CompletedTab from './CompletedTab.vue'
+import UnableDeliverTab from './UnableDeliverTab.vue'
+import PendingDeliveryTab from './PendingDeliveryTab.vue'
 
 const router = useRouter()
 
@@ -23,6 +26,9 @@ onMounted(() => {
       <Tabs :swipeable="true">
         <Tab v-for="item in RestaurantTab" :title="RestaurantStatusTypeToZh[item]" :key="item">
           <DeliveringTab v-if="item === 'DELIVERING'" />
+          <CompletedTab v-if="item === 'DELIVERY_COMPLETED'" />
+          <UnableDeliverTab v-if="item === 'UNABLE_DELIVERY'" />
+          <PendingDeliveryTab v-if="item === 'PENDING_DELIVERY'" />
         </Tab>
       </Tabs>
     </div>

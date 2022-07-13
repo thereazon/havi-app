@@ -140,27 +140,32 @@ export const RestaurantStatusType = {
 
 export const RestaurantStatusNumberToType = {
   0: RestaurantStatusType.PENDING_DELIVERY,
-  1: RestaurantStatusType.DELIVERING,
-  2: RestaurantStatusType.ARRIVAL,
-  3: RestaurantStatusType.TEMP_CONFIRMATION,
-  4: RestaurantStatusType.DELIVERY_COMPLETED,
-  11: RestaurantStatusType.DELAY,
-  12: RestaurantStatusType.UNABLE_DELIVERY,
+  1: RestaurantStatusType.DELIVERING, ///配送中(1)
+  2: RestaurantStatusType.ARRIVAL, //已抵達(2)
+  3: RestaurantStatusType.TEMP_CONFIRMATION, //  攜回配銷中心(3)
+  4: RestaurantStatusType.DELIVERY_COMPLETED, //配送完成(4)
+  11: RestaurantStatusType.DELAY, //延後配送(11)
+  12: RestaurantStatusType.UNABLE_DELIVERY, //無法配送(12)
 }
 
 export const RestaurantTab = {
-  DELIVERING: RestaurantStatusType.DELIVERING,
-  PENDING_DELIVERY: RestaurantStatusType.PENDING_DELIVERY,
-  DELIVERY_COMPLETED: RestaurantStatusType.DELIVERY_COMPLETED,
-  UNABLE_DELIVERY: RestaurantStatusType.UNABLE_DELIVERY,
+  DELIVERING: RestaurantStatusType.DELIVERING, // //配送中(1) 已抵達(2)
+  PENDING_DELIVERY: RestaurantStatusType.PENDING_DELIVERY, ////待配送(0) 延後配送(11)
+  DELIVERY_COMPLETED: RestaurantStatusType.DELIVERY_COMPLETED, ////配送完成(4) 攜回配銷中心(3)
+  UNABLE_DELIVERY: RestaurantStatusType.UNABLE_DELIVERY, //無法配送(12)
 }
 
 export const RestaurantStatusTypeToZh = {
-  DELIVERING: '配送中', //配送中(1) 已抵達(2)
-  PENDING_DELIVERY: '待配送', //待配送(0) 延後配送(11)
-  DELIVERY_COMPLETED: '配送完成', //配送完成(4) 攜回配銷中心(3)
-  UNABLE_DELIVERY: '無法配送', //無法配送(12)
+  DELIVERING: '配送中',
+  ARRIVAL: '已抵達',
+  PENDING_DELIVERY: '待配送',
+  DELIVERY_COMPLETED: '配送完成',
+  TEMP_CONFIRMATION: '攜回配銷中心',
+  DELAY: '延後配送',
+  UNABLE_DELIVERY: '無法配送',
 }
+
+export const restaurantStatusFromStatusToZh = (status) => RestaurantStatusTypeToZh[RestaurantStatusNumberToType[status]]
 
 export const DispatchStatusType = {
   NO_CHECK_IN: 'NO_CHECK_IN',
