@@ -1,13 +1,12 @@
 <script setup>
 import { Button, NavBar } from 'vant'
-import { onMounted } from 'vue'
+import { onMounted, computed } from 'vue'
 import useDispatchInfo from '@/views/Dispatch/store'
-import usePallet from '@/views/Pallet/store'
 import { useRoute, useRouter } from 'vue-router'
+import { showPreCoolChecked, DispatchStatusType } from '@/views/Dispatch/helper'
 import ContainerOnloadCard from '@/components/ContainerOnloadRecord/ContainerOnloadCard.vue'
 
 const dispatchStore = useDispatchInfo()
-const palletStore = usePallet()
 const route = useRoute()
 const router = useRouter()
 
@@ -20,6 +19,10 @@ onMounted(() => {
   }
   dispatchStore.getDispatchAction(car_id, container_id)
 })
+
+const currentDispatch = computed(() =>
+  dispatchStore.dispatchs && dispatchStore.dispatchs.length > 0 ? dispatchStore.dispatchs[0] : null,
+)
 
 const checkInBtn = () => {
   const { id: dispatch_id, no: dispatch_no } = dispatchStore.dispatchs[0]
@@ -36,12 +39,35 @@ const checkInBtn = () => {
   })
 }
 const handleToPallet = async (dispatch) => {
-  await palletStore.setCurrentDispath(dispatch)
+  await dispatchStore.setCurrentDispath(dispatch)
   router.push({
     path: '/pallet',
     query: {
-      dispatch_id: dispatch.id,
-      dispatch_no: dispatch.no,
+      car_id,
+      container_id,
+      container_number,
+      car_number,
+    },
+  })
+}
+const handleToPreCool = async (dispatch) => {
+  await dispatchStore.setCurrentDispath(dispatch)
+  router.push({
+    path: '/precool',
+    query: {
+      car_id,
+      container_id,
+      container_number,
+      car_number,
+    },
+  })
+}
+
+const handleToRestaurantList = async (dispatch) => {
+  await dispatchStore.setCurrentDispath(dispatch)
+  router.push({
+    path: '/restaurantlist',
+    query: {
       car_id,
       container_id,
       container_number,
@@ -56,7 +82,14 @@ const handleToPallet = async (dispatch) => {
     <!-- 導航列 -->
     <NavBar safe-area-inset-top fixed title="派工單">
       <template #right>
-        <Button @click="checkInBtn" round size="mini" class="bg-[#eb5e55] text-white px-3 py-1">報到</Button>
+        <Button
+          @click="checkInBtn"
+          :disabled="currentDispatch?.status !== DispatchStatusType.NO_CHECK_IN"
+          round
+          size="mini"
+          class="bg-[#eb4e55] text-white px-3 py-1"
+          >報到</Button
+        >
       </template>
     </NavBar>
 
@@ -80,8 +113,9 @@ const handleToPallet = async (dispatch) => {
             round
             plain
             type="primary"
-            icon="checked"
+            :icon="showPreCoolChecked(dispatch.status) ? 'checked' : ''"
             icon-position="right"
+            @click="handleToPreCool(dispatch)"
             class="border-2 border-solid border-primary text-primary px-3 py-1"
           >
             預冷溫度
@@ -97,8 +131,8 @@ const handleToPallet = async (dispatch) => {
           <Button
             size="mini"
             round
-            disabled
             class="border-2 border-solid border-neutral-500 bg-neutral-500 text-white px-3 py-1"
+            @click="handleToRestaurantList(dispatch)"
           >
             餐廳明細
           </Button>

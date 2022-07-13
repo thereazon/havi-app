@@ -6,7 +6,7 @@ import ConfirmDialog from './ConfirmDialog.vue'
 const VanDialog = Dialog.Component
 const props = defineProps({
   isShowDialog: Boolean,
-  isCloseOnClickOverlay: Boolean
+  isCloseOnClickOverlay: Boolean,
 })
 const emit = defineEmits(['update:isShowDialog'])
 
@@ -17,7 +17,7 @@ const isShow = computed({
   get: () => props.isShowDialog,
   set: (val) => {
     emit('update:isShowDialog', val)
-  }
+  },
 })
 
 const closeDialog = () => {
@@ -73,7 +73,9 @@ const submitSecurityCode = () => {
       <template v-slot:footer>
         <div class="px-[10%] mt-[42px] flex justify-between items-center font-bold text-white text-[1rem]">
           <button class="w-[48%] h-[43px] bg-gray rounded-full border-0" @click="isConfirmDialog = false">取消</button>
-          <button class="w-[48%] h-[43px] bg-[#eb5e55] rounded-full border-0" @click="submitSecurityCode()">確認</button>
+          <button class="w-[48%] h-[43px] bg-[#eb5e55] rounded-full border-0" @click="submitSecurityCode()">
+            確認
+          </button>
         </div>
       </template>
     </ConfirmDialog>

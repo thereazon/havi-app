@@ -1,5 +1,16 @@
 import axios from 'axios'
 
+const getTemperature = async (id, container) => {
+  return await axios
+    .get(`/api/car/${id}/temperature`, {
+      params: {
+        container,
+      },
+    })
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
+}
+
 const getPallet = async (id) => {
   return await axios
     .get(`/api/dispatch/${id}/pallet`)
@@ -7,16 +18,27 @@ const getPallet = async (id) => {
     .catch((err) => Promise.reject(err.response.data))
 }
 
-const postPallet = async (id, data) => {
+const postPreCool = async (id, data) => {
   return await axios
-    .post(`/api/dispatch/${id}/pallet`, data)
+    .post(`/api/dispatch/${id}/temperature`, data)
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
+}
+
+const postSecurityCode = async (code) => {
+  return await axios
+    .post(`/api/user/security_code`, {
+      code,
+    })
     .then((res) => res.data)
     .catch((err) => Promise.reject(err.response.data))
 }
 
 const ApiCaller = {
   getPallet,
-  postPallet,
+  postPreCool,
+  getTemperature,
+  postSecurityCode,
 }
 
 export default ApiCaller

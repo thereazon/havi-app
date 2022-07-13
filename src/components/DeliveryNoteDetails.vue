@@ -129,16 +129,16 @@ onMounted(() => {
 })
 watch(allChecked, (newVal, oldVal) => {
   if (newVal) {
-    state.mockData.list.forEach(item => item.checked = true)
+    state.mockData.list.forEach((item) => (item.checked = true))
   }
   if (isAllChecked.value && oldVal) {
-    state.mockData.list.forEach(item => item.checked = false)
+    state.mockData.list.forEach((item) => (item.checked = false))
   }
 })
 watch(
   () => state.mockData.list,
   (newVal, oldVal) => {
-    isAllChecked.value = newVal.every(item => item.checked === true)
+    isAllChecked.value = newVal.every((item) => item.checked === true)
     if (isAllChecked.value) {
       allChecked.value = true
     } else {

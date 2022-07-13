@@ -10,9 +10,6 @@ const usePallet = defineStore('pollet', {
     data: [],
   }),
   actions: {
-    async setCurrentDispath(dispatch) {
-      this.dispatch = dispatch
-    },
     async getPalletAuction(id) {
       try {
         this.isLoading = true

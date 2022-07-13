@@ -1,9 +1,10 @@
 <script setup>
 import { Step, Steps, Button } from 'vant'
+import AppDivide from '@/components/ui/AppDivide.vue'
 import RestaurantInfoModal from '@/components/RestaurantInfoModal.vue'
 import { computed, ref } from 'vue'
 import { splitFullDateTimeAsDateAndTime } from '@/utils/date'
-import { tempCode } from './helper'
+import { tempCode } from '@/helpers'
 
 const props = defineProps({
   id: {
@@ -65,7 +66,7 @@ const restaurantInfoBtn = (info) => {
       </ul>
     </div>
     <!-- divide -->
-    <div class="divide py-1"></div>
+    <AppDivide />
     <!-- info -->
     <div class="flex justify-around px-7 py-1 my-1">
       <div>
@@ -113,14 +114,6 @@ const restaurantInfoBtn = (info) => {
 </template>
 
 <style lang="scss" scoped>
-.divide {
-  width: 100%;
-  height: 1px;
-  background-image: linear-gradient(to right, #086eb6 0%, #086eb6 70%, transparent 50%);
-  background-size: 30px 2px;
-  background-repeat: repeat-x;
-}
-
 :deep(.van-step__circle-container) {
   @apply text-sm;
   .van-icon-checked:before,

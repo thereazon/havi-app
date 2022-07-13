@@ -5,13 +5,16 @@ import Temperature from '@/views/Temperature/index.vue'
 import Containers from '@/views/Containers/index.vue'
 import ExceptionRegistration from '@/views/ExceptionRegistration/index.vue'
 import Dispatch from '@/views/Dispatch/index.vue'
+import RestaurantList from '@/views/Dispatch/RestaurantList/index.vue'
 import Main from '@/views/Main/index.vue'
 import EntryRecord from '@/views/EntryRecord/index.vue'
 import Restaurant from '@/views/Restaurant/index.vue'
 import Pallet from '@/views/Pallet/index.vue'
 import PreCool from '@/views/PreCool/index.vue'
+import Sign from '@/views/PreCool/sign.vue'
 import Setting from '@/views/Setting/index.vue'
-import CheckOrder from '../components/CheckOrder.vue'
+import CheckOrder from '@/components/CheckOrder.vue'
+import RestaurantTemperatureConfirm from '@/views/RestaurantTemperatureConfirm/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -66,12 +69,24 @@ const router = createRouter({
       component: Pallet,
     },
     {
+      path: '/restaurantlist',
+      component: RestaurantList,
+    },
+    {
       path: '/precool',
       component: PreCool,
     },
     {
       path: '/checkOrder',
       component: CheckOrder,
+    },
+    {
+      path: '/precool/sign',
+      component: Sign,
+    },
+    {
+      path: '/restaurantTemperatureConfirm',
+      component: RestaurantTemperatureConfirm,
     },
   ],
 })
