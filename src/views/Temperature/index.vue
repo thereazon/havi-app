@@ -32,7 +32,6 @@ onMounted(() => {
         </div>
       </div>
     </div>
-
     <div>
       <div class="flex items-center bg-white p-5 rounded-[20px] shadow-[0_2px_2px_0_rgba(0,0,0,0.16)] mb-3">
         <div>

@@ -1,8 +1,9 @@
 <script setup>
 import { Divider, Button } from 'vant'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import dayjs from 'dayjs'
 
+const route = useRoute()
 const router = useRouter()
 
 defineProps({
@@ -12,13 +13,8 @@ defineProps({
   kg: String,
   dispatch: Object,
   restaurant: Object,
+  handleRouteToDetail: Function,
 })
-
-const goto = (path) => {
-  router.push({
-    path: path,
-  })
-}
 </script>
 
 <template>
@@ -54,9 +50,8 @@ const goto = (path) => {
           {{ restaurant?.tel }}
         </div>
       </div>
-
       <div class="flex justify-center mt-[10px] font-bold">
-        <Button class="bg-primary text-white rounded-full px-[43px]"> 作業明細</Button>
+        <Button :onClick="handleRouteToDetail" class="bg-primary text-white rounded-full px-[43px]"> 作業明細</Button>
       </div>
     </div>
   </div>

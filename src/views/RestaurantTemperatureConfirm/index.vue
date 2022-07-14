@@ -1,11 +1,26 @@
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { NavBar, Button, Popup, Toast } from 'vant'
-import { useRouter } from 'vue-router'
-import UploadImage from '@/components/uploadImage.vue'
+import { useRouter, useRoute } from 'vue-router'
+import useDispatchInfo from '@/views/Dispatch/store'
 import TemperatureActionSheet from './components/TemperatureActionSheet.vue'
+import RestaurantInfoCard from '@/components/RestaurantInfoCard.vue'
+import UploadImage from '@/components/uploadImage.vue'
 
+const { dispatch, currentRestaurant } = useDispatchInfo()
 const router = useRouter()
+const route = useRoute()
+
+onMounted(() => {
+  if (!dispatch || !currentRestaurant) {
+    router.push({
+      path: '/dispatch',
+      query: {
+        ...route.query,
+      },
+    })
+  }
+})
 
 const temperature = reactive({
   refrigeration: null,
@@ -79,7 +94,13 @@ const submitTemperature = () => {
       ><template #right> <van-icon name="wap-nav" size="14" color="black" /> </template>
     </NavBar>
     <div class="px-[26px] bg-[#F2F8FB] pt-20">
-      <div class="text-primary flex flex-row justify-between">
+      <RestaurantInfoCard
+        v-if="dispatch"
+        :temp_zone="dispatch.temp_zone"
+        :no="dispatch.no"
+        :restaurant="currentRestaurant"
+      />
+      <div class="mt-10 text-primary flex flex-row justify-between">
         <div class="flex flex-col">
           <div class="text-[0.9375rem] mb-[4px] flex items-center">
             <span class="mr-[5px]">餐廳溫度確認</span>
