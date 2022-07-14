@@ -32,7 +32,7 @@ onMounted(() => {
 const handleRouteToDetail = (currentRestaurant) => {
   setCurrentRestaurant(currentRestaurant)
   router.push({
-    path: '/restaurantTemperatureConfirm',
+    path: '/restaurant/temperature',
     query: {
       ...route.query,
     },
