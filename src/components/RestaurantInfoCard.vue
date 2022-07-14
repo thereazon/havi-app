@@ -11,7 +11,7 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  store: {
+  restaurant: {
     type: Object,
     required: true,
   },
@@ -37,24 +37,24 @@ const tempZones = computed(() => props.temp_zone.split(','))
 
     <div class="px-7 pt-2 flex items-center text-primary font-bold gap-2">
       <div class="bg-[#f2f2f2] px-3 py-[7px] rounded basis-1/5 text-center rounded-l-[10px]">
-        {{ props.store.bu }}
+        {{ props.restaurant.bu }}
       </div>
-      <div class="bg-[#f2f2f2] px-3 py-[7px] rounded basis-2/5 text-center">{{ props.store.number }}</div>
-      <div class="bg-[#f2f2f2] px-3 py-[5px] basis-2/5 rounded-r-[10px] text-center">{{ props.store.name }}</div>
+      <div class="bg-[#f2f2f2] px-3 py-[7px] rounded basis-2/5 text-center">{{ props.restaurant.number }}</div>
+      <div class="bg-[#f2f2f2] px-3 py-[5px] basis-2/5 rounded-r-[10px] text-center">{{ props.restaurant.name }}</div>
     </div>
 
     <div class="px-7 pb-3">
       <div class="flex items-center text-gray font-bold gap-2 mt-[15px]">
         <div class="basis-1/12"><img class="w-[30px]" src="dispatching_map.png" alt="icon" /></div>
         <div class="flex justify-around bg-[#f2f2f2] px-3 py-[7px] basis-11/12 text-center">
-          <div>{{ props.store.address }}</div>
+          <div>{{ props.restaurant.address }}</div>
           <a class="font-bold" href="">...</a>
         </div>
       </div>
       <div class="flex items-center text-gray font-bold gap-2 mt-[15px]">
         <div class="basis-1/12"><img class="w-[30px]" src="dispatching_phone.png" alt="icon" /></div>
         <div class="bg-[#f2f2f2] px-3 py-[7px] basis-11/12 text-center">
-          {{ props.store.tel }}
+          {{ props.restaurant.tel }}
         </div>
       </div>
     </div>

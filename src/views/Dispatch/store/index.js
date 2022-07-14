@@ -11,8 +11,12 @@ const useDispatchInfo = defineStore('dispatch', {
     status: 'init',
     isLoading: false,
     message: '',
+    currentRestaurant: null,
   }),
   actions: {
+    async setCurrentRestaurant(restaurant) {
+      this.currentRestaurant = restaurant
+    },
     async setCurrentDispath(dispatch) {
       this.dispatch = dispatch
       this.restaurant = restaurantByStatus(dispatch.store)

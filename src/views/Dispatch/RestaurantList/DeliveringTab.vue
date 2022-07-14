@@ -1,6 +1,6 @@
 <script setup>
 import { Button } from 'vant'
-import { onMounted, watch, computed } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAlertModal } from '@/components/store/AlertModalStore'
 import useDispatchInfo from '@/views/Dispatch/store'
@@ -9,9 +9,8 @@ import RestaurantDetailTable from '@/components/RestaurantDetailTable.vue'
 
 const route = useRoute()
 const router = useRouter()
-
 const modal = useAlertModal()
-const { dispatch, restaurant } = useDispatchInfo()
+const { dispatch, restaurant, setCurrentRestaurant } = useDispatchInfo()
 
 const currentRestaurant = computed(() => {
   const arrival = restaurant?.ARRIVAL ? restaurant.ARRIVAL : []
@@ -20,10 +19,6 @@ const currentRestaurant = computed(() => {
   return list[0]
 })
 
-watch(restaurant, (a, b) => {
-  console.log(a)
-  console.log('hello')
-})
 onMounted(() => {
   if (!currentRestaurant.value) {
     modal.open({
@@ -33,6 +28,16 @@ onMounted(() => {
     })
   }
 })
+
+const handleRouteToDetail = (currentRestaurant) => {
+  setCurrentRestaurant(currentRestaurant)
+  router.push({
+    path: '/restaurantTemperatureConfirm',
+    query: {
+      ...route.query,
+    },
+  })
+}
 </script>
 
 <template>
@@ -41,6 +46,7 @@ onMounted(() => {
       :title="RestaurantStatusTypeToZh.DELIVERING"
       :dispatch="dispatch"
       :restaurant="currentRestaurant"
+      :handleRouteToDetail="() => handleRouteToDetail(currentRestaurant)"
     />
     <Button
       v-if="currentRestaurant?.status === 0"
@@ -58,7 +64,12 @@ onMounted(() => {
     >
       已抵達 {{ currentRestaurant?.arrival_time }}</Button
     >
-    <Button round type="primary" class="w-full bg-primary border-none text-white rounded-full px-[43px] mt-10">
+    <Button
+      :onClick="handleToDetail"
+      round
+      type="primary"
+      class="w-full bg-primary border-none text-white rounded-full px-[43px] mt-10"
+    >
       預先查看作業明細
     </Button>
     <div class="w-full text-center text-[#707070] mt-20 underline pointer">無法配送</div>
