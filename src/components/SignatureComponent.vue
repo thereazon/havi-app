@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive, ref, defineProps } from 'vue'
 
 const moving = ref(false)
 const ctx = ref(null)
@@ -8,6 +8,9 @@ const point = reactive({
   y: 0,
 })
 
+const props = defineProps({
+  title: String,
+})
 onMounted(() => {
   ctx.value = document.getElementById('canvas').getContext('2d')
   ctx.value.strokeStyle = '#000'
@@ -53,7 +56,7 @@ const clearcanvas = () => {
 <template>
   <div class="w-full">
     <div class="mt-8 mb-[5px] text-[#959595] flex items-center justify-center relative">
-      <div class="text-center text-[0.8125rem] font-bold">櫃台簽名</div>
+      <div class="text-center text-[0.8125rem] font-bold">{{ props.title }}</div>
       <div
         class="w-[16%] absolute top-0 right-0 text-center text-[#eb5e55] text-[0.75rem] border-1 border-solid border-[#eb5e55] rounded-full"
         @click="clearcanvas()"

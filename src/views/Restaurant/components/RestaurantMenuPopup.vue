@@ -28,8 +28,8 @@ const list = reactive([
   { check: false, text: '餐廳溫度確認', value: 1, path: '/restaurant/temperature' },
   { check: null, text: '送貨單', value: 1, path: '/restaurant' },
   { check: null, text: 'OSnD單', value: 1, path: '/' },
-  { check: false, text: '容器對點單', value: 1, path: '/' },
-  { check: false, text: '餐廳簽收', value: null, path: '/' },
+  { check: false, text: '容器對點單', value: 1, path: '/restaurant/container' },
+  { check: false, text: '餐廳簽收', value: null, path: '/restaurant/signature' },
   // { check: false, text: '退貨單', value: 1, path: '/' },
 ])
 
@@ -37,6 +37,9 @@ const goto = (path) => {
   // 溫度未送出前不能點擊其他頁面
   router.push({
     path: path,
+    query: {
+      ...route.query,
+    },
   })
 }
 </script>

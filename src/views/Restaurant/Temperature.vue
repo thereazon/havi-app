@@ -73,7 +73,12 @@ const confirmRefrigerationTemperature = (data) => {
 }
 
 const onClickLeft = () => {
-  router.back()
+  router.push({
+    path: '/restaurantlist',
+    query: {
+      ...route.query,
+    },
+  })
 }
 
 const onClickRight = () => {
@@ -222,11 +227,11 @@ const submitTemperature = () => {
 </template>
 
 <style scoped>
-:deep(.van-icon-arrow-left) {
+/* :deep(.van-icon-arrow-left) {
   color: gray;
 }
 :deep(.van-nav-bar__title) {
   font-size: 12px;
   color: #707070;
-}
+} */
 </style>

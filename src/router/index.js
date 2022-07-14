@@ -14,6 +14,8 @@ import Sign from '@/views/PreCool/sign.vue'
 import Setting from '@/views/Setting/index.vue'
 import CheckOrder from '@/components/CheckOrder.vue'
 import RestaurantTemperature from '@/views/Restaurant/Temperature.vue'
+import RestaurantContainer from '@/views/Restaurant/Container.vue'
+import RestaurantSignature from '@/views/Restaurant/Signature.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -82,6 +84,14 @@ const router = createRouter({
     {
       path: '/restaurant/temperature',
       component: RestaurantTemperature,
+    },
+    {
+      path: '/restaurant/container',
+      component: RestaurantContainer,
+    },
+    {
+      path: '/restaurant/signature',
+      component: RestaurantSignature,
     },
   ],
 })
