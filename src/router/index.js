@@ -16,6 +16,8 @@ import CheckOrder from '@/components/CheckOrder.vue'
 import RestaurantTemperature from '@/views/Restaurant/Temperature.vue'
 import RestaurantContainer from '@/views/Restaurant/Container.vue'
 import RestaurantSignature from '@/views/Restaurant/Signature.vue'
+import RestaurantDelivery from '@/views/Restaurant/Delivery.vue'
+import RestaurantOsnd from '@/views/Restaurant/Osnd.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -92,6 +94,14 @@ const router = createRouter({
     {
       path: '/restaurant/signature',
       component: RestaurantSignature,
+    },
+    {
+      path: '/restaurant/delivery',
+      component: RestaurantDelivery,
+    },
+    {
+      path: '/restaurant/osnd',
+      component: RestaurantOsnd,
     },
   ],
 })

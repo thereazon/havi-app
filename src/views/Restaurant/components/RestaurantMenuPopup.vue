@@ -26,8 +26,8 @@ const isShow = computed({
 
 const list = reactive([
   { check: false, text: '餐廳溫度確認', value: 1, path: '/restaurant/temperature' },
-  { check: null, text: '送貨單', value: 1, path: '/restaurant' },
-  { check: null, text: 'OSnD單', value: 1, path: '/' },
+  { check: null, text: '送貨單', value: 1, path: '/restaurant/delivery' },
+  { check: null, text: 'OSnD單', value: 1, path: '/restaurant/osnd' },
   { check: false, text: '容器對點單', value: 1, path: '/restaurant/container' },
   { check: false, text: '餐廳簽收', value: null, path: '/restaurant/signature' },
   // { check: false, text: '退貨單', value: 1, path: '/' },
