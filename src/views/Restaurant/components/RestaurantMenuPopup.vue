@@ -25,17 +25,16 @@ const isShow = computed({
  */
 
 const list = reactive([
-  { check: true, text: '餐廳溫度確認', value: 1, path: '/temperature' },
-  { check: false, text: '送貨單', value: 1, path: '/restaurant' },
-  { check: false, text: 'OSnD單', value: 1, path: '/' },
+  { check: false, text: '餐廳溫度確認', value: 1, path: '/restaurant/temperature' },
+  { check: null, text: '送貨單', value: 1, path: '/restaurant' },
+  { check: null, text: 'OSnD單', value: 1, path: '/' },
   { check: false, text: '容器對點單', value: 1, path: '/' },
-  { check: false, text: '退貨單', value: 1, path: '/' },
-  { check: false, text: '餐廳簽收', value: 1, path: '/' },
+  { check: false, text: '餐廳簽收', value: null, path: '/' },
+  // { check: false, text: '退貨單', value: 1, path: '/' },
 ])
 
 const goto = (path) => {
   // 溫度未送出前不能點擊其他頁面
-  if (list.value[0].check == false) return
   router.push({
     path: path,
   })
@@ -50,6 +49,7 @@ const goto = (path) => {
       <Divider :dashed="true" class="mb-[35px] mt-0"></Divider>
       <a
         v-for="item in list"
+        :key="item.text"
         :class="{ active: item.path == route.path }"
         class="grid grid-cols-3 pr-[30px] text-[17px]"
         @click="goto(item.path)"
@@ -59,14 +59,11 @@ const goto = (path) => {
           disabled
           checked-color="#6dbe5b"
           class="mx-[25px]"
-          :class="{ finish: item.check }"
+          :class="{ finish: item.check, invisible: item.check === null ? true : false }"
         ></Checkbox>
-        <div
-          :class="{ 'text-success': item.check }"
-          class="py-[10px] col-span-2 border-t-0 border-x-0 border-solid border-white flex justify-between w-full"
-        >
+        <div :class="{ 'text-success': item.check }" class="py-[10px] col-span-2 flex justify-between w-full">
           <div class="mr-[60px]">{{ item.text }}</div>
-          <div>{{ item.value }}</div>
+          <div v-if="item.value">{{ item.value }}</div>
         </div>
       </a>
     </div>

@@ -4,6 +4,7 @@ import { NavBar, Button, Popup, Toast } from 'vant'
 import { useRouter, useRoute } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
 import TemperatureActionSheet from './components/TemperatureActionSheet.vue'
+import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
 import RestaurantInfoCard from '@/components/RestaurantInfoCard.vue'
 import UploadImage from '@/components/uploadImage.vue'
 
@@ -27,6 +28,7 @@ const temperature = reactive({
   freezing: null,
 })
 const isCelsiusTemp = ref(false)
+const isShowMenu = ref(false)
 const isShowPopup = ref(false)
 const showPopup = () => {
   isShowPopup.value = true
@@ -34,7 +36,6 @@ const showPopup = () => {
 
 const computeTemp = (data) => {
   let temp = null
-
   switch (data.sign) {
     case '+':
       temp = Math.abs(data.integer + data.decimal / 10)
@@ -75,7 +76,9 @@ const onClickLeft = () => {
   router.back()
 }
 
-const onClickRight = () => Toast('按钮')
+const onClickRight = () => {
+  isShowMenu.value = true
+}
 
 const submitTemperature = () => {
   isShowPopup.value = false
@@ -84,6 +87,7 @@ const submitTemperature = () => {
 
 <template>
   <div class="bg-[#F2F8FB] h-screen">
+    <RestaurantMenuPopup v-model:isShow="isShowMenu" />
     <NavBar
       safe-area-inset-top
       fixed
