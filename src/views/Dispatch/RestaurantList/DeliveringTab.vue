@@ -10,7 +10,7 @@ import RestaurantDetailTable from '@/components/RestaurantDetailTable.vue'
 const route = useRoute()
 const router = useRouter()
 const modal = useAlertModal()
-const { dispatch, restaurant, setCurrentRestaurant } = useDispatchInfo()
+const { dispatch, restaurant, setCurrentRestaurant, getRestaurantDetailAction } = useDispatchInfo()
 
 const currentRestaurant = computed(() => {
   const arrival = restaurant?.ARRIVAL ? restaurant.ARRIVAL : []
@@ -30,13 +30,14 @@ onMounted(() => {
 })
 
 const handleRouteToDetail = (currentRestaurant) => {
-  setCurrentRestaurant(currentRestaurant)
-  router.push({
-    path: '/restaurant/temperature',
-    query: {
-      ...route.query,
-    },
-  })
+  getRestaurantDetailAction(currentRestaurant.id).then(() =>
+    router.push({
+      path: '/restaurant/temperature',
+      query: {
+        ...route.query,
+      },
+    }),
+  )
 }
 </script>
 

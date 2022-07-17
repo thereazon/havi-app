@@ -3,8 +3,10 @@ import { ref, onMounted } from 'vue'
 import { NavBar } from 'vant'
 import { useRouter, useRoute } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
+import useRestaurant from '@/views/Restaurant/store'
 import RestaurantSignInCard from '@/components/RestaurantSignInCard.vue'
 import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
+const { getContainerAction } = useRestaurant()
 const { dispatch, currentRestaurant } = useDispatchInfo()
 const router = useRouter()
 const route = useRoute()
@@ -17,6 +19,8 @@ onMounted(() => {
         ...route.query,
       },
     })
+  } else {
+    getContainerAction(currentRestaurant.id)
   }
 })
 

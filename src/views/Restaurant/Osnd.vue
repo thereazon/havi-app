@@ -3,10 +3,12 @@ import { ref, onMounted } from 'vue'
 import { NavBar } from 'vant'
 import { useRouter, useRoute } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
+import useRestaurant from '@/views/Restaurant/store'
 import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
 import RestaurantInfoCard from '@/components/RestaurantInfoCard.vue'
 
 const { dispatch, currentRestaurant } = useDispatchInfo()
+const { getOSNDAction } = useRestaurant()
 const router = useRouter()
 const route = useRoute()
 
@@ -18,6 +20,8 @@ onMounted(() => {
         ...route.query,
       },
     })
+  } else {
+    getOSNDAction(currentRestaurant.id)
   }
 })
 

@@ -2,6 +2,8 @@
 import { Popup, Divider, Checkbox } from 'vant'
 import { computed, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import useDispatchInfo from '@/views/Dispatch/store'
+const { currentRestaurant } = useDispatchInfo()
 
 const props = defineProps({
   isShow: Boolean,
@@ -25,11 +27,11 @@ const isShow = computed({
  */
 
 const list = reactive([
-  { check: false, text: '餐廳溫度確認', value: 1, path: '/restaurant/temperature' },
-  { check: null, text: '送貨單', value: 1, path: '/restaurant/delivery' },
-  { check: null, text: 'OSnD單', value: 1, path: '/restaurant/osnd' },
-  { check: false, text: '容器對點單', value: 1, path: '/restaurant/container' },
-  { check: false, text: '餐廳簽收', value: null, path: '/restaurant/signature' },
+  { check: false, text: '餐廳溫度確認', value: 'temperature_count', path: '/restaurant/temperature' },
+  { check: null, text: '送貨單', value: 'delivery_count', path: '/restaurant/delivery' },
+  { check: null, text: 'OSnD單', value: 'delivery_count', path: '/restaurant/osnd' },
+  { check: false, text: '容器對點單', value: 'container_count', path: '/restaurant/container' },
+  { check: false, text: '餐廳簽收', key: null, path: '/restaurant/signature' },
   // { check: false, text: '退貨單', value: 1, path: '/' },
 ])
 
@@ -66,7 +68,7 @@ const goto = (path) => {
         ></Checkbox>
         <div :class="{ 'text-success': item.check }" class="py-[10px] col-span-2 flex justify-between w-full">
           <div class="mr-[60px]">{{ item.text }}</div>
-          <div v-if="item.value">{{ item.value }}</div>
+          <div v-if="item.value">{{ currentRestaurant[item.value] }}</div>
         </div>
       </a>
     </div>
