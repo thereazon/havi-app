@@ -14,8 +14,16 @@ const getDispatch = async (id, fleet_id, car_id, container_id) => {
     .catch((err) => Promise.reject(err.response.data))
 }
 
+const getRestaurantDetail = async (id) => {
+  return await axios
+    .get(`/api/webStore/${id}`)
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
+}
+
 const ApiCaller = {
   getDispatch,
+  getRestaurantDetail,
 }
 
 export default ApiCaller

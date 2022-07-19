@@ -137,7 +137,7 @@ const isDisabled = computed(() => {
           <Checkbox shape="square" name="clean">車廂清潔確認</Checkbox>
         </CheckboxGroup>
       </div>
-      <SignatureComponent />
+      <SignatureComponent title="櫃檯簽名" />
       <Button
         class="w-full mt-7 text-white font-bold text-[1.0625rem] bg-success rounded-full"
         :disabled="isDisabled"

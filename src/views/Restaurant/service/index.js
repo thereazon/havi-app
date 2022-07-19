@@ -1,86 +1,46 @@
 import axios from 'axios'
 
-const getStoreDetail = async (id) => {
+const getRestaurantDetail = async (id) => {
   return await axios
-    .get(`/api/store/${id}`)
+    .get(`/api/webStore/${id}`)
     .then((res) => res.data)
     .catch((err) => Promise.reject(err.response.data))
 }
 
-const postArrival = async (id) => {
+const getDelivery = async (id) => {
   return await axios
-    .post(`/api/store/${id}/arrival`)
+    .get(`/api/webStore/${id}/delivery`)
     .then((res) => res.data)
     .catch((err) => Promise.reject(err.response.data))
 }
 
-const postTemperature = async (id) => {
+const getContainer = async (id) => {
   return await axios
-    .post(`/api/store/${id}/temperature`)
+    .get(`/api/webStore/${id}/container`)
     .then((res) => res.data)
     .catch((err) => Promise.reject(err.response.data))
 }
 
-// 無法配送-延後配送
-const postDelayed = async (id) => {
+const getReturned = async (id) => {
   return await axios
-    .post(`/api/store/${id}/delayed`)
+    .get(`/api/webStore/${id}/returned`)
     .then((res) => res.data)
     .catch((err) => Promise.reject(err.response.data))
 }
 
-// 無法配送-攜回DC
-const postBring = async (id) => {
+const getOSND = async (id) => {
   return await axios
-    .post(`/api/store/${id}/bring`)
-    .then((res) => res.data)
-    .catch((err) => Promise.reject(err.response.data))
-}
-
-const postOSND = async (id) => {
-  return await axios
-    .post(`/api/store/${id}/osnd`)
-    .then((res) => res.data)
-    .catch((err) => Promise.reject(err.response.data))
-}
-
-const postContainer = async (id, data) => {
-  return await axios
-    .post(`/api/store/${id}/osnd`, {
-      data,
-    })
-    .then((res) => res.data)
-    .catch((err) => Promise.reject(err.response.data))
-}
-
-const postReturned = async (id, data) => {
-  return await axios
-    .post(`/api/store/${id}/returned`, {
-      data,
-    })
-    .then((res) => res.data)
-    .catch((err) => Promise.reject(err.response.data))
-}
-
-const postFile = async (id, data) => {
-  return await axios
-    .post(`/api/store/${id}/file`, {
-      data,
-    })
+    .get(`/api/webStore/${id}/osnd`)
     .then((res) => res.data)
     .catch((err) => Promise.reject(err.response.data))
 }
 
 const ApiCaller = {
-  getStoreDetail,
-  postArrival,
-  postTemperature,
-  postDelayed,
-  postBring,
-  postOSND,
-  postContainer,
-  postReturned,
-  postFile,
+  getRestaurantDetail,
+  getDelivery,
+  getContainer,
+  getReturned,
+  getOSND,
 }
 
 export default ApiCaller

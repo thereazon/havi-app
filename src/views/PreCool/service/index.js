@@ -20,7 +20,11 @@ const getPallet = async (id) => {
 
 const postPreCool = async (id, data) => {
   return await axios
-    .post(`/api/dispatch/${id}/temperature`, data)
+    .post(`/api/dispatch/${id}/temperature`, data, {
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+    })
     .then((res) => res.data)
     .catch((err) => Promise.reject(err.response.data))
 }

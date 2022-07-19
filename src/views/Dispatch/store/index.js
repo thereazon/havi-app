@@ -11,11 +11,33 @@ const useDispatchInfo = defineStore('dispatch', {
     status: 'init',
     isLoading: false,
     message: '',
+    currentRestaurant: null,
   }),
   actions: {
+    async setCurrentRestaurant(restaurant) {
+      this.currentRestaurant = restaurant
+    },
     async setCurrentDispath(dispatch) {
       this.dispatch = dispatch
       this.restaurant = restaurantByStatus(dispatch.store)
+    },
+    async getRestaurantDetailAction(id) {
+      this.isLoading = true
+      try {
+        const response = await DispatchApiCaller.getRestaurantDetail(id)
+        if (response.status === 'success') {
+          this.currentRestaurant = {
+            temperature_count: 1, //餐廳溫度數量寫死1
+            ...response.data,
+          }
+          this.status = response.status
+        }
+      } catch (err) {
+        this.status = err.status
+        this.message = err.message
+      } finally {
+        this.isLoading = false
+      }
     },
     async getDispatchAction(car_id, container_id) {
       const accountStore = useAccountInfo()

@@ -28,34 +28,26 @@ const usePreCool = defineStore('precool', {
       this.signImage = null
     },
     async postTemperature(id) {
-      // const formData = new FormData()
-      // const blob = this.signImage.blob()
-      // console.log(this.signImage.blob())
-      // formData.append('signature_photo', jpg)
-      // formData.append('temp_photo', jpg)
+      const formData = new FormData()
+      const signPhotoBlob = await fetch(this.signImage).then((r) => r.blob())
+      formData.append('signature_photo', signPhotoBlob)
+      // todo temp_photo
+      formData.append('temp_photo', signPhotoBlob)
       const data = {
         temp_type: 1,
         degree_type: 'f',
         temp_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-        cold_c: this.degree_type === 'C' ? this.currentTemp : TempModule.toCelsius(this.currentTemp),
-        cold_storage_c: this.degree_type === 'C' ? this.currentTemp : TempModule.toCelsius(this.currentTemp),
         frozen_c: this.degree_type === 'C' ? this.currentTemp : TempModule.toCelsius(this.currentTemp),
-        frozen_storage_c: this.degree_type === 'C' ? this.currentTemp : TempModule.toCelsius(this.currentTemp),
-        cold_f: this.degree_type === 'F' ? this.currentTemp : TempModule.toFahrenheit(this.currentTemp),
-        cold_storage_f: this.degree_type === 'F' ? this.currentTemp : TempModule.toFahrenheit(this.currentTemp),
         frozen_f: this.degree_type === 'F' ? this.currentTemp : TempModule.toFahrenheit(this.currentTemp),
-        frozen_storage_f: this.degree_type === 'F' ? this.currentTemp : TempModule.toFahrenheit(this.currentTemp),
         is_clean: 1,
         is_bug: 1,
         signature_photo: this.signImage,
         temp_photo: this.signImage,
       }
-      // for (let key in data) {
-      //   formData.append(key, data[key])
-      // }
+      Object.keys(data).forEach((key) => formData.append(key, data[key]))
       try {
         this.isLoading = true
-        const response = await ApiCaller.postPreCool(id, data)
+        const response = await ApiCaller.postPreCool(id, formData)
         if (response.status === 'success') {
           this.status = response.status
           this.message = response.message
