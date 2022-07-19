@@ -13,8 +13,8 @@ import Pallet from '@/views/Pallet/index.vue'
 import PreCool from '@/views/PreCool/index.vue'
 import Sign from '@/views/PreCool/sign.vue'
 import Setting from '@/views/Setting/index.vue'
-import CheckOrder from '@/components/CheckOrder.vue'
 import RestaurantTemperatureConfirm from '@/views/RestaurantTemperatureConfirm/index.vue'
+import ContainerCheckOrder from '../components/ContainerCheckOrder.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -77,8 +77,8 @@ const router = createRouter({
       component: PreCool,
     },
     {
-      path: '/checkOrder',
-      component: CheckOrder,
+      path: '/containerCheckOrder',
+      component: ContainerCheckOrder,
     },
     {
       path: '/precool/sign',
