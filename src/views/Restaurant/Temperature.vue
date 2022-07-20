@@ -1,17 +1,34 @@
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { NavBar, Button, Popup, Toast } from 'vant'
-import { useRouter } from 'vue-router'
-import UploadImage from '@/components/uploadImage.vue'
+import { useRouter, useRoute } from 'vue-router'
+import useDispatchInfo from '@/views/Dispatch/store'
 import TemperatureActionSheet from './components/TemperatureActionSheet.vue'
+import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
+import RestaurantInfoCard from '@/components/RestaurantInfoCard.vue'
+import UploadImage from '@/components/uploadImage.vue'
 
+const { dispatch, currentRestaurant } = useDispatchInfo()
 const router = useRouter()
+const route = useRoute()
+
+onMounted(() => {
+  if (!dispatch || !currentRestaurant) {
+    router.push({
+      path: '/dispatch',
+      query: {
+        ...route.query,
+      },
+    })
+  }
+})
 
 const temperature = reactive({
   refrigeration: null,
   freezing: null,
 })
 const isCelsiusTemp = ref(false)
+const isShowMenu = ref(false)
 const isShowPopup = ref(false)
 const showPopup = () => {
   isShowPopup.value = true
@@ -19,7 +36,6 @@ const showPopup = () => {
 
 const computeTemp = (data) => {
   let temp = null
-
   switch (data.sign) {
     case '+':
       temp = Math.abs(data.integer + data.decimal / 10)
@@ -57,10 +73,17 @@ const confirmRefrigerationTemperature = (data) => {
 }
 
 const onClickLeft = () => {
-  router.back()
+  router.push({
+    path: '/restaurantlist',
+    query: {
+      ...route.query,
+    },
+  })
 }
 
-const onClickRight = () => Toast('按钮')
+const onClickRight = () => {
+  isShowMenu.value = true
+}
 
 const submitTemperature = () => {
   isShowPopup.value = false
@@ -69,6 +92,7 @@ const submitTemperature = () => {
 
 <template>
   <div class="bg-[#F2F8FB] h-screen">
+    <RestaurantMenuPopup v-model:isShow="isShowMenu" />
     <NavBar
       safe-area-inset-top
       fixed
@@ -79,7 +103,13 @@ const submitTemperature = () => {
       ><template #right> <van-icon name="wap-nav" size="14" color="black" /> </template>
     </NavBar>
     <div class="px-[26px] bg-[#F2F8FB] pt-20">
-      <div class="text-primary flex flex-row justify-between">
+      <RestaurantInfoCard
+        v-if="dispatch"
+        :temp_zone="dispatch.temp_zone"
+        :no="dispatch.no"
+        :restaurant="currentRestaurant"
+      />
+      <div class="mt-10 text-primary flex flex-row justify-between">
         <div class="flex flex-col">
           <div class="text-[0.9375rem] mb-[4px] flex items-center">
             <span class="mr-[5px]">餐廳溫度確認</span>
@@ -197,11 +227,11 @@ const submitTemperature = () => {
 </template>
 
 <style scoped>
-:deep(.van-icon-arrow-left) {
+/* :deep(.van-icon-arrow-left) {
   color: gray;
 }
 :deep(.van-nav-bar__title) {
   font-size: 12px;
   color: #707070;
-}
+} */
 </style>

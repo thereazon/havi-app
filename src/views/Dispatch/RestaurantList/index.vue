@@ -1,5 +1,5 @@
 <script setup>
-import { NavBar, Tab, Tabs } from 'vant'
+import { NavBar, Tab, Tabs, Button } from 'vant'
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
@@ -21,7 +21,11 @@ onMounted(() => {
 
 <template>
   <div class="bg-primary/[.05] min-h-screen pt-[46px] box-border">
-    <NavBar safe-area-inset-top left-arrow fixed :onClick="router.back" :title="dispatchStore?.dispatch?.no"></NavBar>
+    <NavBar safe-area-inset-top left-arrow fixed :onClick="router.back" :title="dispatchStore?.dispatch?.no">
+      <template #right>
+        <Button round size="mini" class="bg-primary text-white px-3 py-1">出車</Button>
+      </template>
+    </NavBar>
     <div class="pt-4 px-[26px] text-[13px]">
       <Tabs :swipeable="true">
         <Tab v-for="item in RestaurantTab" :title="RestaurantStatusTypeToZh[item]" :key="item">

@@ -8,13 +8,18 @@ import Dispatch from '@/views/Dispatch/index.vue'
 import RestaurantList from '@/views/Dispatch/RestaurantList/index.vue'
 import Main from '@/views/Main/index.vue'
 import EntryRecord from '@/views/EntryRecord/index.vue'
-import Restaurant from '@/views/Restaurant/index.vue'
 import Pallet from '@/views/Pallet/index.vue'
 import PreCool from '@/views/PreCool/index.vue'
 import Sign from '@/views/PreCool/sign.vue'
 import Setting from '@/views/Setting/index.vue'
 import RestaurantTemperatureConfirm from '@/views/RestaurantTemperatureConfirm/index.vue'
-import ContainerCheckOrder from '../components/ContainerCheckOrder.vue'
+import ContainerCheckOrder from '@/components/ContainerCheckOrder.vue'
+import CheckOrder from '@/components/CheckOrder.vue'
+import RestaurantTemperature from '@/views/Restaurant/Temperature.vue'
+import RestaurantContainer from '@/views/Restaurant/Container.vue'
+import RestaurantSignature from '@/views/Restaurant/Signature.vue'
+import RestaurantDelivery from '@/views/Restaurant/Delivery.vue'
+import RestaurantOsnd from '@/views/Restaurant/Osnd.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -61,10 +66,6 @@ const router = createRouter({
       component: EntryRecord,
     },
     {
-      path: '/restaurant',
-      component: Restaurant,
-    },
-    {
       path: '/pallet',
       component: Pallet,
     },
@@ -85,8 +86,24 @@ const router = createRouter({
       component: Sign,
     },
     {
-      path: '/restaurantTemperatureConfirm',
-      component: RestaurantTemperatureConfirm,
+      path: '/restaurant/temperature',
+      component: RestaurantTemperature,
+    },
+    {
+      path: '/restaurant/container',
+      component: RestaurantContainer,
+    },
+    {
+      path: '/restaurant/signature',
+      component: RestaurantSignature,
+    },
+    {
+      path: '/restaurant/delivery',
+      component: RestaurantDelivery,
+    },
+    {
+      path: '/restaurant/osnd',
+      component: RestaurantOsnd,
     },
   ],
 })
