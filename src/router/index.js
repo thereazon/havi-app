@@ -13,8 +13,6 @@ import PreCool from '@/views/PreCool/index.vue'
 import Sign from '@/views/PreCool/sign.vue'
 import Setting from '@/views/Setting/index.vue'
 import RestaurantTemperatureConfirm from '@/views/RestaurantTemperatureConfirm/index.vue'
-import ContainerCheckOrder from '@/components/ContainerCheckOrder.vue'
-import CheckOrder from '@/components/CheckOrder.vue'
 import RestaurantTemperature from '@/views/Restaurant/Temperature.vue'
 import RestaurantContainer from '@/views/Restaurant/Container.vue'
 import RestaurantSignature from '@/views/Restaurant/Signature.vue'
@@ -76,10 +74,6 @@ const router = createRouter({
     {
       path: '/precool',
       component: PreCool,
-    },
-    {
-      path: '/containerCheckOrder',
-      component: ContainerCheckOrder,
     },
     {
       path: '/precool/sign',

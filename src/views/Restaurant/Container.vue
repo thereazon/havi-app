@@ -1,15 +1,97 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
 import { NavBar } from 'vant'
 import { useRouter, useRoute } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
 import useRestaurant from '@/views/Restaurant/store'
 import RestaurantSignInCard from '@/components/RestaurantSignInCard.vue'
+import ContainerCheckOrder from '@/components/ContainerCheckOrder.vue'
 import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
 const { getContainerAction } = useRestaurant()
 const { dispatch, currentRestaurant } = useDispatchInfo()
 const router = useRouter()
 const route = useRoute()
+const containerMockData = reactive([
+  {
+    id: 'OC600e91e62b23d',
+    date: '01/25/2021',
+    no: 'DR2020120001',
+    items: [
+      {
+        id: 'OCD600e91e62c88a',
+        wrin: '004',
+        name: '容器 1',
+        qty: 24,
+        overflow_qty: 0,
+        short_qty: 0,
+        backing_qty: 0,
+        return_qty: 0,
+        resource_qty: 0,
+        pallet_qty: 0,
+        sort: 1,
+      },
+      {
+        id: 'OCD600e91e62c66b',
+        wrin: '005',
+        name: '容器 2',
+        qty: 15,
+        overflow_qty: 0,
+        short_qty: 0,
+        backing_qty: 0,
+        return_qty: 0,
+        resource_qty: 0,
+        pallet_qty: 0,
+        sort: 1,
+      },
+    ],
+  },
+  {
+    id: 'OC600e91e62b30f',
+    date: '01/26/2021',
+    no: 'DR2020120005',
+    items: [
+      {
+        id: 'OCD600e91e62c22m',
+        wrin: '004',
+        name: '容器 3',
+        qty: 24,
+        overflow_qty: 0,
+        short_qty: 0,
+        backing_qty: 0,
+        return_qty: 0,
+        resource_qty: 0,
+        pallet_qty: 0,
+        sort: 1,
+      },
+    ],
+  },
+  {
+    id: 'OC600e91e62b40r',
+    date: '01/27/2021',
+    no: 'DR2020120002',
+    items: [
+      {
+        id: 'OCD600e91e62c33k',
+        wrin: '004',
+        name: '容器 4',
+        qty: 24,
+        overflow_qty: 0,
+        short_qty: 0,
+        backing_qty: 0,
+        return_qty: 0,
+        resource_qty: 0,
+        pallet_qty: 0,
+        sort: 1,
+      },
+    ],
+  },
+])
+containerMockData.forEach((order) => {
+  order.items.forEach((content) => {
+    content.purchase_total = content.qty + content.overflow_qty - (content.short_qty + content.backing_qty)
+    content.return_total = content.return_qty + content.resource_qty
+  })
+})
 
 onMounted(() => {
   if (!dispatch || !currentRestaurant) {
@@ -59,6 +141,7 @@ const onClickRight = () => {
         :no="dispatch.no"
         :restaurant="currentRestaurant"
       />
+      <ContainerCheckOrder :mockData="containerMockData" />
     </div>
   </div>
 </template>

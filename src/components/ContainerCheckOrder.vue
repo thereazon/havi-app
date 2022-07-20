@@ -3,18 +3,22 @@ import { computed, reactive, ref } from 'vue'
 import { Collapse, CollapseItem } from 'vant'
 import ConfirmDialog from './ConfirmDialog.vue'
 import { Dialog } from 'vant'
-import { containerData } from '../utils/containerCheckMock'
 import { useAlertModal } from '@/components/store/AlertModalStore'
 
 const VanDialog = Dialog.Component
 const modal = useAlertModal()
+const props = defineProps({
+  mockData: {
+    type: Array,
+    default: () => [],
+  },
+})
 const isConfirmDialog = ref(false)
 const collapseActiveNames = ref([])
 const pageSize = 1
-const total = ref(containerData.length)
 const dataIndex = ref(0)
 const currentPage = computed(() => dataIndex.value + 1)
-const pageTotal = computed(() => Math.ceil(total.value / pageSize))
+const pageTotal = computed(() => Math.ceil(props.mockData.length / pageSize))
 const showInputDialog = ref(false)
 const inputDialogTitle = ref('')
 const initialContainerForm = {
@@ -33,24 +37,16 @@ const showAlert = (content) => {
     content: content,
   })
 }
-containerData[dataIndex.value].items.forEach((item) => {
-  item.purchase_total = item.qty + item.overflow_qty - (item.short_qty + item.backing_qty)
-  item.return_total = item.return_qty + item.resource_qty
-})
-const mockData = ref(containerData)
 
 const openInputDialog = (container) => {
   showInputDialog.value = true
   inputDialogTitle.value = container.name
-  containerForm.id = container.id
-  containerForm.backing_qty = container.backing_qty
-  containerForm.short_qty = container.short_qty
-  containerForm.resource_qty = container.resource_qty
-  containerForm.return_qty = container.return_qty
-  containerForm.qty = container.qty
+  const { id, backing_qty, short_qty, resource_qty, return_qty, qty } = container
+  const form = { id, backing_qty, short_qty, resource_qty, return_qty, qty }
+  Object.assign(containerForm, form)
 }
 const submitContainerCount = () => {
-  mockData.value[dataIndex.value].items.forEach((content) => {
+  props.mockData[dataIndex.value].items.forEach((content) => {
     if (content.id === containerForm.id) {
       content.backing_qty = Number(containerForm.backing_qty)
       content.short_qty = Number(containerForm.short_qty)
@@ -89,7 +85,7 @@ const submit = () => {
 </script>
 
 <template>
-  <div class="h-screen bg-[#daf0ff] pt-[26px] px-5 flex flex-col items-center">
+  <div class="flex flex-col items-center" v-if="mockData.length !== 0">
     <div class="w-[50%] h-8 flex justify-between items-center mb-5">
       <div class="w-8 h-full rounded-full bg-white" @click="prevPage()"></div>
       <div
@@ -100,14 +96,14 @@ const submit = () => {
       <div class="w-8 h-full rounded-full bg-white" @click="nextPage()"></div>
     </div>
 
-    <div class="w-full rounded-xl shadow-md bg-white" v-if="mockData.length !== 0">
+    <div class="w-full rounded-xl shadow-md bg-white">
       <div class="flex flex-col justify-between box-border h-20 px-5 py-4 text-[0.8125rem]">
         <div class="flex items-center text-[#044d80]">
           <span class="mr-[10px]">送貨單號</span>
           <span>{{ mockData[dataIndex].no }}</span>
         </div>
         <div class="flex items-center text-gray">
-          <img src="dispatching_calendar.png" class="w-4 h-4 mr-2" alt="" />
+          <img src="/dispatching_calendar.png" class="w-4 h-4 mr-2" alt="" />
           <div class="bg-[#f2f2f2] w-24 h-5 pl-2 flex items-center">{{ mockData[dataIndex].date }}</div>
         </div>
       </div>
