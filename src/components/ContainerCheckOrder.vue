@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { Collapse, CollapseItem } from 'vant'
 import ConfirmDialog from './ConfirmDialog.vue'
 import { Dialog } from 'vant'
@@ -11,23 +11,21 @@ const modal = useAlertModal()
 const isConfirmDialog = ref(false)
 const collapseActiveNames = ref([])
 const pageSize = 1
-const total = ref(0)
+const total = ref(containerData.length)
 const dataIndex = ref(0)
 const currentPage = computed(() => dataIndex.value + 1)
 const pageTotal = computed(() => Math.ceil(total.value / pageSize))
-const state = reactive({
-  mockData: [],
-})
 const showInputDialog = ref(false)
 const inputDialogTitle = ref('')
-const containerForm = reactive({
+const initialContainerForm = {
   id: '',
   qty: 0,
   backing_qty: 0,
   short_qty: 0,
   resource_qty: 0,
   return_qty: 0,
-})
+}
+const containerForm = reactive({ ...initialContainerForm })
 const showAlert = (content) => {
   modal.open({
     type: 'hint',
@@ -35,6 +33,12 @@ const showAlert = (content) => {
     content: content,
   })
 }
+containerData[dataIndex.value].items.forEach((item) => {
+  item.purchase_total = item.qty + item.overflow_qty - (item.short_qty + item.backing_qty)
+  item.return_total = item.return_qty + item.resource_qty
+})
+const mockData = ref(containerData)
+
 const openInputDialog = (container) => {
   showInputDialog.value = true
   inputDialogTitle.value = container.name
@@ -46,7 +50,7 @@ const openInputDialog = (container) => {
   containerForm.qty = container.qty
 }
 const submitContainerCount = () => {
-  state.mockData[dataIndex.value].items.forEach((content) => {
+  mockData.value[dataIndex.value].items.forEach((content) => {
     if (content.id === containerForm.id) {
       content.backing_qty = Number(containerForm.backing_qty)
       content.short_qty = Number(containerForm.short_qty)
@@ -63,12 +67,7 @@ const submitContainerCount = () => {
   showInputDialog.value = false
 }
 const closeInputDialog = () => {
-  containerForm.id = ''
-  containerForm.qty = 0
-  containerForm.backing_qty = 0
-  containerForm.short_qty = 0
-  containerForm.resource_qty = 0
-  containerForm.return_qty = 0
+  Object.assign(containerForm, initialContainerForm)
 }
 const prevPage = () => {
   if (currentPage.value === 1) {
@@ -87,14 +86,6 @@ const nextPage = () => {
 const submit = () => {
   isConfirmDialog.value = false
 }
-onMounted(() => {
-  state.mockData = containerData
-  state.mockData[dataIndex.value].items.forEach((item) => {
-    item.purchase_total = item.qty + item.overflow_qty - (item.short_qty + item.backing_qty)
-    item.return_total = item.return_qty + item.resource_qty
-  })
-  total.value = state.mockData.length
-})
 </script>
 
 <template>
@@ -109,20 +100,20 @@ onMounted(() => {
       <div class="w-8 h-full rounded-full bg-white" @click="nextPage()"></div>
     </div>
 
-    <div class="w-full rounded-xl shadow-md bg-white" v-if="state.mockData.length !== 0">
+    <div class="w-full rounded-xl shadow-md bg-white" v-if="mockData.length !== 0">
       <div class="flex flex-col justify-between box-border h-20 px-5 py-4 text-[0.8125rem]">
         <div class="flex items-center text-[#044d80]">
           <span class="mr-[10px]">送貨單號</span>
-          <span>{{ state.mockData[dataIndex].no }}</span>
+          <span>{{ mockData[dataIndex].no }}</span>
         </div>
         <div class="flex items-center text-gray">
           <img src="dispatching_calendar.png" class="w-4 h-4 mr-2" alt="" />
-          <div class="bg-[#f2f2f2] w-24 h-5 pl-2 flex items-center">{{ state.mockData[dataIndex].date }}</div>
+          <div class="bg-[#f2f2f2] w-24 h-5 pl-2 flex items-center">{{ mockData[dataIndex].date }}</div>
         </div>
       </div>
 
       <Collapse v-model="collapseActiveNames">
-        <CollapseItem v-for="container in state.mockData[dataIndex].items" :key="container.id" :name="container.id">
+        <CollapseItem v-for="container in mockData[dataIndex].items" :key="container.id" :name="container.id">
           <template #title>
             <div class="flex items-center">
               <div class="w-[50%] flex flex-col">
