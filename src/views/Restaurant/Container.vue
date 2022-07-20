@@ -11,7 +11,7 @@ const { getContainerAction } = useRestaurant()
 const { dispatch, currentRestaurant } = useDispatchInfo()
 const router = useRouter()
 const route = useRoute()
-const containerMockData = reactive([
+const containerList = reactive([
   {
     id: 'OC600e91e62b23d',
     date: '01/25/2021',
@@ -86,7 +86,7 @@ const containerMockData = reactive([
     ],
   },
 ])
-containerMockData.forEach((order) => {
+containerList.forEach((order) => {
   order.items.forEach((content) => {
     content.purchase_total = content.qty + content.overflow_qty - (content.short_qty + content.backing_qty)
     content.return_total = content.return_qty + content.resource_qty
@@ -141,7 +141,7 @@ const onClickRight = () => {
         :no="dispatch.no"
         :restaurant="currentRestaurant"
       />
-      <ContainerCheckOrder :mockData="containerMockData" />
+      <ContainerCheckOrder :containerList="containerList" />
     </div>
   </div>
 </template>

@@ -8,7 +8,7 @@ import { useAlertModal } from '@/components/store/AlertModalStore'
 const VanDialog = Dialog.Component
 const modal = useAlertModal()
 const props = defineProps({
-  mockData: {
+  containerList: {
     type: Array,
     default: () => [],
   },
@@ -18,7 +18,7 @@ const collapseActiveNames = ref([])
 const pageSize = 1
 const dataIndex = ref(0)
 const currentPage = computed(() => dataIndex.value + 1)
-const pageTotal = computed(() => Math.ceil(props.mockData.length / pageSize))
+const pageTotal = computed(() => Math.ceil(props.containerList.length / pageSize))
 const showInputDialog = ref(false)
 const inputDialogTitle = ref('')
 const initialContainerForm = {
@@ -46,7 +46,7 @@ const openInputDialog = (container) => {
   Object.assign(containerForm, form)
 }
 const submitContainerCount = () => {
-  props.mockData[dataIndex.value].items.forEach((content) => {
+  props.containerList[dataIndex.value].items.forEach((content) => {
     if (content.id === containerForm.id) {
       content.backing_qty = Number(containerForm.backing_qty)
       content.short_qty = Number(containerForm.short_qty)
@@ -85,7 +85,7 @@ const submit = () => {
 </script>
 
 <template>
-  <div class="flex flex-col items-center" v-if="mockData.length !== 0">
+  <div class="flex flex-col items-center" v-if="containerList.length !== 0">
     <div class="w-[50%] h-8 flex justify-between items-center mb-5">
       <div class="w-8 h-full rounded-full bg-white" @click="prevPage()"></div>
       <div
@@ -100,16 +100,16 @@ const submit = () => {
       <div class="flex flex-col justify-between box-border h-20 px-5 py-4 text-[0.8125rem]">
         <div class="flex items-center text-[#044d80]">
           <span class="mr-[10px]">送貨單號</span>
-          <span>{{ mockData[dataIndex].no }}</span>
+          <span>{{ containerList[dataIndex].no }}</span>
         </div>
         <div class="flex items-center text-gray">
           <img src="/dispatching_calendar.png" class="w-4 h-4 mr-2" alt="" />
-          <div class="bg-[#f2f2f2] w-24 h-5 pl-2 flex items-center">{{ mockData[dataIndex].date }}</div>
+          <div class="bg-[#f2f2f2] w-24 h-5 pl-2 flex items-center">{{ containerList[dataIndex].date }}</div>
         </div>
       </div>
 
       <Collapse v-model="collapseActiveNames">
-        <CollapseItem v-for="container in mockData[dataIndex].items" :key="container.id" :name="container.id">
+        <CollapseItem v-for="container in containerList[dataIndex].items" :key="container.id" :name="container.id">
           <template #title>
             <div class="flex items-center">
               <div class="w-[50%] flex flex-col">
