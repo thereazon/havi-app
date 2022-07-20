@@ -5,9 +5,10 @@ import { useRouter, useRoute } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
 import useRestaurant from '@/views/Restaurant/store'
 import RestaurantSignInCard from '@/components/RestaurantSignInCard.vue'
-import ContainerCheckOrder from '@/components/ContainerCheckOrder.vue'
+import ContainerCheckOrder from './components/ContainerCheckOrder.vue'
 import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
-const { getContainerAction } = useRestaurant()
+
+const { getContainerAction, containers } = useRestaurant()
 const { dispatch, currentRestaurant } = useDispatchInfo()
 const router = useRouter()
 const route = useRoute()

@@ -1,9 +1,9 @@
 <script setup>
 import { computed, reactive, ref } from 'vue'
 import { Collapse, CollapseItem } from 'vant'
-import ConfirmDialog from './ConfirmDialog.vue'
 import { Dialog } from 'vant'
 import { useAlertModal } from '@/components/store/AlertModalStore'
+import ConfirmDialog from '@/components/ConfirmDialog.vue'
 
 const VanDialog = Dialog.Component
 const modal = useAlertModal()
