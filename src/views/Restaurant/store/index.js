@@ -8,6 +8,7 @@ const useRestaurant = defineStore('restaurant', {
     containers: null,
     returned: null,
     osnd: null,
+    temperature: null,
     status: 'init',
     message: null,
     isLoading: null,
@@ -79,6 +80,21 @@ const useRestaurant = defineStore('restaurant', {
         const response = await ApiCaller.getReturned(id)
         if (response.status === 'success') {
           this.returned = response.data
+          this.status = response.status
+        }
+      } catch (err) {
+        this.status = err.status
+        this.message = err.message
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async getTemperatureAction(carId, containerId) {
+      this.isLoading = true
+      try {
+        const response = await ApiCaller.getTemperature(carId, containerId)
+        if (response.status === 'success') {
+          this.temperature = response.data
           this.status = response.status
         }
       } catch (err) {

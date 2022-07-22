@@ -3,12 +3,14 @@ import { ref, reactive, onMounted } from 'vue'
 import { NavBar, Button, Popup, Toast } from 'vant'
 import { useRouter, useRoute } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
+import useRestaurant from './store'
 import TemperatureActionSheet from './components/TemperatureActionSheet.vue'
 import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
 import RestaurantInfoCard from '@/components/RestaurantInfoCard.vue'
 import UploadImage from '@/components/uploadImage.vue'
 
 const { dispatch, currentRestaurant } = useDispatchInfo()
+const restaurantStore = useRestaurant()
 const router = useRouter()
 const route = useRoute()
 
@@ -30,6 +32,8 @@ const temperature = reactive({
 const isCelsiusTemp = ref(false)
 const isShowMenu = ref(false)
 const isShowPopup = ref(false)
+const isLockedTempAndFinishedPhoto = ref(false)
+
 const showPopup = () => {
   isShowPopup.value = true
 }
@@ -88,6 +92,12 @@ const onClickRight = () => {
 const submitTemperature = () => {
   isShowPopup.value = false
 }
+
+const handleFetchTemp = () => {
+  if (route.query.car_id && route.query.container_id) {
+    restaurantStore.getTemperatureAction(route.query.car_id, route.query.container_id)
+  }
+}
 </script>
 
 <template>
@@ -121,7 +131,9 @@ const submitTemperature = () => {
           </div>
         </div>
 
-        <Button class="rounded-full border-2 h-[31px] w-[97px]" plain type="success">擷取溫度</Button>
+        <Button class="rounded-full border-2 h-[31px] w-[97px]" plain type="success" @click="handleFetchTemp"
+          >擷取溫度</Button
+        >
       </div>
       <div class="mt-5">
         <div class="w-full flex justify-evenly items-center text-[10px] font-bold mb-2">
@@ -160,7 +172,14 @@ const submitTemperature = () => {
         </div>
       </div>
       <UploadImage title="實測溫度" />
-      <Button class="bg-success mt-8" loading-type="spinner" round block type="success" native-type="submit"
+      <Button
+        class="bg-success mt-8"
+        loading-type="spinner"
+        round
+        block
+        type="success"
+        native-type="submit"
+        :disabled="!isLockedTempAndFinishedPhoto"
         >完成</Button
       >
     </div>
