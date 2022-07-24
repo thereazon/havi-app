@@ -33,9 +33,20 @@ const isCelsiusTemp = ref(false)
 const isShowMenu = ref(false)
 const isShowPopup = ref(false)
 const isLockedTempAndFinishedPhoto = ref(false)
+const isShowLockTempConfirm = ref(false)
+const isShowTempSubmitConfirm = ref(false)
+const isValidTempRange = ref(true)
 
 const showPopup = () => {
   isShowPopup.value = true
+}
+
+const showLockTempConfirm = () => {
+  isShowLockTempConfirm.value = true
+}
+
+const showTempSubmitConfirm = () => {
+  isShowTempSubmitConfirm.value = true
 }
 
 const computeTemp = (data) => {
@@ -167,11 +178,12 @@ const handleFetchTemp = () => {
         </div>
 
         <div class="flex justify-around mt-10">
-          <Button class="rounded-full h-[36px] w-[134px]" type="danger">鎖定溫度</Button>
+          <Button class="rounded-full h-[36px] w-[134px]" type="danger" @click="showLockTempConfirm">鎖定溫度</Button>
           <Button class="rounded-full h-[36px] w-[134px] bg-primary text-white" @click="showPopup">實測溫度</Button>
         </div>
       </div>
       <UploadImage title="實測溫度" />
+      <!-- :disabled="!isLockedTempAndFinishedPhoto" -->
       <Button
         class="bg-success mt-8"
         loading-type="spinner"
@@ -179,7 +191,7 @@ const handleFetchTemp = () => {
         block
         type="success"
         native-type="submit"
-        :disabled="!isLockedTempAndFinishedPhoto"
+        @click="showTempSubmitConfirm"
         >完成</Button
       >
     </div>
@@ -235,6 +247,31 @@ const handleFetchTemp = () => {
           >確認</Button
         >
       </form>
+    </div>
+  </Popup>
+
+  <Popup v-model:show="isShowLockTempConfirm" class="w-[325px] h-[202px] rounded-[20px]">
+    <div class="py-[20px] px-[28px]">
+      <h1 class="text-center text-[#707070] text-[20px] mb-0">是否要鎖定溫度？</h1>
+      <h2 class="text-center text-[#eb5e55] text-[13px]">
+        {{ isValidTempRange ? '鎖定後將無法進行變更！' : '您目前擷取溫度並不符合規範 鎖定後將無法進行變更！' }}
+      </h2>
+      <div class="flex justify-around mt-10">
+        <Button class="rounded-full h-[43px] w-[121px] bg-gray text-white">取消</Button>
+        <Button class="rounded-full h-[43px] w-[121px] bg-warning text-white">確認</Button>
+      </div>
+    </div>
+  </Popup>
+  <Popup v-model:show="isShowTempSubmitConfirm" class="w-[325px] h-[202px] rounded-[20px]">
+    <div class="py-[20px] px-[28px]">
+      <h1 class="text-center text-[#707070] text-[20px] mb-0">確認送出</h1>
+      <h2 class="text-center text-[#eb5e55] text-[13px]">
+        {{ isLockedTemp ? '' : '您尚未『鎖定溫度』無法完成此步驟！ 請先『鎖定溫度』後，在點擊『完成』' }}
+      </h2>
+      <div class="flex justify-around mt-10">
+        <Button class="rounded-full h-[43px] w-[121px] bg-gray text-white">返回 ？ 取消 </Button>
+        <Button class="rounded-full h-[43px] w-[121px] bg-warning text-white">確認</Button>
+      </div>
     </div>
   </Popup>
   <TemperatureActionSheet
