@@ -5,7 +5,7 @@ const useRestaurant = defineStore('restaurant', {
   state: () => ({
     restaurant: null,
     deliveries: null,
-    containers: null,
+    containers: [],
     returned: null,
     osnd: null,
     status: 'init',
@@ -50,6 +50,14 @@ const useRestaurant = defineStore('restaurant', {
         if (response.status === 'success') {
           this.containers = response.data
           this.status = response.status
+          if (this.containers.length !== 0) {
+            this.containers.forEach((content) => {
+              content.items.forEach((item) => {
+                item.purchase_total = item.qty - (item.short_qty + item.backing_qty)
+                item.return_total = item.return_qty + item.resource_qty
+              })
+            })
+          }
         }
       } catch (err) {
         this.status = err.status
@@ -87,6 +95,18 @@ const useRestaurant = defineStore('restaurant', {
       } finally {
         this.isLoading = false
       }
+    },
+    setContainersAction(FormData, index) {
+      this.containers[index].items.forEach((content) => {
+        if (content.id === FormData.id) {
+          content.backing_qty = Number(FormData.backing_qty)
+          content.short_qty = Number(FormData.short_qty)
+          content.resource_qty = Number(FormData.resource_qty)
+          content.return_qty = Number(FormData.return_qty)
+          content.purchase_total = content.qty - (content.short_qty + content.backing_qty)
+          content.return_total = content.return_qty + content.resource_qty
+        }
+      })
     },
   },
 })
