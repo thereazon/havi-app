@@ -165,7 +165,7 @@ const submit = () => {
         </Collapse>
       </div>
 
-      <div class="w-full mt-9 flex justify-between items-center font-bold text-white text-[1rem]">
+      <div class="w-full pt-9 pb-9 flex justify-between items-center font-bold text-white text-[1rem]">
         <button class="w-[48%] h-[43px] bg-success rounded-full border-0">完成</button>
         <button class="w-[48%] h-[43px] bg-warning rounded-full border-0" @click="isConfirmDialog = true">發送</button>
       </div>
