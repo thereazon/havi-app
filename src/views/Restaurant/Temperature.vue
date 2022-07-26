@@ -37,14 +37,6 @@ const showPopup = () => {
   isShowPopup.value = true
 }
 
-const showLockTempConfirm = () => {
-  isShowLockTempConfirm.value = true
-}
-
-const showTempSubmitConfirm = () => {
-  isShowTempSubmitConfirm.value = true
-}
-
 const computeTemp = (data) => {
   let temp = null
   switch (data.sign) {
@@ -109,7 +101,6 @@ const handleFetchTemp = () => {
 
 const setTempImage = (data) => {
   restaurantStore.temperatureImage = data
-  console.log('pppp', data)
 }
 
 const cleanTempImage = () => {
@@ -178,8 +169,24 @@ const isTempRangeInvalid = () => {
   isTempInvalid.value = isInValid
 }
 
-const postTemperatureData = () => {
-  restaurantStore.postLockTemperature(1)
+const postTemperatureData = async () => {
+  await restaurantStore.postLockTemperature(currentRestaurant.id)
+  if (restaurantStore.status === 'success') {
+    isLockedTempAndFinishedPhoto.value = true
+  }
+  toggleShowLockTempConfirm()
+}
+
+const toggleShowLockTempConfirm = () => {
+  isShowLockTempConfirm.value = !isShowLockTempConfirm.value
+}
+
+const postTemperatureFinish = async () => {
+  await restaurantStore.postTemperatureFinish(currentRestaurant.id)
+}
+
+const toggleShowTempSubmitConfirm = () => {
+  isShowTempSubmitConfirm.value = !isShowTempSubmitConfirm.value
 }
 </script>
 
@@ -258,7 +265,13 @@ const postTemperatureData = () => {
         </div>
 
         <div class="flex justify-around mt-10">
-          <Button class="rounded-full h-[36px] w-[134px]" type="danger" @click="showLockTempConfirm">鎖定溫度</Button>
+          <Button
+            class="rounded-full h-[36px] w-[134px]"
+            type="danger"
+            @click="toggleShowLockTempConfirm"
+            :disabled="isLockedTempAndFinishedPhoto"
+            >鎖定溫度</Button
+          >
           <Button class="rounded-full h-[36px] w-[134px] bg-primary text-white" @click="showPopup">實測溫度</Button>
         </div>
       </div>
@@ -270,7 +283,7 @@ const postTemperatureData = () => {
         block
         type="success"
         native-type="submit"
-        @click="showTempSubmitConfirm"
+        @click="toggleShowTempSubmitConfirm"
         :disabled="!isLockedTempAndFinishedPhoto"
         >完成</Button
       >
@@ -329,7 +342,11 @@ const postTemperatureData = () => {
       </form>
     </div>
   </Popup>
-  <Popup v-model:show="isShowLockTempConfirm" class="w-[325px] h-[202px] rounded-[20px]">
+  <Popup
+    :close-on-click-overlay="false"
+    v-model:show="isShowLockTempConfirm"
+    class="w-[325px] h-[202px] rounded-[20px]"
+  >
     <div class="py-[20px] px-[28px]">
       <h1 class="text-center text-[#707070] text-[20px] mb-0">是否要鎖定溫度？</h1>
       <h2 class="text-center text-[#eb5e55] text-[13px]">
@@ -339,14 +356,8 @@ const postTemperatureData = () => {
             : '鎖定後將無法進行變更！'
         }}
       </h2>
-      <div class="flex justify-around mt-10">
-        <Button
-          class="rounded-full h-[43px] w-[121px] bg-gray text-white"
-          @click="
-            () => {
-              isShowLockTempConfirm = !isShowLockTempConfirm
-            }
-          "
+      <div class="flex justify-around mt-6">
+        <Button class="rounded-full h-[43px] w-[121px] bg-gray text-white" @click="toggleShowLockTempConfirm"
           >取消</Button
         >
         <Button class="rounded-full h-[43px] w-[121px] bg-warning text-white" @click="postTemperatureData">確認</Button>
@@ -357,11 +368,17 @@ const postTemperatureData = () => {
     <div class="py-[20px] px-[28px]">
       <h1 class="text-center text-[#707070] text-[20px] mb-0">確認送出</h1>
       <h2 class="text-center text-[#eb5e55] text-[13px]">
-        {{ isLockedTemp ? '' : '您尚未『鎖定溫度』無法完成此步驟！ 請先『鎖定溫度』後，在點擊『完成』' }}
+        {{
+          isLockedTempAndFinishedPhoto ? '' : '您尚未『鎖定溫度』無法完成此步驟！ 請先『鎖定溫度』後，在點擊『完成』'
+        }}
       </h2>
       <div class="flex justify-around mt-10">
-        <Button class="rounded-full h-[43px] w-[121px] bg-gray text-white">返回 ？ 取消 </Button>
-        <Button class="rounded-full h-[43px] w-[121px] bg-warning text-white">確認</Button>
+        <Button class="rounded-full h-[43px] w-[121px] bg-gray text-white" @click="toggleShowTempSubmitConfirm">{{
+          isLockedTempAndFinishedPhoto ? '取消' : '返回'
+        }}</Button>
+        <Button class="rounded-full h-[43px] w-[121px] bg-warning text-white" @click="postTemperatureFinish"
+          >確認</Button
+        >
       </div>
     </div>
   </Popup>

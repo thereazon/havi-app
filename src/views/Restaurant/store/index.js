@@ -126,24 +126,35 @@ const useRestaurant = defineStore('restaurant', {
         frozen: this.frozen_temp,
       }
       Object.keys(data).forEach((key) => formData.append(key, data[key]))
-      console.log('formData', formData)
-      console.log('data', data)
-      for (var pair of formData.entries()) {
-        console.log(pair[0] + ', ' + pair[1])
+      this.isLoading = true
+      try {
+        const response = await ApiCaller.postLockTemperature(restaurantId, formData)
+
+        if (response.status === 'success') {
+          this.status = response.status
+          this.message = response.message
+        }
+      } catch (error) {
+        this.status = error.status
+        this.message = error.message
+      } finally {
+        this.isLoading = false
       }
-      // try {
-      //   this.isLoading = true
-      //   const response = await ApiCaller.postLockTemperature(restaurantId, data)
-      //   if (response.status === 'success') {
-      //     this.status = response.status
-      //     this.message = response.message
-      //   }
-      // } catch (error) {
-      //   this.status = error.status
-      //   this.message = error.message
-      // } finally {
-      //   this.isLoading = false
-      // }
+    },
+    async postTemperatureFinish(restaurantId) {
+      this.isLoading = true
+      try {
+        const response = await ApiCaller.postTemperatureFinish(restaurantId)
+        if (response.status === 'success') {
+          this.message = response.message
+          this.status = response.status
+        }
+      } catch (err) {
+        this.message = err.message
+        this.status = err.status
+      } finally {
+        this.isLoading = false
+      }
     },
   },
 })
