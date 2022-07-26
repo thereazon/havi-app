@@ -3,7 +3,6 @@ import Login from '@/views/Login/index.vue'
 import Cars from '@/views/Cars/index.vue'
 import Temperature from '@/views/Temperature/index.vue'
 import Containers from '@/views/Containers/index.vue'
-import ExceptionRegistration from '@/views/ExceptionRegistration/index.vue'
 import Dispatch from '@/views/Dispatch/index.vue'
 import RestaurantList from '@/views/Dispatch/RestaurantList/index.vue'
 import Main from '@/views/Main/index.vue'
@@ -17,6 +16,7 @@ import RestaurantContainer from '@/views/Restaurant/Container.vue'
 import RestaurantSignature from '@/views/Restaurant/Signature.vue'
 import RestaurantDelivery from '@/views/Restaurant/Delivery.vue'
 import RestaurantOsnd from '@/views/Restaurant/Osnd.vue'
+import RestaurantExceptionRegistration from '@/views/Restaurant/ExceptionRegistration.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,10 +28,6 @@ const router = createRouter({
     {
       path: '/cars',
       component: Cars,
-    },
-    {
-      path: '/ExceptionRegistration',
-      component: ExceptionRegistration,
     },
     {
       path: '/main',
@@ -85,6 +81,10 @@ const router = createRouter({
     {
       path: '/restaurant/container',
       component: RestaurantContainer,
+    },
+    {
+      path: '/restaurant/ExceptionRegistration',
+      component: RestaurantExceptionRegistration,
     },
     {
       path: '/restaurant/signature',
