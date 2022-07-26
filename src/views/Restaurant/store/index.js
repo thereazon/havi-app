@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import ApiCaller from '../service'
+import dayjs from 'dayjs'
 
 const useRestaurant = defineStore('restaurant', {
   state: () => ({
@@ -10,7 +11,7 @@ const useRestaurant = defineStore('restaurant', {
     osnd: null,
     temperature: null,
     temperatureImage: null,
-    degree_type: 'C',
+    degree_type: 'c',
     cold_temp: null,
     frozen_temp: null,
     status: 'init',
@@ -108,8 +109,28 @@ const useRestaurant = defineStore('restaurant', {
         this.isLoading = false
       }
     },
+    cleanTempImage() {
+      this.temperatureImage = null
+    },
     async postLockTemperature(restaurantId) {
-      const data = {}
+      const formData = new FormData()
+      const tempImageBlob = await fetch(this.temperatureImage).then((r) => r.blob())
+      console.log('tempImageBlob', tempImageBlob)
+      console.log('this.temperatureImage', this.temperatureImage)
+      formData.append('photo', tempImageBlob)
+      const data = {
+        temp_type: 2,
+        degree_type: this.degree_type,
+        temp_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+        cold: this.cold_temp,
+        frozen: this.frozen_temp,
+      }
+      Object.keys(data).forEach((key) => formData.append(key, data[key]))
+      console.log('formData', formData)
+      console.log('data', data)
+      for (var pair of formData.entries()) {
+        console.log(pair[0] + ', ' + pair[1])
+      }
       // try {
       //   this.isLoading = true
       //   const response = await ApiCaller.postLockTemperature(restaurantId, data)

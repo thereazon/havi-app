@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { Popup } from 'vant'
 
-const emit = defineEmits(['uploadImage'])
+const emit = defineEmits(['uploadImage', 'resetImageToNull'])
 defineProps({
   title: String,
 })
@@ -32,6 +32,7 @@ const uploadImage = (e) => {
 
 const deletePreviewImage = () => {
   previewImage.value = ''
+  emit('resetImageToNull')
 }
 </script>
 

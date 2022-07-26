@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, watch } from 'vue'
 import { NavBar, Button, Popup, Toast } from 'vant'
 import { useRouter, useRoute } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
@@ -8,6 +8,7 @@ import TemperatureActionSheet from './components/TemperatureActionSheet.vue'
 import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
 import RestaurantInfoCard from '@/components/RestaurantInfoCard.vue'
 import UploadImage from '@/components/uploadImage.vue'
+import { TempModule } from '@/utils/common'
 
 const { dispatch, currentRestaurant } = useDispatchInfo()
 const restaurantStore = useRestaurant()
@@ -25,13 +26,12 @@ onMounted(() => {
   }
 })
 
-const isCelsiusTemp = ref(false)
+const isCelsiusTemp = ref(restaurantStore.degree_type === 'c' ? true : false)
 const isShowMenu = ref(false)
 const isShowPopup = ref(false)
 const isLockedTempAndFinishedPhoto = ref(false)
 const isShowLockTempConfirm = ref(false)
 const isShowTempSubmitConfirm = ref(false)
-const isValidTempRange = ref(true)
 
 const showPopup = () => {
   isShowPopup.value = true
@@ -98,7 +98,7 @@ const onClickRight = () => {
 
 const submitTemperature = () => {
   isShowPopup.value = false
-  restaurantStore.degree_type = isCelsiusTemp.value ? 'f' : 'c'
+  restaurantStore.degree_type = isCelsiusTemp.value ? 'c' : 'f'
 }
 
 const handleFetchTemp = () => {
@@ -112,20 +112,48 @@ const setTempImage = (data) => {
   console.log('pppp', data)
 }
 
-// 區間判斷
-//規範冷藏溫度；1個數字代表小於，2個數字代表區間 []
-//規範冷凍溫度；1個數字代表小於，2個數字代表區間 []
-const tempRangeJedge = () => {
-  // restaurantStore.frozen_temp
-  // restaurantStore.cold_temp
-  // isCelsiusTemp
-  // currentRestaurant.cold_temp
-  // currentRestaurant.frozen_temp
-  // currentRestaurant.temp_type
-  let isInValid = null
-  // const isCelsius = currentRestaurant.temp_type === 'c' ? true : false
+const cleanTempImage = () => {
+  restaurantStore.cleanTempImage()
+}
+
+watch(
+  () => isShowLockTempConfirm.value,
+  (newVal, _) => {
+    if (newVal) {
+      isTempRangeInvalid()
+    }
+  },
+)
+
+/**
+ * 區間判斷
+ * 規範冷藏溫度；1個數字代表小於，2個數字代表區間 []
+ * 規範冷凍溫度；1個數字代表小於，2個數字代表區間 []
+ */
+const isTempInvalid = ref(false)
+const isTempRangeInvalid = () => {
+  let isInValid = false
   switch (isCelsiusTemp.value) {
     case true:
+      if (currentRestaurant.frozen_temp.length === 1) {
+        isInValid = restaurantStore.frozen_temp > TempModule.toCelsius(currentRestaurant.frozen_temp[0])
+      } else {
+        isInValid =
+          restaurantStore.frozen_temp < TempModule.toCelsius(currentRestaurant.frozen_temp[0]) ||
+          restaurantStore.frozen_temp > TempModule.toCelsius(currentRestaurant.frozen_temp[1])
+      }
+
+      if (currentRestaurant.cold_temp.length === 1) {
+        isInValid = restaurantStore.cold_temp > TempModule.toCelsius(currentRestaurant.cold_temp[0])
+      } else {
+        isInValid =
+          restaurantStore.cold_temp < TempModule.toCelsius(currentRestaurant.cold_temp[0]) ||
+          restaurantStore.cold_temp > TempModule.toCelsius(currentRestaurant.cold_temp[1])
+      }
+
+      break
+
+    case false:
       if (currentRestaurant.frozen_temp.length === 1) {
         isInValid = restaurantStore.frozen_temp > currentRestaurant.frozen_temp[0]
       } else {
@@ -141,15 +169,17 @@ const tempRangeJedge = () => {
           restaurantStore.cold_temp < currentRestaurant.cold_temp[0] ||
           restaurantStore.cold_temp > currentRestaurant.cold_temp[1]
       }
-
-      break
-
-    case false:
       break
 
     default:
       return
   }
+
+  isTempInvalid.value = isInValid
+}
+
+const postTemperatureData = () => {
+  restaurantStore.postLockTemperature(1)
 }
 </script>
 
@@ -206,7 +236,7 @@ const tempRangeJedge = () => {
           </div>
           <div class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
             <!-- 冷凍品溫 -->
-            {{ restaurantStore.frozen_temp ? restaurantStore.frozen_temp : '-' }}
+            {{ restaurantStore.frozen_temp !== null ? restaurantStore.frozen_temp : '-' }}
             {{ isCelsiusTemp ? '°C' : '°F' }}
           </div>
         </div>
@@ -222,7 +252,7 @@ const tempRangeJedge = () => {
           </div>
           <div class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
             <!-- 冷藏品溫 -->
-            {{ restaurantStore.cold_temp ? restaurantStore.cold_temp : '-' }}
+            {{ restaurantStore.cold_temp !== null ? restaurantStore.cold_temp : '-' }}
             {{ isCelsiusTemp ? '°C' : '°F' }}
           </div>
         </div>
@@ -232,8 +262,7 @@ const tempRangeJedge = () => {
           <Button class="rounded-full h-[36px] w-[134px] bg-primary text-white" @click="showPopup">實測溫度</Button>
         </div>
       </div>
-      <UploadImage title="實測溫度" @uploadImage="setTempImage" />
-      <!-- :disabled="!isLockedTempAndFinishedPhoto" -->
+      <UploadImage title="實測溫度" @uploadImage="setTempImage" @resetImageToNull="cleanTempImage" />
       <Button
         class="bg-success mt-8"
         loading-type="spinner"
@@ -258,12 +287,12 @@ const tempRangeJedge = () => {
         >
           <span
             class="w-[50%] h-full flex justify-center items-center"
-            :class="[!isCelsiusTemp ? 'text-white' : 'text-primary bg-white rounded-l-md']"
+            :class="[isCelsiusTemp ? 'text-white' : 'text-primary bg-white rounded-l-md']"
             >°C</span
           >
           <span
             class="w-[50%] h-full flex justify-center items-center"
-            :class="[!isCelsiusTemp ? 'text-primary bg-white rounded-r-md' : 'text-white']"
+            :class="[isCelsiusTemp ? 'text-primary bg-white rounded-r-md' : 'text-white']"
             >°F</span
           >
         </div>
@@ -304,7 +333,11 @@ const tempRangeJedge = () => {
     <div class="py-[20px] px-[28px]">
       <h1 class="text-center text-[#707070] text-[20px] mb-0">是否要鎖定溫度？</h1>
       <h2 class="text-center text-[#eb5e55] text-[13px]">
-        {{ isValidTempRange ? '鎖定後將無法進行變更！' : '您目前擷取溫度並不符合規範 鎖定後將無法進行變更！' }}
+        {{
+          isTempInvalid || restaurantStore.temperatureImage === null
+            ? '您目前擷取溫度並不符合規範 鎖定後將無法進行變更！'
+            : '鎖定後將無法進行變更！'
+        }}
       </h2>
       <div class="flex justify-around mt-10">
         <Button
@@ -316,7 +349,7 @@ const tempRangeJedge = () => {
           "
           >取消</Button
         >
-        <Button class="rounded-full h-[43px] w-[121px] bg-warning text-white">確認</Button>
+        <Button class="rounded-full h-[43px] w-[121px] bg-warning text-white" @click="postTemperatureData">確認</Button>
       </div>
     </div>
   </Popup>
