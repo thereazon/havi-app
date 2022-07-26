@@ -18,6 +18,7 @@ const getUndeliverable = async () => {
 const useCommonStore = defineStore('common', {
   state: () => ({
     abnormalReasons: [],
+    onkAbnormalReasons: [],
     undeliverableReasons: [],
     status: 'init',
     isLoading: false,
@@ -31,6 +32,9 @@ const useCommonStore = defineStore('common', {
         const response = await Promise.all([getAbnormalList(), getUndeliverable()])
         const [abnormalReasons, undeliverableReasons] = response
         this.abnormalReasons = abnormalReasons.data
+        this.onkAbnormalReasons = abnormalReasons.data.filter((e) => {
+          if (e.code == 'O' || e.code == 'K') return e
+        })
         this.undeliverableReasons = undeliverableReasons.data
       } catch (err) {
         this.status = err.status
