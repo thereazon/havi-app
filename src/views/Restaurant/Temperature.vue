@@ -25,10 +25,6 @@ onMounted(() => {
   }
 })
 
-const temperature = reactive({
-  refrigeration: null,
-  freezing: null,
-})
 const isCelsiusTemp = ref(false)
 const isShowMenu = ref(false)
 const isShowPopup = ref(false)
@@ -73,7 +69,7 @@ const showFreezingActionSheet = () => {
 }
 
 const confirmFreezingTemperature = (data) => {
-  temperature.freezing = computeTemp(data)
+  restaurantStore.frozen_temp = computeTemp(data)
   isShowFreezing.value = false
 }
 
@@ -83,7 +79,7 @@ const showRefrigerationActionSheet = () => {
   isShowRefrigeration.value = true
 }
 const confirmRefrigerationTemperature = (data) => {
-  temperature.refrigeration = computeTemp(data)
+  restaurantStore.cold_temp = computeTemp(data)
   isShowRefrigeration.value = false
 }
 
@@ -102,11 +98,57 @@ const onClickRight = () => {
 
 const submitTemperature = () => {
   isShowPopup.value = false
+  restaurantStore.degree_type = isCelsiusTemp.value ? 'f' : 'c'
 }
 
 const handleFetchTemp = () => {
   if (route.query.car_id && route.query.container_id) {
     restaurantStore.getTemperatureAction(route.query.car_id, route.query.container_id)
+  }
+}
+
+const setTempImage = (data) => {
+  restaurantStore.temperatureImage = data
+  console.log('pppp', data)
+}
+
+// 區間判斷
+//規範冷藏溫度；1個數字代表小於，2個數字代表區間 []
+//規範冷凍溫度；1個數字代表小於，2個數字代表區間 []
+const tempRangeJedge = () => {
+  // restaurantStore.frozen_temp
+  // restaurantStore.cold_temp
+  // isCelsiusTemp
+  // currentRestaurant.cold_temp
+  // currentRestaurant.frozen_temp
+  // currentRestaurant.temp_type
+  let isInValid = null
+  // const isCelsius = currentRestaurant.temp_type === 'c' ? true : false
+  switch (isCelsiusTemp.value) {
+    case true:
+      if (currentRestaurant.frozen_temp.length === 1) {
+        isInValid = restaurantStore.frozen_temp > currentRestaurant.frozen_temp[0]
+      } else {
+        isInValid =
+          restaurantStore.frozen_temp < currentRestaurant.frozen_temp[0] ||
+          restaurantStore.frozen_temp > currentRestaurant.frozen_temp[1]
+      }
+
+      if (currentRestaurant.cold_temp.length === 1) {
+        isInValid = restaurantStore.cold_temp > currentRestaurant.cold_temp[0]
+      } else {
+        isInValid =
+          restaurantStore.cold_temp < currentRestaurant.cold_temp[0] ||
+          restaurantStore.cold_temp > currentRestaurant.cold_temp[1]
+      }
+
+      break
+
+    case false:
+      break
+
+    default:
+      return
   }
 }
 </script>
@@ -157,11 +199,15 @@ const handleFetchTemp = () => {
         >
           <span class="w-[16%] text-primary">冷凍品溫</span>
           <div class="w-[42%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
-            -12.2°C / -30.1°F
+            {{
+              restaurantStore.temperature &&
+              `${restaurantStore.temperature.c.frozen}°C / ${restaurantStore.temperature.f.frozen}°F`
+            }}
           </div>
           <div class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
             <!-- 冷凍品溫 -->
-            {{ temperature.freezing ? temperature.freezing : '-' }}
+            {{ restaurantStore.frozen_temp ? restaurantStore.frozen_temp : '-' }}
+            {{ isCelsiusTemp ? '°C' : '°F' }}
           </div>
         </div>
         <div
@@ -169,11 +215,15 @@ const handleFetchTemp = () => {
         >
           <span class="w-[16%] text-primary">冷藏品溫</span>
           <div class="w-[42%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
-            -12.2°C / -30.1°F
+            {{
+              restaurantStore.temperature &&
+              `${restaurantStore.temperature.c.cold}°C / ${restaurantStore.temperature.f.cold}°F`
+            }}
           </div>
           <div class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
             <!-- 冷藏品溫 -->
-            {{ temperature.refrigeration ? temperature.refrigeration : '-' }}
+            {{ restaurantStore.cold_temp ? restaurantStore.cold_temp : '-' }}
+            {{ isCelsiusTemp ? '°C' : '°F' }}
           </div>
         </div>
 
@@ -182,7 +232,7 @@ const handleFetchTemp = () => {
           <Button class="rounded-full h-[36px] w-[134px] bg-primary text-white" @click="showPopup">實測溫度</Button>
         </div>
       </div>
-      <UploadImage title="實測溫度" />
+      <UploadImage title="實測溫度" @uploadImage="setTempImage" />
       <!-- :disabled="!isLockedTempAndFinishedPhoto" -->
       <Button
         class="bg-success mt-8"
@@ -192,6 +242,7 @@ const handleFetchTemp = () => {
         type="success"
         native-type="submit"
         @click="showTempSubmitConfirm"
+        :disabled="!isLockedTempAndFinishedPhoto"
         >完成</Button
       >
     </div>
@@ -207,12 +258,12 @@ const handleFetchTemp = () => {
         >
           <span
             class="w-[50%] h-full flex justify-center items-center"
-            :class="[isCelsiusTemp ? 'text-white' : 'text-primary bg-white rounded-l-md']"
+            :class="[!isCelsiusTemp ? 'text-white' : 'text-primary bg-white rounded-l-md']"
             >°C</span
           >
           <span
             class="w-[50%] h-full flex justify-center items-center"
-            :class="[isCelsiusTemp ? 'text-primary bg-white rounded-r-md' : 'text-white']"
+            :class="[!isCelsiusTemp ? 'text-primary bg-white rounded-r-md' : 'text-white']"
             >°F</span
           >
         </div>
@@ -224,7 +275,7 @@ const handleFetchTemp = () => {
             class="w-[205px] h-[37px] bg-[#f2f2f2] rounded-md flex justify-center items-center"
             @click="showFreezingActionSheet"
           >
-            {{ temperature.freezing }}
+            {{ restaurantStore.frozen_temp }}
           </div>
         </div>
         <div class="flex justify-between mt-4">
@@ -233,7 +284,7 @@ const handleFetchTemp = () => {
             class="w-[205px] h-[37px] bg-[#f2f2f2] rounded-md flex justify-center items-center"
             @click="showRefrigerationActionSheet"
           >
-            {{ temperature.refrigeration }}
+            {{ restaurantStore.cold_temp }}
           </div>
         </div>
         <Button
@@ -249,7 +300,6 @@ const handleFetchTemp = () => {
       </form>
     </div>
   </Popup>
-
   <Popup v-model:show="isShowLockTempConfirm" class="w-[325px] h-[202px] rounded-[20px]">
     <div class="py-[20px] px-[28px]">
       <h1 class="text-center text-[#707070] text-[20px] mb-0">是否要鎖定溫度？</h1>
@@ -257,7 +307,15 @@ const handleFetchTemp = () => {
         {{ isValidTempRange ? '鎖定後將無法進行變更！' : '您目前擷取溫度並不符合規範 鎖定後將無法進行變更！' }}
       </h2>
       <div class="flex justify-around mt-10">
-        <Button class="rounded-full h-[43px] w-[121px] bg-gray text-white">取消</Button>
+        <Button
+          class="rounded-full h-[43px] w-[121px] bg-gray text-white"
+          @click="
+            () => {
+              isShowLockTempConfirm = !isShowLockTempConfirm
+            }
+          "
+          >取消</Button
+        >
         <Button class="rounded-full h-[43px] w-[121px] bg-warning text-white">確認</Button>
       </div>
     </div>

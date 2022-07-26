@@ -50,7 +50,11 @@ const getTemperature = async (id, container) => {
 //POST /api/webStore/{id}/temperature 餐廳鎖定溫度
 const postLockTemperature = async (id, data) => {
   return await axios
-    .post(`/api/webStore/${id}/temperature`, data)
+    .post(`/api/webStore/${id}/temperature`, data, {
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+    })
     .then((res) => res.data)
     .catch((err) => Promise.reject(err.response.data))
 }

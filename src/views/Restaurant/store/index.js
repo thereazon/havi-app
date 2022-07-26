@@ -9,6 +9,10 @@ const useRestaurant = defineStore('restaurant', {
     returned: null,
     osnd: null,
     temperature: null,
+    temperatureImage: null,
+    degree_type: 'C',
+    cold_temp: null,
+    frozen_temp: null,
     status: 'init',
     message: null,
     isLoading: null,
@@ -103,6 +107,22 @@ const useRestaurant = defineStore('restaurant', {
       } finally {
         this.isLoading = false
       }
+    },
+    async postLockTemperature(restaurantId) {
+      const data = {}
+      // try {
+      //   this.isLoading = true
+      //   const response = await ApiCaller.postLockTemperature(restaurantId, data)
+      //   if (response.status === 'success') {
+      //     this.status = response.status
+      //     this.message = response.message
+      //   }
+      // } catch (error) {
+      //   this.status = error.status
+      //   this.message = error.message
+      // } finally {
+      //   this.isLoading = false
+      // }
     },
   },
 })
