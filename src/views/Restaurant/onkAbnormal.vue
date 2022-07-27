@@ -1,9 +1,8 @@
 <script setup>
 import { ref, reactive, watch } from 'vue'
-import { Icon, NavBar, Field, DatetimePicker, Calendar, Popup, Switch } from 'vant'
+import { Icon, NavBar, DatetimePicker, Calendar, Popup, Switch } from 'vant'
 import { useRouter } from 'vue-router'
 import useCommonStore from '@/common/useCommonStore.js'
-// import ExceptionReasonTable from '@/components/ExceptionReasonTable.vue'
 
 const router = useRouter()
 const store = useCommonStore()
@@ -16,14 +15,13 @@ const formatDate = (date) => {
   let m = date.getMonth() + 1
   let d = date.getDate()
   let y = date.getFullYear()
-  console.log(m, d)
   return `${m < 10 ? '0' : ''}${m}/${d < 10 ? '0' : ''}${d}/${y}`
 }
-const onConfirm = (value) => {
-  console.log(value)
+const onConfirmDate = (value) => {
   show.value = false
   date.value = formatDate(value)
 }
+
 const exReason = reactive({
   selectReason: store.onkAbnormalReasons[0],
   exp: date,
@@ -31,7 +29,6 @@ const exReason = reactive({
   set_qty: null,
   note: '',
 })
-
 watch(
   () => noset.value,
   () => {
@@ -42,9 +39,18 @@ watch(
 const onClickLeft = () => {
   router.back()
 }
-const onClickRight = () => {}
+const onClickRight = () => {
+  // 【餐廳明細 - 作業明細 – 餐廳溫度確認 - 確認送出後 - 查看menu】
+  //   router.push({
+  //     path: '/restaurant/temperature',
+  //     query: {
+  //
+  //     },
+  //   })
+}
 
 const handleToDeliveryDetail = () => {
+  // 【餐廳明細 - 作業明細 - 送貨單 - O代號 - 輸入產品資訊】
   //   router.push({
   //     path: '/restaurant/delivery',
   //     query: {
@@ -55,7 +61,7 @@ const handleToDeliveryDetail = () => {
 </script>
 
 <template>
-  <div class="bg-primary bg-opacity-[0.05] h-full font-['Segoe UI']">
+  <div class="bg-primary bg-opacity-[0.05] h-full pb-28">
     <NavBar
       safe-area-inset-top
       fixed
@@ -66,7 +72,7 @@ const handleToDeliveryDetail = () => {
     >
       <template #right> <Icon name="wap-nav" size="18" /> </template>
     </NavBar>
-    <div class="px-[26px] bg-[#F2F8FB] pt-20">
+    <div class="px-7 bg-[#F2F8FB] pt-20">
       <div class="rounded-[20px] shadow-lg">
         <section class="rounded-t-[20px] max-w-5xl overflow-hidden bg-white py-4 px-6">
           <div class="text-primary text-[13px] mb-2"><span class="font-bold">單號 </span>{{ '202020430' }}</div>
@@ -84,25 +90,25 @@ const handleToDeliveryDetail = () => {
         <section
           class="rounded-b-[20px] max-w-5xl shadow-[0_0_2px_0_rgba(112,112,112,100)] overflow-hidden bg-white py-3 px-6"
         >
-          <div class="flex flex-col bg-zinc-100 px-2 py-3 text-neutral-500 rounded" :click="handleToDeliveryDetail">
-            <span class="text-[12px] font-bold">輸入品號</span>
-            <span class="text-[10px]">輸入產品名稱</span>
+          <div class="flex flex-col bg-zinc-100 px-2 py-3 text-neutral-500 rounded" @click="handleToDeliveryDetail">
+            <span class="text-[12px] font-bold leading-[1.17]">輸入品號</span>
+            <span class="text-[10px] leading-[1.3]">輸入產品名稱</span>
           </div>
         </section>
       </div>
 
       <div class="flex flex-col items-stretch">
         <div
-          class="text-gray text-[13px] flex flex-col items-center shadow-[0_2px_10px_0_rgba(112,112,112,100)] border-[solid 1px #707070] bg-white rounded-[20px] px-8 py-4 my-6"
+          class="flex flex-col items-center bg-white text-gray text-[13px] shadow-[0_2px_10px_0_rgba(112,112,112,100)] border-[solid 1px #707070] rounded-[20px] px-8 py-4 my-6"
         >
-          <div class="mb-[13px]">異常原因</div>
+          <div class="mb-3 font-bold text-[13px]">異常原因</div>
           <select v-model="exReason.selectReason" class="w-full border-dashed p-3 text-gray bg-[#fffcf6]">
             <option v-for="reason in store.onkAbnormalReasons" :key="reason.id" :value="reason">
               {{ reason.code + ' ' + reason.content }}
             </option>
           </select>
 
-          <div class="mt-[23px] mb-[13px]">有效日期</div>
+          <div class="mt-6 mb-3 font-bold text-[13px]">有效日期</div>
           <input
             v-model="date"
             name="exp"
@@ -115,14 +121,14 @@ const handleToDeliveryDetail = () => {
             color="#086eb6"
             first-day-of-week="1"
             v-model:show="show"
-            @confirm="onConfirm"
+            @confirm="onConfirmDate"
             :show-confirm="false"
           /> -->
           <Popup v-model:show="show" position="bottom">
             <DatetimePicker
               v-model="today"
               type="date"
-              @confirm="onConfirm"
+              @confirm="onConfirmDate"
               title="選擇日期"
               confirm-button-text="確認"
               cancel-button-text="取消"
@@ -130,13 +136,12 @@ const handleToDeliveryDetail = () => {
             />
           </Popup>
 
-          <div class="mt-[23px] mb-[13px]">異常數量</div>
-          <div class="grid grid-cols-6 w-full mb-[9px] items-center">
+          <div class="mt-6 mb-3 font-bold text-[13px]">異常數量</div>
+          <div class="grid grid-cols-6 w-full mb-2 items-center">
             <div class="text-[15px] col-span-1">單位</div>
             <input v-model="exReason.qty" type="text" class="border py-2 bg-[#fffcf6] border-dashed col-span-4" />
           </div>
-
-          <div class="grid grid-cols-6 w-full items-center mb-[9px]">
+          <div class="grid grid-cols-6 w-full items-center mb-2">
             <div class="text-[15px] col-span-1" :class="{ 'text-[#bbb]': !noset }">內包</div>
             <input
               v-model="exReason.set_qty"
@@ -146,11 +151,12 @@ const handleToDeliveryDetail = () => {
             />
             <Switch v-model="noset" size="16px" active-color="#6dbe5b" class="mx-auto"></Switch>
           </div>
-          <div class="mt-[23px] mb-[13px]">備註原因</div>
+
+          <div class="mt-6 mb-3 font-bold text-[13px]">備註原因</div>
           <textarea v-model="exReason.note" class="py-2 bg-[#fffcf6] border-dashed w-full"></textarea>
         </div>
         <div class="m-auto mb-5">
-          <button class="bg-success border-0 text-white rounded-full py-3 px-28">完成</button>
+          <button class="bg-success border-0 text-white rounded-full py-3 px-28 text-bold">完成</button>
         </div>
       </div>
     </div>
@@ -162,4 +168,11 @@ const handleToDeliveryDetail = () => {
 /* :deep(.van-popup) {
   height: 50%;
 } */
+:deep(#app) {
+  font-family: 'Segoe UI';
+}
+:deep(.van-nav-bar__title) {
+  font-size: 12px;
+  color: #707070;
+}
 </style>
