@@ -1,15 +1,24 @@
 <script setup>
 import { reactive, watch, ref } from 'vue'
-import { Switch } from 'vant'
+import { v4 as uuidv4 } from 'uuid'
+import { Switch, Icon } from 'vant'
+
+const uuid = uuidv4()
 
 const props = defineProps({
-  finish: Boolean,
+  readyToPush: Boolean,
 })
 
 const emits = defineEmits(['update:data', 'delete:reason'])
 
-const noset = ref(true)
-const nopcs = ref(true)
+const toggleSet = ref(true)
+const togglePcs = ref(true)
+const file = ref()
+const fileStructure = reactive({
+  fileName: '',
+  base64: '',
+  uploaded: false,
+})
 
 const reasonData = reactive([
   {
@@ -37,32 +46,49 @@ const remove = () => {
 }
 
 watch(
-  () => props.finish,
+  () => props.readyToPush,
   () => {
-    if (props.finish) emits('update:data', exReason)
+    if (props.readyToPush) emits('update:data', { data: exReason, img: fileStructure.base64 })
   },
 )
 
 watch(
-  () => noset.value,
+  () => toggleSet.value,
   () => {
     exReason.set_qty = null
   },
 )
 
 watch(
-  () => nopcs.value,
+  () => togglePcs.value,
   () => {
     exReason.pcs_qty = null
   },
 )
 const exReason = reactive({
+  uuid: uuid,
   selectReason: reasonData[0],
   unit: null,
   set_qty: null,
   pcs_qty: null,
   note: '',
 })
+
+const dataURItoBlob = (dataURI) => {
+  return fetch(dataURI).then((res) => res.blob())
+}
+
+const handleFileUpLoad = () => {
+  fileStructure.fileName = file.value.files[0].name
+  fileStructure.uploaded = true
+  let oFReader = new FileReader()
+  oFReader.onloadend = async function () {
+    await dataURItoBlob(oFReader.result).then((res) => {
+      fileStructure.base64 = res
+    })
+  }
+  oFReader.readAsDataURL(file.value.files[0])
+}
 </script>
 <template>
   <div
@@ -87,25 +113,33 @@ const exReason = reactive({
       <input v-model="exReason.unit" type="text" class="py-2 bg-[#fffcf6] border-dashed col-span-4" />
     </div>
     <div class="grid grid-cols-6 w-full items-center mb-[9px]">
-      <div class="text-[15px] col-span-1" :class="{ 'text-[#bbb]': !noset }">內包</div>
+      <div class="text-[15px] col-span-1" :class="{ 'text-[#bbb]': !toggleSet }">內包</div>
       <input
         v-model="exReason.set_qty"
-        :disabled="!noset"
+        :disabled="!toggleSet"
         type="text"
         class="py-2 bg-[#fffcf6] border-dashed col-span-4"
       />
-      <Switch v-model="noset" size="23px" class="mx-auto"></Switch>
+      <Switch v-model="toggleSet" active-color="#6dbe5b" size="15px" class="mx-auto"></Switch>
     </div>
     <div class="grid grid-cols-6 w-full items-center mb-[9px]">
-      <div class="text-[15px] col-span-1" :class="{ 'text-[#bbb]': !nopcs }">零散</div>
+      <div class="text-[15px] col-span-1" :class="{ 'text-[#bbb]': !togglePcs }">零散</div>
       <input
         v-model="exReason.pcs_qty"
-        :disabled="!nopcs"
+        :disabled="!togglePcs"
         type="text"
         class="py-2 bg-[#fffcf6] border-dashed col-span-4"
       />
-      <Switch v-model="nopcs" size="23px" class="mx-auto"></Switch>
+      <Switch v-model="togglePcs" active-color="#6dbe5b" size="15px" class="mx-auto"></Switch>
     </div>
+    <button class="bg-[#fffcf6] border-dashed w-full py-4 mt-[23px]" @click="$refs.file.click()">
+      <div v-if="!fileStructure.uploaded" class="flex justify-center gap-2">
+        <Icon class="bg-gray rounded-full p-1" color="white" name="plus"></Icon>
+        <div>選擇圖片</div>
+      </div>
+      <div v-else>{{ fileStructure.fileName }}</div>
+    </button>
+    <input type="file" ref="file" class="hidden" @change="handleFileUpLoad" />
     <div class="mt-[23px] mb-[13px]">備註原因</div>
     <textarea v-model="exReason.note" class="py-2 bg-[#fffcf6] border-dashed w-full"></textarea>
   </div>
