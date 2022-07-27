@@ -35,12 +35,28 @@ const getOSND = async (id) => {
     .catch((err) => Promise.reject(err.response.data))
 }
 
+const postContainerFinish = async (id, data) => {
+  return await axios
+    .post(`/api/webContainer/${id}/finish`, data)
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
+}
+
+const postContainerSend = async (id) => {
+  return await axios
+    .post(`/api/webContainer/${id}/send`)
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
+}
+
 const ApiCaller = {
   getRestaurantDetail,
   getDelivery,
   getContainer,
   getReturned,
   getOSND,
+  postContainerFinish,
+  postContainerSend,
 }
 
 export default ApiCaller
