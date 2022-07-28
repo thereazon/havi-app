@@ -39,7 +39,7 @@ const checkInBtn = () => {
   })
 }
 const handleToPallet = async (dispatch) => {
-  await dispatchStore.setCurrentDispath(dispatch)
+  await dispatchStore.setCurrentDispatch(dispatch)
   router.push({
     path: '/pallet',
     query: {
@@ -51,7 +51,7 @@ const handleToPallet = async (dispatch) => {
   })
 }
 const handleToPreCool = async (dispatch) => {
-  await dispatchStore.setCurrentDispath(dispatch)
+  await dispatchStore.setCurrentDispatch(dispatch)
   router.push({
     path: '/precool',
     query: {
@@ -64,7 +64,8 @@ const handleToPreCool = async (dispatch) => {
 }
 
 const handleToRestaurantList = async (dispatch) => {
-  await dispatchStore.setCurrentDispath(dispatch)
+  await dispatchStore.setCurrentDispatch(dispatch)
+  await dispatchStore.getDispatchDetailAction(dispatch.id)
   router.push({
     path: '/restaurantlist',
     query: {

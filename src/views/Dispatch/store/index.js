@@ -17,9 +17,22 @@ const useDispatchInfo = defineStore('dispatch', {
     async setCurrentRestaurant(restaurant) {
       this.currentRestaurant = restaurant
     },
-    async setCurrentDispath(dispatch) {
+    async setCurrentDispatch(dispatch) {
       this.dispatch = dispatch
-      this.restaurant = restaurantByStatus(dispatch.store)
+    },
+    async getDispatchDetailAction(id) {
+      this.isLoading = true
+      try {
+        const response = await DispatchApiCaller.getDispatchDetail(id)
+        if (response.status === 'success') {
+          this.restaurant = restaurantByStatus(response.data)
+        }
+      } catch (err) {
+        this.status = err.status
+        this.message = err.message
+      } finally {
+        this.isLoading = false
+      }
     },
     async getRestaurantDetailAction(id) {
       this.isLoading = true

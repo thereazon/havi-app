@@ -21,6 +21,13 @@ const getRestaurantDetail = async (id) => {
     .catch((err) => Promise.reject(err.response.data))
 }
 
+const getDispatchDetail = async (id) => {
+  return await axios
+    .get(`/api/webDispatch/${id}`)
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
+}
+
 const postUndelivered = async (id) => {
   return await axios
     .post(`/api/webStore/${id}/undelivered`)
@@ -30,6 +37,7 @@ const postUndelivered = async (id) => {
 
 const ApiCaller = {
   getDispatch,
+  getDispatchDetail,
   getRestaurantDetail,
   postUndelivered,
 }
