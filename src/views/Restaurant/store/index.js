@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import ApiCaller from '../service'
+import dayjs from 'dayjs'
 
 const useRestaurant = defineStore('restaurant', {
   state: () => ({
@@ -8,6 +9,11 @@ const useRestaurant = defineStore('restaurant', {
     containers: [],
     returned: null,
     osnd: null,
+    temperature: null,
+    temperatureImage: null,
+    degree_type: 'c',
+    cold_temp: null,
+    frozen_temp: null,
     status: 'init',
     message: null,
     isLoading: null,
@@ -96,6 +102,21 @@ const useRestaurant = defineStore('restaurant', {
         this.isLoading = false
       }
     },
+    async getTemperatureAction(carId, containerId) {
+      this.isLoading = true
+      try {
+        const response = await ApiCaller.getTemperature(carId, containerId)
+        if (response.status === 'success') {
+          this.temperature = response.data
+          this.status = response.status
+        }
+      } catch (err) {
+        this.status = err.status
+        this.message = err.message
+      } finally {
+        this.isLoading = false
+      }
+    },
     async postContainerFinishAction(containerOrder) {
       this.isLoading = true
       try {
@@ -115,6 +136,33 @@ const useRestaurant = defineStore('restaurant', {
         this.isLoading = false
       }
     },
+    cleanTempImage() {
+      this.temperatureImage = null
+    },
+    async postLockTemperature(restaurantId) {
+      const formData = new FormData()
+      const tempImageBlob = await fetch(this.temperatureImage).then((r) => r.blob())
+      console.log('tempImageBlob', tempImageBlob)
+      console.log('this.temperatureImage', this.temperatureImage)
+      formData.append('photo', tempImageBlob)
+      const data = {
+        temp_type: 2,
+        degree_type: this.degree_type,
+        temp_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+        cold: this.cold_temp,
+        frozen: this.frozen_temp,
+      }
+      Object.keys(data).forEach((key) => formData.append(key, data[key]))
+      this.isLoading = true
+      try {
+        const response = await ApiCaller.postLockTemperature(restaurantId, formData)
+      } catch (err) {
+        this.status = err.status
+        this.message = err.message
+      } finally {
+        this.isLoading = false
+      }
+    },
     async postContainerSendAction(id) {
       this.isLoading = true
       try {
@@ -122,6 +170,21 @@ const useRestaurant = defineStore('restaurant', {
         if (response.status === 'success') {
           this.status = response.status
           this.message = response.message
+        }
+      } catch (error) {
+        this.status = error.status
+        this.message = error.message
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async postTemperatureFinish(restaurantId) {
+      this.isLoading = true
+      try {
+        const response = await ApiCaller.postTemperatureFinish(restaurantId)
+        if (response.status === 'success') {
+          this.message = response.message
+          this.status = response.status
         }
       } catch (err) {
         this.status = err.status

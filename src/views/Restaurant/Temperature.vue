@@ -1,14 +1,17 @@
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, watch } from 'vue'
 import { NavBar, Button, Popup, Toast } from 'vant'
 import { useRouter, useRoute } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
+import useRestaurant from './store'
 import TemperatureActionSheet from './components/TemperatureActionSheet.vue'
 import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
 import RestaurantInfoCard from '@/components/RestaurantInfoCard.vue'
 import UploadImage from '@/components/uploadImage.vue'
+import { TempModule } from '@/utils/common'
 
 const { dispatch, currentRestaurant } = useDispatchInfo()
+const restaurantStore = useRestaurant()
 const router = useRouter()
 const route = useRoute()
 
@@ -23,13 +26,13 @@ onMounted(() => {
   }
 })
 
-const temperature = reactive({
-  refrigeration: null,
-  freezing: null,
-})
-const isCelsiusTemp = ref(false)
+const isCelsiusTemp = ref(restaurantStore.degree_type === 'c' ? true : false)
 const isShowMenu = ref(false)
 const isShowPopup = ref(false)
+const isLockedTempAndFinishedPhoto = ref(false)
+const isShowLockTempConfirm = ref(false)
+const isShowTempSubmitConfirm = ref(false)
+
 const showPopup = () => {
   isShowPopup.value = true
 }
@@ -58,7 +61,7 @@ const showFreezingActionSheet = () => {
 }
 
 const confirmFreezingTemperature = (data) => {
-  temperature.freezing = computeTemp(data)
+  restaurantStore.frozen_temp = computeTemp(data)
   isShowFreezing.value = false
 }
 
@@ -68,7 +71,7 @@ const showRefrigerationActionSheet = () => {
   isShowRefrigeration.value = true
 }
 const confirmRefrigerationTemperature = (data) => {
-  temperature.refrigeration = computeTemp(data)
+  restaurantStore.cold_temp = computeTemp(data)
   isShowRefrigeration.value = false
 }
 
@@ -87,6 +90,103 @@ const onClickRight = () => {
 
 const submitTemperature = () => {
   isShowPopup.value = false
+  restaurantStore.degree_type = isCelsiusTemp.value ? 'c' : 'f'
+}
+
+const handleFetchTemp = () => {
+  if (route.query.car_id && route.query.container_id) {
+    restaurantStore.getTemperatureAction(route.query.car_id, route.query.container_id)
+  }
+}
+
+const setTempImage = (data) => {
+  restaurantStore.temperatureImage = data
+}
+
+const cleanTempImage = () => {
+  restaurantStore.cleanTempImage()
+}
+
+watch(
+  () => isShowLockTempConfirm.value,
+  (newVal, _) => {
+    if (newVal) {
+      isTempRangeInvalid()
+    }
+  },
+)
+
+/**
+ * 區間判斷
+ * 規範冷藏溫度；1個數字代表小於，2個數字代表區間 []
+ * 規範冷凍溫度；1個數字代表小於，2個數字代表區間 []
+ */
+const isTempInvalid = ref(false)
+const isTempRangeInvalid = () => {
+  let isInValid = false
+  switch (isCelsiusTemp.value) {
+    case true:
+      if (currentRestaurant.frozen_temp.length === 1) {
+        isInValid = restaurantStore.frozen_temp > TempModule.toCelsius(currentRestaurant.frozen_temp[0])
+      } else {
+        isInValid =
+          restaurantStore.frozen_temp < TempModule.toCelsius(currentRestaurant.frozen_temp[0]) ||
+          restaurantStore.frozen_temp > TempModule.toCelsius(currentRestaurant.frozen_temp[1])
+      }
+
+      if (currentRestaurant.cold_temp.length === 1) {
+        isInValid = restaurantStore.cold_temp > TempModule.toCelsius(currentRestaurant.cold_temp[0])
+      } else {
+        isInValid =
+          restaurantStore.cold_temp < TempModule.toCelsius(currentRestaurant.cold_temp[0]) ||
+          restaurantStore.cold_temp > TempModule.toCelsius(currentRestaurant.cold_temp[1])
+      }
+
+      break
+
+    case false:
+      if (currentRestaurant.frozen_temp.length === 1) {
+        isInValid = restaurantStore.frozen_temp > currentRestaurant.frozen_temp[0]
+      } else {
+        isInValid =
+          restaurantStore.frozen_temp < currentRestaurant.frozen_temp[0] ||
+          restaurantStore.frozen_temp > currentRestaurant.frozen_temp[1]
+      }
+
+      if (currentRestaurant.cold_temp.length === 1) {
+        isInValid = restaurantStore.cold_temp > currentRestaurant.cold_temp[0]
+      } else {
+        isInValid =
+          restaurantStore.cold_temp < currentRestaurant.cold_temp[0] ||
+          restaurantStore.cold_temp > currentRestaurant.cold_temp[1]
+      }
+      break
+
+    default:
+      return
+  }
+
+  isTempInvalid.value = isInValid
+}
+
+const postTemperatureData = async () => {
+  await restaurantStore.postLockTemperature(currentRestaurant.id)
+  if (restaurantStore.status === 'success') {
+    isLockedTempAndFinishedPhoto.value = true
+  }
+  toggleShowLockTempConfirm()
+}
+
+const toggleShowLockTempConfirm = () => {
+  isShowLockTempConfirm.value = !isShowLockTempConfirm.value
+}
+
+const postTemperatureFinish = async () => {
+  await restaurantStore.postTemperatureFinish(currentRestaurant.id)
+}
+
+const toggleShowTempSubmitConfirm = () => {
+  isShowTempSubmitConfirm.value = !isShowTempSubmitConfirm.value
 }
 </script>
 
@@ -121,7 +221,9 @@ const submitTemperature = () => {
           </div>
         </div>
 
-        <Button class="rounded-full border-2 h-[31px] w-[97px]" plain type="success">擷取溫度</Button>
+        <Button class="rounded-full border-2 h-[31px] w-[97px]" plain type="success" @click="handleFetchTemp"
+          >擷取溫度</Button
+        >
       </div>
       <div class="mt-5">
         <div class="w-full flex justify-evenly items-center text-[10px] font-bold mb-2">
@@ -134,11 +236,15 @@ const submitTemperature = () => {
         >
           <span class="w-[16%] text-primary">冷凍品溫</span>
           <div class="w-[42%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
-            -12.2°C / -30.1°F
+            {{
+              restaurantStore.temperature &&
+              `${restaurantStore.temperature.c.frozen}°C / ${restaurantStore.temperature.f.frozen}°F`
+            }}
           </div>
           <div class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
             <!-- 冷凍品溫 -->
-            {{ temperature.freezing ? temperature.freezing : '-' }}
+            {{ restaurantStore.frozen_temp !== null ? restaurantStore.frozen_temp : '-' }}
+            {{ isCelsiusTemp ? '°C' : '°F' }}
           </div>
         </div>
         <div
@@ -146,21 +252,39 @@ const submitTemperature = () => {
         >
           <span class="w-[16%] text-primary">冷藏品溫</span>
           <div class="w-[42%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
-            -12.2°C / -30.1°F
+            {{
+              restaurantStore.temperature &&
+              `${restaurantStore.temperature.c.cold}°C / ${restaurantStore.temperature.f.cold}°F`
+            }}
           </div>
           <div class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
             <!-- 冷藏品溫 -->
-            {{ temperature.refrigeration ? temperature.refrigeration : '-' }}
+            {{ restaurantStore.cold_temp !== null ? restaurantStore.cold_temp : '-' }}
+            {{ isCelsiusTemp ? '°C' : '°F' }}
           </div>
         </div>
 
         <div class="flex justify-around mt-10">
-          <Button class="rounded-full h-[36px] w-[134px]" type="danger">鎖定溫度</Button>
+          <Button
+            class="rounded-full h-[36px] w-[134px]"
+            type="danger"
+            @click="toggleShowLockTempConfirm"
+            :disabled="isLockedTempAndFinishedPhoto"
+            >鎖定溫度</Button
+          >
           <Button class="rounded-full h-[36px] w-[134px] bg-primary text-white" @click="showPopup">實測溫度</Button>
         </div>
       </div>
-      <UploadImage title="實測溫度" />
-      <Button class="bg-success mt-8" loading-type="spinner" round block type="success" native-type="submit"
+      <UploadImage title="實測溫度" @uploadImage="setTempImage" @resetImageToNull="cleanTempImage" />
+      <Button
+        class="bg-success mt-8"
+        loading-type="spinner"
+        round
+        block
+        type="success"
+        native-type="submit"
+        @click="toggleShowTempSubmitConfirm"
+        :disabled="!isLockedTempAndFinishedPhoto"
         >完成</Button
       >
     </div>
@@ -193,7 +317,7 @@ const submitTemperature = () => {
             class="w-[205px] h-[37px] bg-[#f2f2f2] rounded-md flex justify-center items-center"
             @click="showFreezingActionSheet"
           >
-            {{ temperature.freezing }}
+            {{ restaurantStore.frozen_temp }}
           </div>
         </div>
         <div class="flex justify-between mt-4">
@@ -202,7 +326,7 @@ const submitTemperature = () => {
             class="w-[205px] h-[37px] bg-[#f2f2f2] rounded-md flex justify-center items-center"
             @click="showRefrigerationActionSheet"
           >
-            {{ temperature.refrigeration }}
+            {{ restaurantStore.cold_temp }}
           </div>
         </div>
         <Button
@@ -216,6 +340,46 @@ const submitTemperature = () => {
           >確認</Button
         >
       </form>
+    </div>
+  </Popup>
+  <Popup
+    :close-on-click-overlay="false"
+    v-model:show="isShowLockTempConfirm"
+    class="w-[325px] h-[202px] rounded-[20px]"
+  >
+    <div class="py-[20px] px-[28px]">
+      <h1 class="text-center text-[#707070] text-[20px] mb-0">是否要鎖定溫度？</h1>
+      <h2 class="text-center text-[#eb5e55] text-[13px]">
+        {{
+          isTempInvalid || restaurantStore.temperatureImage === null
+            ? '您目前擷取溫度並不符合規範 鎖定後將無法進行變更！'
+            : '鎖定後將無法進行變更！'
+        }}
+      </h2>
+      <div class="flex justify-around mt-6">
+        <Button class="rounded-full h-[43px] w-[121px] bg-gray text-white" @click="toggleShowLockTempConfirm"
+          >取消</Button
+        >
+        <Button class="rounded-full h-[43px] w-[121px] bg-warning text-white" @click="postTemperatureData">確認</Button>
+      </div>
+    </div>
+  </Popup>
+  <Popup v-model:show="isShowTempSubmitConfirm" class="w-[325px] h-[202px] rounded-[20px]">
+    <div class="py-[20px] px-[28px]">
+      <h1 class="text-center text-[#707070] text-[20px] mb-0">確認送出</h1>
+      <h2 class="text-center text-[#eb5e55] text-[13px]">
+        {{
+          isLockedTempAndFinishedPhoto ? '' : '您尚未『鎖定溫度』無法完成此步驟！ 請先『鎖定溫度』後，在點擊『完成』'
+        }}
+      </h2>
+      <div class="flex justify-around mt-10">
+        <Button class="rounded-full h-[43px] w-[121px] bg-gray text-white" @click="toggleShowTempSubmitConfirm">{{
+          isLockedTempAndFinishedPhoto ? '取消' : '返回'
+        }}</Button>
+        <Button class="rounded-full h-[43px] w-[121px] bg-warning text-white" @click="postTemperatureFinish"
+          >確認</Button
+        >
+      </div>
     </div>
   </Popup>
   <TemperatureActionSheet

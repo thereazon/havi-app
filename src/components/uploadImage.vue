@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { Popup } from 'vant'
 
+const emit = defineEmits(['uploadImage', 'resetImageToNull'])
 defineProps({
   title: String,
 })
@@ -25,11 +26,13 @@ const uploadImage = (e) => {
   reader.readAsDataURL(file)
   reader.onload = (e) => {
     previewImage.value = e.target.result
+    emit('uploadImage', e.target.result)
   }
 }
 
 const deletePreviewImage = () => {
   previewImage.value = ''
+  emit('resetImageToNull')
 }
 </script>
 
