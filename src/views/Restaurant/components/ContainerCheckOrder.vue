@@ -8,7 +8,7 @@ import ConfirmDialog from '@/components/ConfirmDialog.vue'
 
 const VanDialog = Dialog.Component
 const { containers, isLoading } = storeToRefs(useRestaurant())
-const { setContainersAction } = useRestaurant()
+const { setContainersAction, postContainerFinishAction, postContainerSendAction } = useRestaurant()
 const modal = useAlertModal()
 const isConfirmDialog = ref(false)
 const collapseActiveNames = ref([])
@@ -74,8 +74,13 @@ const nextPage = () => {
     dataIndex.value += 1
   }
 }
-const submit = () => {
-  isConfirmDialog.value = false
+const submit = (containerOrderId) => {
+  postContainerSendAction(containerOrderId).then(() => {
+    isConfirmDialog.value = false
+  })
+}
+const confirm = (containerOrder) => {
+  postContainerFinishAction(containerOrder)
 }
 </script>
 
@@ -166,7 +171,9 @@ const submit = () => {
       </div>
 
       <div class="w-full pt-9 pb-9 flex justify-between items-center font-bold text-white text-[1rem]">
-        <button class="w-[48%] h-[43px] bg-success rounded-full border-0">完成</button>
+        <button class="w-[48%] h-[43px] bg-success rounded-full border-0" @click="confirm(containers[dataIndex])">
+          完成
+        </button>
         <button class="w-[48%] h-[43px] bg-warning rounded-full border-0" @click="isConfirmDialog = true">發送</button>
       </div>
 
@@ -240,7 +247,12 @@ const submit = () => {
             <button class="w-[48%] h-[43px] bg-gray rounded-full border-0" @click="isConfirmDialog = false">
               取消
             </button>
-            <button class="w-[48%] h-[43px] bg-[#eb5e55] rounded-full border-0" @click="submit()">確認</button>
+            <button
+              class="w-[48%] h-[43px] bg-[#eb5e55] rounded-full border-0"
+              @click="submit(containers[dataIndex].id)"
+            >
+              確認
+            </button>
           </div>
         </template>
       </ConfirmDialog>

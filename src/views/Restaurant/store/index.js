@@ -96,6 +96,40 @@ const useRestaurant = defineStore('restaurant', {
         this.isLoading = false
       }
     },
+    async postContainerFinishAction(containerOrder) {
+      this.isLoading = true
+      try {
+        const { id, items } = containerOrder
+        const newItems = items.map(({ name, qty, wrin, sort, ...item }) => {
+          return item
+        })
+        const response = await ApiCaller.postContainerFinish(id, newItems)
+        if (response.status === 'success') {
+          this.status = response.status
+          this.message = response.message
+        }
+      } catch (err) {
+        this.status = err.status
+        this.message = err.message
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async postContainerSendAction(id) {
+      this.isLoading = true
+      try {
+        const response = await ApiCaller.postContainerSend(id)
+        if (response.status === 'success') {
+          this.status = response.status
+          this.message = response.message
+        }
+      } catch (err) {
+        this.status = err.status
+        this.message = err.message
+      } finally {
+        this.isLoading = false
+      }
+    },
     setContainersAction(FormData, index) {
       this.containers[index].items.forEach((content) => {
         if (content.id === FormData.id) {
