@@ -13,92 +13,89 @@ const pageTotal = computed(() => Math.ceil(total.value / pageSize))
 const state = reactive({
   tabList: [
     { value: 'all', title: '全部', bg: '#fff', color: '#044d80' },
-    { value: 'normal', title: '常溫', bg: '#6dbe5b', color: '#fff' },
-    { value: 'Chilled', title: '冷藏', bg: '#086eb6', color: '#fff' },
-    { value: 'Frozen', title: '冷凍', bg: '#044d80', color: '#fff' },
+    { value: 'D', title: '常溫', bg: '#6dbe5b', color: '#fff' },
+    { value: 'C', title: '冷藏', bg: '#086eb6', color: '#fff' },
+    { value: 'F', title: '冷凍', bg: '#044d80', color: '#fff' },
   ],
   mockData: {
-    order: '202020430',
-    code: 'O',
+    no: '202020430',
+    code: 'O', // 畫面顯示
     date: '02/06/2021',
-    weight: '1332.52',
-    total: 8,
-    currentPage: 1,
-    list: [
+    cube: 1332.52,
+    // total: 8, // pagination
+    // currentPage: 1, // pagination
+    items: [
       {
-        productId: 12345678901234234,
-        temperature: 'Frozen',
-        name: '麥當勞冷凍麥克炸雞排',
-        count: 11,
-        package: '箱',
-        checked: false,
-        detailsList: [
+        rec_no: '001',
+        wrin: '12345678901234234',
+        temp_zone: 'F',
+        item_desc: '麥當勞冷凍麥克炸雞排',
+        qty: 11,
+        uom: '箱',
+        checked: false, // for checked
+        data: [
           {
-            id: 1,
-            no: 120720,
-            name: '#12',
-            count: 6,
-            package: '箱',
-            abnormal: false,
+            uid: '1',
+            batch_no: '120720',
+            qty: 6,
+            uom: '箱',
+            abnormal: false, // 異常按鈕顯示
           },
           {
-            id: 2,
-            no: 120720,
-            name: '#12',
-            count: 5,
-            package: '箱',
+            uid: '2',
+            batch_no: '120720',
+            qty: 5,
+            uom: '箱',
             abnormal: true,
           },
         ],
       },
       {
-        productId: 1234457890124214,
-        temperature: 'Chilled',
-        name: '滿福麵包C',
-        count: 11,
-        package: '箱',
+        rec_no: '002',
+        wrin: '1234457890124214',
+        temp_zone: 'C',
+        item_desc: '滿福麵包C',
+        qty: 11,
+        uom: '箱',
         checked: false,
-        detailsList: [
+        data: [
           {
-            id: 1,
-            no: 120720,
-            name: '#12',
-            count: 6,
-            package: '箱',
+            uid: '1',
+            batch_no: '120720',
+            qty: 6,
+            uom: '箱',
             abnormal: false,
           },
           {
-            id: 2,
-            no: 120720,
-            name: '#12',
-            count: 5,
-            package: '箱',
+            uid: '2',
+            batch_no: '120720',
+            qty: 5,
+            uom: '箱',
             abnormal: true,
           },
         ],
       },
       {
-        productId: 11245567890124214,
-        temperature: 'normal',
-        name: '點點卡',
-        count: 11,
-        package: '箱',
+        rec_no: '003',
+        wrin: '11245567890124214',
+        temp_zone: 'D',
+        item_desc: '點點卡',
+        qty: 11,
+        uom: '箱',
         checked: false,
-        detailsList: [
+        data: [
           {
-            id: 1,
-            no: 120720,
-            name: '#12',
-            count: 6,
-            package: '箱',
+            uid: '1',
+            batch_no: '120720',
+            qty: 6,
+            uom: '箱',
             abnormal: false,
           },
           {
-            id: 2,
-            no: 120720,
-            name: '#12',
-            count: 5,
-            package: '箱',
+            uid: '2',
+            batch_no: '120720',
+            qty: 5,
+            uom: '箱',
             abnormal: true,
           },
         ],
@@ -106,6 +103,26 @@ const state = reactive({
     ],
   },
 })
+
+const props = defineProps({
+  delivery: {
+    type: Object,
+    required: true,
+  },
+})
+
+const deliveryViewModel = computed(() => {
+  let tempDelivery = props.delivery
+  tempDelivery.code = 'O'
+  tempDelivery.items = tempDelivery.items.map(({ data, ...props }) => ({
+    checked: false,
+    data: data.map((x) => ({ abnormal: true, ...x })),
+    ...props,
+  }))
+
+  return tempDelivery
+})
+
 const handleTab = (id) => {
   tabActive.value = id
 }
@@ -123,20 +140,17 @@ const nextPage = () => {
     currentPage.value += 1
   }
 }
-onMounted(() => {
-  total.value = state.mockData.total
-  currentPage.value = state.mockData.currentPage
-})
+
 watch(allChecked, (newVal, oldVal) => {
   if (newVal) {
-    state.mockData.list.forEach((item) => (item.checked = true))
+    deliveryViewModel.value.items.forEach((item) => (item.checked = true))
   }
   if (isAllChecked.value && oldVal) {
-    state.mockData.list.forEach((item) => (item.checked = false))
+    deliveryViewModel.value.items.forEach((item) => (item.checked = false))
   }
 })
 watch(
-  () => state.mockData.list,
+  () => deliveryViewModel.value.items,
   (newVal, oldVal) => {
     isAllChecked.value = newVal.every((item) => item.checked === true)
     if (isAllChecked.value) {
@@ -179,20 +193,20 @@ watch(
         <div class="h-6 mb-2 font-bold flex justify-between items-center">
           <div class="flex items-center text-[0.875rem] text-[#044d80]">
             <span class="mr-[10px]">送貨單號</span>
-            <span>{{ state.mockData.order }}</span>
+            <span>{{ deliveryViewModel.no }}</span>
           </div>
           <div class="w-14 h-full flex justify-center items-center bg-[#044d80] text-white text-[0.75rem] rounded-full">
-            {{ state.mockData.code }}代號
+            {{ deliveryViewModel.code }}代號
           </div>
         </div>
         <div class="text-gray text-[0.875rem] flex justify-between items-center">
           <div class="flex items-center">
             <img src="dispatching_calendar.png" class="w-4 h-4 mr-2" alt="" />
-            <div class="bg-[#f2f2f2] w-24 h-5 pl-2 flex items-center">{{ state.mockData.date }}</div>
+            <div class="bg-[#f2f2f2] w-24 h-5 pl-2 flex items-center">{{ deliveryViewModel.date }}</div>
           </div>
           <div class="flex items-center">
             <img src="dispatching_box.png" class="w-4 h-4 mr-2" alt="" />
-            <div class="bg-[#f2f2f2] w-20 h-5 pl-2 flex items-center">{{ state.mockData.weight }}</div>
+            <div class="bg-[#f2f2f2] w-20 h-5 pl-2 flex items-center">{{ deliveryViewModel.cube }}</div>
           </div>
         </div>
       </div>
@@ -204,38 +218,37 @@ watch(
         <span class="text-[#044d80] text-[0.875rem] font-bold">全選</span>
       </div>
       <Collapse v-model="collapseActiveNames">
-        <CollapseItem v-for="product in state.mockData.list" :key="product.productId" :name="product.productId">
+        <CollapseItem v-for="product in deliveryViewModel.items" :key="product.wrin" :name="product.wrin">
           <template #title>
             <div class="flex items-center">
               <div class="w-[10%]">
                 <Checkbox v-model="product.checked" @click.stop></Checkbox>
               </div>
               <div class="w-[50%] flex flex-col leading-snug">
-                <span class="text-[#044d80] text-[0.875rem] font-bold truncate">{{ product.name }}</span>
-                <span class="text-gray text-[0.75rem] truncate">{{ product.productId }}</span>
+                <span class="text-[#044d80] text-[0.875rem] font-bold truncate">{{ product.item_desc }}</span>
+                <span class="text-gray text-[0.75rem] truncate">{{ product.wrin }}</span>
               </div>
               <div class="w-[40%] flex items-center text-[0.875rem] font-bold text-[#044d80]">
                 <div class="min-w-[40%] flex justify-between items-center">
-                  <span>{{ product.count }}</span>
-                  <span>{{ product.package }}</span>
+                  <span>{{ product.qty }}</span>
+                  <span>{{ product.uom }}</span>
                 </div>
               </div>
             </div>
           </template>
 
           <li
-            v-for="item in product.detailsList"
-            :key="item.id"
+            v-for="item in product.data"
+            :key="item.uid"
             class="detail-list list-none mx-4 leading-snug h-11 flex items-center text-gray"
           >
-            <div class="w-[50%] ml-[10%] flex flex-col leading-snug">
-              <span class="text-[0.875rem] truncate">{{ item.no }}</span>
-              <span class="text-[0.75rem] truncate">{{ item.name }}</span>
+            <div class="w-[50%] ml-[10%] leading-snug">
+              <span class="text-[0.875rem] truncate">{{ item.batch_no }}</span>
             </div>
             <div class="w-[40%] flex justify-between items-center text-[0.875rem]">
               <div class="min-w-[40%] flex justify-between items-center">
-                <span>{{ item.count }}</span>
-                <span>{{ item.package }}</span>
+                <span>{{ item.qty }}</span>
+                <span>{{ item.uom }}</span>
               </div>
               <div
                 v-if="item.abnormal"

@@ -6,23 +6,26 @@ import useDispatchInfo from '@/views/Dispatch/store'
 import useRestaurant from '@/views/Restaurant/store'
 import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
 import RestaurantInfoCard from '@/components/RestaurantInfoCard.vue'
+import DeliveryNoteDetails from '@/components/DeliveryNoteDetails.vue'
 
 const { dispatch, currentRestaurant } = useDispatchInfo()
-const { getDeliveryAction } = useRestaurant()
+const restaurantStore = useRestaurant()
 const router = useRouter()
 const route = useRoute()
 
 onMounted(() => {
-  if (!dispatch || !currentRestaurant) {
-    router.push({
-      path: '/dispatch',
-      query: {
-        ...route.query,
-      },
-    })
-  } else {
-    getDeliveryAction(currentRestaurant.id)
-  }
+  restaurantStore.getDeliveryAction()
+
+  // if (!dispatch || !currentRestaurant) {
+  //   router.push({
+  //     path: '/dispatch',
+  //     query: {
+  //       ...route.query,
+  //     },
+  //   })
+  // } else {
+  //   getDeliveryAction(currentRestaurant.id)
+  // }
 })
 
 const isShowMenu = ref(false)
@@ -53,6 +56,12 @@ const onClickRight = () => {
         :temp_zone="dispatch.temp_zone"
         :no="dispatch.no"
         :restaurant="currentRestaurant"
+      />
+    </div>
+    <div class="bg-[#F2F8FB] pt-8">
+      <DeliveryNoteDetails
+        v-if="restaurantStore.deliveries && restaurantStore.deliveries[0]"
+        :delivery="restaurantStore.deliveries[0]"
       />
     </div>
   </div>
