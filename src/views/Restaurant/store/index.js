@@ -6,7 +6,7 @@ const useRestaurant = defineStore('restaurant', {
   state: () => ({
     restaurant: null,
     deliveries: null,
-    containers: null,
+    containers: [],
     returned: null,
     osnd: null,
     temperature: null,
@@ -56,6 +56,14 @@ const useRestaurant = defineStore('restaurant', {
         if (response.status === 'success') {
           this.containers = response.data
           this.status = response.status
+          if (this.containers.length !== 0) {
+            this.containers.forEach((content) => {
+              content.items.forEach((item) => {
+                item.purchase_total = item.qty - (item.short_qty + item.backing_qty)
+                item.return_total = item.return_qty + item.resource_qty
+              })
+            })
+          }
         }
       } catch (err) {
         this.status = err.status
@@ -109,6 +117,25 @@ const useRestaurant = defineStore('restaurant', {
         this.isLoading = false
       }
     },
+    async postContainerFinishAction(containerOrder) {
+      this.isLoading = true
+      try {
+        const { id, items } = containerOrder
+        const newItems = items.map(({ name, qty, wrin, sort, ...item }) => {
+          return item
+        })
+        const response = await ApiCaller.postContainerFinish(id, newItems)
+        if (response.status === 'success') {
+          this.status = response.status
+          this.message = response.message
+        }
+      } catch (err) {
+        this.status = err.status
+        this.message = err.message
+      } finally {
+        this.isLoading = false
+      }
+    },
     cleanTempImage() {
       this.temperatureImage = null
     },
@@ -129,7 +156,17 @@ const useRestaurant = defineStore('restaurant', {
       this.isLoading = true
       try {
         const response = await ApiCaller.postLockTemperature(restaurantId, formData)
-
+      } catch (err) {
+        this.status = err.status
+        this.message = err.message
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async postContainerSendAction(id) {
+      this.isLoading = true
+      try {
+        const response = await ApiCaller.postContainerSend(id)
         if (response.status === 'success') {
           this.status = response.status
           this.message = response.message
@@ -150,11 +187,23 @@ const useRestaurant = defineStore('restaurant', {
           this.status = response.status
         }
       } catch (err) {
-        this.message = err.message
         this.status = err.status
+        this.message = err.message
       } finally {
         this.isLoading = false
       }
+    },
+    setContainersAction(FormData, index) {
+      this.containers[index].items.forEach((content) => {
+        if (content.id === FormData.id) {
+          content.backing_qty = Number(FormData.backing_qty)
+          content.short_qty = Number(FormData.short_qty)
+          content.resource_qty = Number(FormData.resource_qty)
+          content.return_qty = Number(FormData.return_qty)
+          content.purchase_total = content.qty - (content.short_qty + content.backing_qty)
+          content.return_total = content.return_qty + content.resource_qty
+        }
+      })
     },
   },
 })

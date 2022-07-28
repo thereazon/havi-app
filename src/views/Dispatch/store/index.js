@@ -64,6 +64,20 @@ const useDispatchInfo = defineStore('dispatch', {
         this.isLoading = false
       }
     },
+    async postUndeliveredAction(id) {
+      this.isLoading = true
+      try {
+        const response = await DispatchApiCaller.postUndelivered(id)
+        if (response.status === 'success') {
+          this.status = response.status
+        }
+      } catch (err) {
+        this.status = err.status
+        this.message = err.message
+      } finally {
+        this.isLoading = false
+      }
+    },
   },
 })
 

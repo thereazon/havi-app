@@ -43,6 +43,9 @@ const getTemperature = async (id, container) => {
         container,
       },
     })
+const postContainerFinish = async (id, data) => {
+  return await axios
+    .post(`/api/webContainer/${id}/finish`, data)
     .then((res) => res.data)
     .catch((err) => Promise.reject(err.response.data))
 }
@@ -63,6 +66,9 @@ const postLockTemperature = async (id, data) => {
 const postTemperatureFinish = async (id) => {
   return await axios
     .post(`/api/webStore/${id}/temperature_finish`)
+const postContainerSend = async (id) => {
+  return await axios
+    .post(`/api/webContainer/${id}/send`)
     .then((res) => res.data)
     .catch((err) => Promise.reject(err.response.data))
 }
@@ -76,6 +82,8 @@ const ApiCaller = {
   getTemperature,
   postLockTemperature,
   postTemperatureFinish,
+  postContainerFinish,
+  postContainerSend,
 }
 
 export default ApiCaller

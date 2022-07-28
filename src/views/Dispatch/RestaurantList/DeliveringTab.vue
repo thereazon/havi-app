@@ -10,7 +10,7 @@ import RestaurantDetailTable from '@/components/RestaurantDetailTable.vue'
 const route = useRoute()
 const router = useRouter()
 const modal = useAlertModal()
-const { dispatch, restaurant, setCurrentRestaurant, getRestaurantDetailAction } = useDispatchInfo()
+const { dispatch, restaurant, postUndeliveredAction, getRestaurantDetailAction } = useDispatchInfo()
 
 const currentRestaurant = computed(() => {
   const arrival = restaurant?.ARRIVAL ? restaurant.ARRIVAL : []
@@ -38,6 +38,9 @@ const handleRouteToDetail = (currentRestaurant) => {
       },
     }),
   )
+}
+const handleUndelivered = (currentRestaurant) => {
+  postUndeliveredAction(currentRestaurant.id)
 }
 </script>
 
@@ -73,7 +76,12 @@ const handleRouteToDetail = (currentRestaurant) => {
     >
       預先查看作業明細
     </Button>
-    <div class="w-full text-center text-[#707070] mt-20 underline pointer">無法配送</div>
+    <div
+      :onClick="() => handleUndelivered(currentRestaurant)"
+      class="w-full text-center text-[#707070] mt-20 underline pointer"
+    >
+      無法配送
+    </div>
   </div>
 </template>
 

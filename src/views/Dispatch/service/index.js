@@ -21,9 +21,17 @@ const getRestaurantDetail = async (id) => {
     .catch((err) => Promise.reject(err.response.data))
 }
 
+const postUndelivered = async (id) => {
+  return await axios
+    .post(`/api/webStore/${id}/undelivered`)
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
+}
+
 const ApiCaller = {
   getDispatch,
   getRestaurantDetail,
+  postUndelivered,
 }
 
 export default ApiCaller
