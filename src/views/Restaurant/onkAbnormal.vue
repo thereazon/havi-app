@@ -2,6 +2,7 @@
 import { ref, reactive, watch } from 'vue'
 import { Icon, NavBar, DatetimePicker, Calendar, Popup, Switch } from 'vant'
 import { useRouter } from 'vue-router'
+import dayjs from 'dayjs'
 import useCommonStore from '@/common/useCommonStore.js'
 
 const router = useRouter()
@@ -12,10 +13,7 @@ const show = ref(false)
 const noset = ref(true)
 
 const formatDate = (date) => {
-  let m = date.getMonth() + 1
-  let d = date.getDate()
-  let y = date.getFullYear()
-  return `${m < 10 ? '0' : ''}${m}/${d < 10 ? '0' : ''}${d}/${y}`
+  return dayjs(date).format('MM/DD/YYYY')
 }
 const onConfirmDate = (value) => {
   show.value = false

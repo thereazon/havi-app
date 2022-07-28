@@ -32,9 +32,7 @@ const useCommonStore = defineStore('common', {
         const response = await Promise.all([getAbnormalList(), getUndeliverable()])
         const [abnormalReasons, undeliverableReasons] = response
         this.abnormalReasons = abnormalReasons.data
-        this.onkAbnormalReasons = abnormalReasons.data.filter((e) => {
-          if (e.code == 'O' || e.code == 'K') return e
-        })
+        this.onkAbnormalReasons = abnormalReasons.data.filter((e) => e.code == 'O' || e.code == 'K')
         this.undeliverableReasons = undeliverableReasons.data
       } catch (err) {
         this.status = err.status
