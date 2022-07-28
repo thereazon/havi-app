@@ -59,7 +59,7 @@ const usePreCool = defineStore('precool', {
         this.isLoading = false
       }
     },
-    async setCurrentDispath(dispatch) {
+    async setCurrentDispatch(dispatch) {
       this.dispatch = dispatch
     },
     async getTemperatureAction(carId, containerId) {
