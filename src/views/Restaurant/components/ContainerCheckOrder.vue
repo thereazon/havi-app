@@ -44,14 +44,8 @@ const openInputDialog = (container) => {
 }
 const submitContainerCount = () => {
   const shortQty = Number(containerForm.short_qty)
-  const backingQty = Number(containerForm.backing_qty)
-  const orderAmount = shortQty + backingQty
-  if (shortQty > containerForm.qty || orderAmount > containerForm.qty) {
+  if (shortQty > containerForm.qty) {
     showAlert('短收不可大於訂貨量')
-    return
-  }
-  if (backingQty > containerForm.qty || orderAmount > containerForm.qty) {
-    showAlert('墊底不可大於訂貨量')
     return
   }
   setContainersAction(containerForm, dataIndex.value)
