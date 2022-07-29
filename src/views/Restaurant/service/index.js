@@ -21,7 +21,7 @@ const getRestaurantDetail = async (id) => {
 //             ctn: 50,
 //             items: [...Array(30).keys()].map((x) => ({
 //               rec_no: `000${x}`,
-//               temp_zone: ['all', 'C', 'D', 'F'][Math.floor(Math.random() * 4)],
+//               temp_zone: ['C', 'D', 'F'][Math.floor(Math.random() * 3)],
 //               wrin: `00010${x}`,
 //               item_desc: `麥香雞醬-A${x}`,
 //               qty: 5,

@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onMounted, reactive, ref, watch } from 'vue'
-import { Collapse, CollapseItem, Checkbox } from 'vant'
+import { Collapse, CollapseItem, Checkbox, Button, Icon } from 'vant'
 
 const props = defineProps({
   delivery: {
@@ -202,15 +202,31 @@ const resetPagination = () => {
 </script>
 
 <template>
-  <div class="h-screen pt-[26px] px-5 bg-[#daf0ff] flex flex-col items-center">
+  <div class="h-auto max-h-screen pt-[26px] flex flex-col items-center">
     <div class="w-[50%] h-8 flex justify-between items-center mb-5">
-      <div class="w-8 h-full rounded-full bg-white" @click="prevPage()"></div>
+      <Button
+        type="primary"
+        color="#086eb6"
+        :plain="currentPage === 1"
+        class="w-8 h-full rounded-full"
+        @click="prevPage()"
+      >
+        <Icon name="arrow-left" />
+      </Button>
       <div
         class="w-16 h-6 text-[0.875rem] rounded-full bg-white text-primary border border-solid border-primary flex justify-center items-center"
       >
         {{ currentPage }} / {{ pageTotal }}
       </div>
-      <div class="w-8 h-full rounded-full bg-white" @click="nextPage()"></div>
+      <Button
+        type="primary"
+        color="#086eb6"
+        :plain="currentPage === pageTotal"
+        class="w-8 h-full rounded-full"
+        @click="nextPage()"
+      >
+        <Icon name="arrow" />
+      </Button>
     </div>
 
     <ul class="w-[90%] h-7 mb-5 flex items-center justify-between">

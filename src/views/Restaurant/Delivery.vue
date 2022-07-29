@@ -58,7 +58,7 @@ const onClickRight = () => {
         :restaurant="currentRestaurant"
       />
     </div>
-    <div class="bg-[#F2F8FB] pt-8">
+    <div class="px-[26px] bg-[#F2F8FB] pt-8 pb-4">
       <DeliveryNoteDetails
         v-if="restaurantStore.deliveries && restaurantStore.deliveries[0]"
         :delivery="restaurantStore.deliveries[0]"
