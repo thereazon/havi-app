@@ -37,11 +37,14 @@ const getOSND = async (id) => {
 
 //GET 擷取溫度須call /api/car/{id}/temperature 車子即時溫度
 const getTemperature = async (id, container) => {
-  return await axios.get(`/api/car/${id}/temperature`, {
-    params: {
-      container,
-    },
-  })
+  return await axios
+    .get(`/api/car/${id}/temperature`, {
+      params: {
+        container,
+      },
+    })
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
 }
 
 const postContainerFinish = async (id, data) => {
