@@ -2,12 +2,47 @@
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { Collapse, CollapseItem, Checkbox } from 'vant'
 
+const props = defineProps({
+  delivery: {
+    type: Object,
+    required: true,
+  },
+})
+
+const deliveryTableData = computed(() => {
+  let tempDelivery = props.delivery
+  tempDelivery.code = 'O'
+  tempDelivery.items = tempDelivery.items.map(({ data, ...props }) => ({
+    checked: false,
+    data: data.map((x) => ({ abnormal: true, ...x })),
+    ...props,
+  }))
+
+  return tempDelivery
+})
+
+const filterDeliveryItems = computed(() => {
+  const filterByActiveTemperature = (deliveryItem) => {
+    if (tabActive.value === 'all') return true
+    return deliveryItem.temp_zone === tabActive.value
+  }
+
+  const paginationQuery = (() => {
+    const start = (currentPage.value - 1) * pageSize
+    const end = currentPage.value * pageSize
+    return [start, end]
+  })()
+
+  return deliveryTableData.value.items.filter(filterByActiveTemperature).slice(...paginationQuery)
+})
+
 const allChecked = ref(false)
 const isAllChecked = ref(false)
 const tabActive = ref('all')
 const collapseActiveNames = ref([])
 const pageSize = 5
-const total = ref(0)
+const MINIMUM_TOTAL = 1
+const total = computed(() => filterDeliveryItems.value.length || MINIMUM_TOTAL)
 const currentPage = ref(1)
 const pageTotal = computed(() => Math.ceil(total.value / pageSize))
 const state = reactive({
@@ -104,25 +139,6 @@ const state = reactive({
   },
 })
 
-const props = defineProps({
-  delivery: {
-    type: Object,
-    required: true,
-  },
-})
-
-const deliveryViewModel = computed(() => {
-  let tempDelivery = props.delivery
-  tempDelivery.code = 'O'
-  tempDelivery.items = tempDelivery.items.map(({ data, ...props }) => ({
-    checked: false,
-    data: data.map((x) => ({ abnormal: true, ...x })),
-    ...props,
-  }))
-
-  return tempDelivery
-})
-
 const handleTab = (id) => {
   tabActive.value = id
 }
@@ -143,15 +159,19 @@ const nextPage = () => {
 
 watch(allChecked, (newVal, oldVal) => {
   if (newVal) {
-    deliveryViewModel.value.items.forEach((item) => (item.checked = true))
+    filterDeliveryItems.value.forEach((item) => (item.checked = true))
   }
   if (isAllChecked.value && oldVal) {
-    deliveryViewModel.value.items.forEach((item) => (item.checked = false))
+    filterDeliveryItems.value.forEach((item) => (item.checked = false))
   }
 })
 watch(
-  () => deliveryViewModel.value.items,
+  () => filterDeliveryItems.value,
   (newVal, oldVal) => {
+    if (newVal.length === 0) {
+      allChecked.value = false
+      return
+    }
     isAllChecked.value = newVal.every((item) => item.checked === true)
     if (isAllChecked.value) {
       allChecked.value = true
@@ -193,32 +213,35 @@ watch(
         <div class="h-6 mb-2 font-bold flex justify-between items-center">
           <div class="flex items-center text-[0.875rem] text-[#044d80]">
             <span class="mr-[10px]">送貨單號</span>
-            <span>{{ deliveryViewModel.no }}</span>
+            <span>{{ deliveryTableData.no }}</span>
           </div>
           <div class="w-14 h-full flex justify-center items-center bg-[#044d80] text-white text-[0.75rem] rounded-full">
-            {{ deliveryViewModel.code }}代號
+            {{ deliveryTableData.code }}代號
           </div>
         </div>
         <div class="text-gray text-[0.875rem] flex justify-between items-center">
           <div class="flex items-center">
-            <img src="dispatching_calendar.png" class="w-4 h-4 mr-2" alt="" />
-            <div class="bg-[#f2f2f2] w-24 h-5 pl-2 flex items-center">{{ deliveryViewModel.date }}</div>
+            <img src="/dispatching_calendar.png" class="w-4 h-4 mr-2" alt="" />
+            <div class="bg-[#f2f2f2] w-24 h-5 pl-2 flex items-center">{{ deliveryTableData.date }}</div>
           </div>
           <div class="flex items-center">
-            <img src="dispatching_box.png" class="w-4 h-4 mr-2" alt="" />
-            <div class="bg-[#f2f2f2] w-20 h-5 pl-2 flex items-center">{{ deliveryViewModel.cube }}</div>
+            <img src="/dispatching_box.png" class="w-4 h-4 mr-2" alt="" />
+            <div class="bg-[#f2f2f2] w-20 h-5 pl-2 flex items-center">{{ deliveryTableData.cube }}</div>
           </div>
         </div>
       </div>
 
-      <div class="flex items-center px-4 py-[10px] border-0 border-y border-solid border-[#f2f2f2]">
+      <div
+        v-if="filterDeliveryItems.length"
+        class="flex items-center px-4 py-[10px] border-0 border-y border-solid border-[#f2f2f2]"
+      >
         <div class="w-[10%]">
           <Checkbox v-model="allChecked" @click.stop></Checkbox>
         </div>
         <span class="text-[#044d80] text-[0.875rem] font-bold">全選</span>
       </div>
       <Collapse v-model="collapseActiveNames">
-        <CollapseItem v-for="product in deliveryViewModel.items" :key="product.wrin" :name="product.wrin">
+        <CollapseItem v-for="product in filterDeliveryItems" :key="product.wrin" :name="product.wrin">
           <template #title>
             <div class="flex items-center">
               <div class="w-[10%]">
