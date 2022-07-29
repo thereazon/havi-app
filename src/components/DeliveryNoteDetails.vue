@@ -165,6 +165,7 @@ watch(allChecked, (newVal, oldVal) => {
     filterDeliveryItems.value.forEach((item) => (item.checked = false))
   }
 })
+
 watch(
   () => filterDeliveryItems.value,
   (newVal, oldVal) => {
@@ -181,6 +182,17 @@ watch(
   },
   { deep: true },
 )
+
+watch(
+  () => tabActive.value,
+  (newVal, oldVal) => {
+    resetPagination()
+  },
+)
+
+const resetPagination = () => {
+  currentPage.value = 1
+}
 </script>
 
 <template>
