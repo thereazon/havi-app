@@ -27,13 +27,19 @@ const filterDeliveryItems = computed(() => {
     return deliveryItem.temp_zone === tabActive.value
   }
 
+  const sortByRecNo = (a, b) => a.rec_no - b.rec_no
+
+  return deliveryTableData.value.items.filter(filterByActiveTemperature).sort(sortByRecNo)
+})
+
+const paginationDeliveryItems = computed(() => {
   const paginationQuery = (() => {
     const start = (currentPage.value - 1) * pageSize
     const end = currentPage.value * pageSize
     return [start, end]
   })()
 
-  return deliveryTableData.value.items.filter(filterByActiveTemperature).slice(...paginationQuery)
+  return filterDeliveryItems.value.slice(...paginationQuery)
 })
 
 const allChecked = ref(false)
@@ -253,7 +259,7 @@ const resetPagination = () => {
         <span class="text-[#044d80] text-[0.875rem] font-bold">全選</span>
       </div>
       <Collapse v-model="collapseActiveNames">
-        <CollapseItem v-for="product in filterDeliveryItems" :key="product.wrin" :name="product.wrin">
+        <CollapseItem v-for="product in paginationDeliveryItems" :key="product.wrin" :name="product.wrin">
           <template #title>
             <div class="flex items-center">
               <div class="w-[10%]">
