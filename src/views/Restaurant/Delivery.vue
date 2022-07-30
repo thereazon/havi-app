@@ -14,18 +14,16 @@ const router = useRouter()
 const route = useRoute()
 
 onMounted(() => {
-  restaurantStore.getDeliveryAction()
-
-  // if (!dispatch || !currentRestaurant) {
-  //   router.push({
-  //     path: '/dispatch',
-  //     query: {
-  //       ...route.query,
-  //     },
-  //   })
-  // } else {
-  //   getDeliveryAction(currentRestaurant.id)
-  // }
+  if (!dispatch || !currentRestaurant) {
+    router.push({
+      path: '/dispatch',
+      query: {
+        ...route.query,
+      },
+    })
+  } else {
+    restaurantStore.getDeliveryAction(currentRestaurant.id)
+  }
 })
 
 const isShowMenu = ref(false)
@@ -41,6 +39,9 @@ const onClickLeft = () => {
 
 const onClickRight = () => {
   isShowMenu.value = true
+}
+const deliveryItemAbnormalHandle = (item) => {
+  // TODO: 異常處理
 }
 </script>
 
@@ -60,8 +61,9 @@ const onClickRight = () => {
     </div>
     <div class="px-[26px] bg-[#F2F8FB] pt-8 pb-4">
       <DeliveryNoteDetails
-        v-if="restaurantStore.deliveries && restaurantStore.deliveries[0]"
-        :delivery="restaurantStore.deliveries[0]"
+        v-if="restaurantStore.deliveries"
+        :deliveries="restaurantStore.deliveries"
+        @deliveryItemAbnormal="deliveryItemAbnormalHandle"
       />
     </div>
   </div>

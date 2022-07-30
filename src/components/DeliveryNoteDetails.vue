@@ -1,56 +1,58 @@
 <script setup>
-import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { computed, onMounted, reactive, ref, watch, nextTick } from 'vue'
 import { Collapse, CollapseItem, Checkbox, Button, Icon } from 'vant'
 
 const props = defineProps({
-  delivery: {
-    type: Object,
+  deliveries: {
+    type: Array,
     required: true,
   },
 })
 
+const DELIVERY_CODE = 'O'
 const deliveryTableData = computed(() => {
-  let tempDelivery = props.delivery
-  tempDelivery.code = 'O'
-  tempDelivery.items = tempDelivery.items.map(({ data, ...props }) => ({
-    checked: false,
-    data: data.map((x) => ({ abnormal: true, ...x })),
-    ...props,
+  return props.deliveries.map(({ items, ...remainDeliveryProperties }) => ({
+    code: DELIVERY_CODE,
+    items: items.map((item) => ({
+      checked: false,
+      ...item,
+    })),
+    ...remainDeliveryProperties,
   }))
-
-  return tempDelivery
 })
 
-const filterDeliveryItems = computed(() => {
-  const filterByActiveTemperature = (deliveryItem) => {
-    if (tabActive.value === 'all') return true
-    return deliveryItem.temp_zone === tabActive.value
-  }
-
-  const sortByRecNo = (a, b) => a.rec_no - b.rec_no
-
-  return deliveryTableData.value.items.filter(filterByActiveTemperature).sort(sortByRecNo)
+const currentDelivery = computed(() => {
+  return deliveryTableData.value[currentIndex.value]
 })
 
-const paginationDeliveryItems = computed(() => {
-  const paginationQuery = (() => {
-    const start = (currentPage.value - 1) * pageSize
-    const end = currentPage.value * pageSize
-    return [start, end]
-  })()
+let _filterDeliveriesItems = ref([])
+const filterDeliveryItems = computed({
+  get() {
+    const filterByActiveTemperature = (deliveryItem) => {
+      if (tabActive.value === 'all') return true
+      return deliveryItem.temp_zone === tabActive.value
+    }
 
-  return filterDeliveryItems.value.slice(...paginationQuery)
+    const sortByRecNo = (a, b) => a.rec_no - b.rec_no
+
+    // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+    _filterDeliveriesItems.value = currentDelivery.value.items.filter(filterByActiveTemperature).sort(sortByRecNo)
+    return _filterDeliveriesItems.value
+  },
+  set(val) {
+    _filterDeliveriesItems.value = [...val]
+  },
 })
 
 const allChecked = ref(false)
 const isAllChecked = ref(false)
 const tabActive = ref('all')
 const collapseActiveNames = ref([])
-const pageSize = 5
 const MINIMUM_TOTAL = 1
-const total = computed(() => filterDeliveryItems.value.length || MINIMUM_TOTAL)
-const currentPage = ref(1)
-const pageTotal = computed(() => Math.ceil(total.value / pageSize))
+const total = computed(() => deliveryTableData.value.length || MINIMUM_TOTAL)
+const currentIndex = ref(0)
+const currentPage = computed(() => currentIndex.value + 1)
+const pageTotal = computed(() => total.value)
 const state = reactive({
   tabList: [
     { value: 'all', title: '全部', bg: '#fff', color: '#044d80' },
@@ -149,28 +151,32 @@ const handleTab = (id) => {
   tabActive.value = id
 }
 const prevPage = () => {
-  if (currentPage.value === 1) {
+  if (currentIndex.value === 0) {
     return
   } else {
-    currentPage.value -= 1
+    currentIndex.value -= 1
   }
 }
 const nextPage = () => {
   if (currentPage.value === pageTotal.value) {
     return
   } else {
-    currentPage.value += 1
+    currentIndex.value += 1
   }
 }
 
-watch(allChecked, (newVal, oldVal) => {
-  if (newVal) {
-    filterDeliveryItems.value.forEach((item) => (item.checked = true))
-  }
-  if (isAllChecked.value && oldVal) {
-    filterDeliveryItems.value.forEach((item) => (item.checked = false))
-  }
-})
+watch(
+  () => allChecked.value,
+  (newVal, oldVal) => {
+    if (newVal) {
+      filterDeliveryItems.value.forEach((item) => (item.checked = true))
+    }
+    if (isAllChecked.value && oldVal) {
+      filterDeliveryItems.value.forEach((item) => (item.checked = false))
+    }
+  },
+  { deep: true },
+)
 
 watch(
   () => filterDeliveryItems.value,
@@ -188,17 +194,6 @@ watch(
   },
   { deep: true },
 )
-
-watch(
-  () => tabActive.value,
-  (newVal, oldVal) => {
-    resetPagination()
-  },
-)
-
-const resetPagination = () => {
-  currentPage.value = 1
-}
 </script>
 
 <template>
@@ -208,7 +203,7 @@ const resetPagination = () => {
         type="primary"
         color="#086eb6"
         :plain="currentPage === 1"
-        class="w-8 h-full rounded-full"
+        class="w-8 h-8 rounded-full"
         @click="prevPage()"
       >
         <Icon name="arrow-left" />
@@ -222,7 +217,7 @@ const resetPagination = () => {
         type="primary"
         color="#086eb6"
         :plain="currentPage === pageTotal"
-        class="w-8 h-full rounded-full"
+        class="w-8 h-8 rounded-full"
         @click="nextPage()"
       >
         <Icon name="arrow" />
@@ -247,20 +242,20 @@ const resetPagination = () => {
         <div class="h-6 mb-2 font-bold flex justify-between items-center">
           <div class="flex items-center text-[0.875rem] text-[#044d80]">
             <span class="mr-[10px]">送貨單號</span>
-            <span>{{ deliveryTableData.no }}</span>
+            <span>{{ currentDelivery.no }}</span>
           </div>
           <div class="w-14 h-full flex justify-center items-center bg-[#044d80] text-white text-[0.75rem] rounded-full">
-            {{ deliveryTableData.code }}代號
+            {{ currentDelivery.code }}代號
           </div>
         </div>
         <div class="text-gray text-[0.875rem] flex justify-between items-center">
           <div class="flex items-center">
             <img src="/dispatching_calendar.png" class="w-4 h-4 mr-2" alt="" />
-            <div class="bg-[#f2f2f2] w-24 h-5 pl-2 flex items-center">{{ deliveryTableData.date }}</div>
+            <div class="bg-[#f2f2f2] w-24 h-5 pl-2 flex items-center">{{ currentDelivery.date }}</div>
           </div>
           <div class="flex items-center">
             <img src="/dispatching_box.png" class="w-4 h-4 mr-2" alt="" />
-            <div class="bg-[#f2f2f2] w-20 h-5 pl-2 flex items-center">{{ deliveryTableData.cube }}</div>
+            <div class="bg-[#f2f2f2] w-20 h-5 pl-2 flex items-center">{{ currentDelivery.cube }}</div>
           </div>
         </div>
       </div>
@@ -275,7 +270,7 @@ const resetPagination = () => {
         <span class="text-[#044d80] text-[0.875rem] font-bold">全選</span>
       </div>
       <Collapse v-model="collapseActiveNames">
-        <CollapseItem v-for="product in paginationDeliveryItems" :key="product.wrin" :name="product.wrin">
+        <CollapseItem v-for="product in filterDeliveryItems" :key="product.wrin" :name="product.wrin">
           <template #title>
             <div class="flex items-center">
               <div class="w-[10%]">
@@ -307,12 +302,9 @@ const resetPagination = () => {
                 <span>{{ item.qty }}</span>
                 <span>{{ item.uom }}</span>
               </div>
-              <div
-                v-if="item.abnormal"
-                class="w-12 h-5 text-[0.75rem] flex justify-center items-center bg-warning text-white rounded-full"
+              <Button color="#eb5e55" round type="danger" size="mini" @click="$emit('deliveryItemAbnormal', item)"
+                >異常+</Button
               >
-                異常+
-              </div>
             </div>
           </li>
         </CollapseItem>
