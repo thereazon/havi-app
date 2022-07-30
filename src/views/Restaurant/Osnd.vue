@@ -4,8 +4,9 @@ import { NavBar } from 'vant'
 import { useRouter, useRoute } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
 import useRestaurant from '@/views/Restaurant/store'
-import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
 import RestaurantInfoCard from '@/components/RestaurantInfoCard.vue'
+import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
+import OSNDTable from './components/OSNDTable.vue'
 
 const { dispatch, currentRestaurant } = useDispatchInfo()
 const { getOSNDAction } = useRestaurant()
@@ -54,6 +55,9 @@ const onClickRight = () => {
         :no="dispatch.no"
         :restaurant="currentRestaurant"
       />
+      <div class="mt-10 pb-20">
+        <OSNDTable title="OSnD單號" />
+      </div>
     </div>
   </div>
 </template>
