@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, reactive, ref, watch, nextTick } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { Collapse, CollapseItem, Checkbox, Button, Icon } from 'vant'
 
 const props = defineProps({
