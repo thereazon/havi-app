@@ -49,6 +49,10 @@ const useDispatchInfo = defineStore('dispatch', {
         if (response.status === 'success') {
           this.currentRestaurant = {
             temperature_count: 1, //餐廳溫度數量寫死1
+            is_temp: !!response.data.is_temp,
+            is_container: !!response.data.is_container,
+            is_returned: !!response.data.is_returned,
+            is_finish: !!response.data.is_finish,
             ...response.data,
           }
           this.status = response.status
