@@ -59,7 +59,7 @@ const useRestaurant = defineStore('restaurant', {
           if (this.containers.length !== 0) {
             this.containers.forEach((content) => {
               content.items.forEach((item) => {
-                item.purchase_total = item.qty - (item.short_qty + item.backing_qty)
+                item.purchase_total = item.qty - item.short_qty
                 item.return_total = item.return_qty + item.resource_qty
               })
             })
@@ -204,7 +204,7 @@ const useRestaurant = defineStore('restaurant', {
           content.short_qty = Number(FormData.short_qty)
           content.resource_qty = Number(FormData.resource_qty)
           content.return_qty = Number(FormData.return_qty)
-          content.purchase_total = content.qty - (content.short_qty + content.backing_qty)
+          content.purchase_total = content.qty - content.short_qty
           content.return_total = content.return_qty + content.resource_qty
         }
       })
