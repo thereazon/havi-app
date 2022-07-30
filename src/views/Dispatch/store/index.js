@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import DispatchApiCaller from '@/views/Dispatch/service'
 import { DispatchStatusNumberToType, restaurantByStatus } from '@/views/Dispatch/helper'
+import { useAlertModal } from '@/components/store/AlertModalStore'
 import useAccountInfo from '@/views/Login/store'
 
 const useDispatchInfo = defineStore('dispatch', {
@@ -20,16 +21,23 @@ const useDispatchInfo = defineStore('dispatch', {
     async setCurrentDispatch(dispatch) {
       this.dispatch = dispatch
     },
-    async getDispatchDetailAction(id) {
+    async getDispatchDetailAction(id, cb) {
       this.isLoading = true
+      const modal = useAlertModal()
       try {
         const response = await DispatchApiCaller.getDispatchDetail(id)
         if (response.status === 'success') {
           this.restaurant = restaurantByStatus(response.data)
+          cb()
         }
       } catch (err) {
         this.status = err.status
         this.message = err.message
+        modal.open({
+          type: 'error', //required
+          title: '錯誤',
+          content: err.message,
+        })
       } finally {
         this.isLoading = false
       }

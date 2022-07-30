@@ -65,16 +65,17 @@ const handleToPreCool = async (dispatch) => {
 
 const handleToRestaurantList = async (dispatch) => {
   await dispatchStore.setCurrentDispatch(dispatch)
-  await dispatchStore.getDispatchDetailAction(dispatch.id)
-  router.push({
-    path: '/restaurantlist',
-    query: {
-      car_id,
-      container_id,
-      container_number,
-      car_number,
-    },
-  })
+  await dispatchStore.getDispatchDetailAction(dispatch.id, () =>
+    router.push({
+      path: '/restaurantlist',
+      query: {
+        car_id,
+        container_id,
+        container_number,
+        car_number,
+      },
+    }),
+  )
 }
 </script>
 
