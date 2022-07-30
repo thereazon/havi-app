@@ -156,6 +156,10 @@ const useRestaurant = defineStore('restaurant', {
       this.isLoading = true
       try {
         const response = await ApiCaller.postLockTemperature(restaurantId, formData)
+        if (response.status === 'success') {
+          this.status = response.status
+          this.message = response.message
+        }
       } catch (err) {
         this.status = err.status
         this.message = err.message

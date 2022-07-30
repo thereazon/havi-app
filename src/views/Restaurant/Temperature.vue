@@ -107,67 +107,25 @@ const cleanTempImage = () => {
   restaurantStore.cleanTempImage()
 }
 
+const isTempInvalid = ref(false)
 watch(
   () => isShowLockTempConfirm.value,
   (newVal, _) => {
     if (newVal) {
-      isTempRangeInvalid()
+      const isInvalid = TempModule.isTempRangeInvalid(
+        isCelsiusTemp.value,
+        currentRestaurant.frozen_temp,
+        currentRestaurant.cold_temp,
+        restaurantStore.frozen_temp,
+        restaurantStore.cold_temp,
+      )
+
+      if (isInvalid) {
+        isTempInvalid.value = isInvalid
+      }
     }
   },
 )
-
-/**
- * 區間判斷
- * 規範冷藏溫度；1個數字代表小於，2個數字代表區間 []
- * 規範冷凍溫度；1個數字代表小於，2個數字代表區間 []
- */
-const isTempInvalid = ref(false)
-const isTempRangeInvalid = () => {
-  let isInValid = false
-  switch (isCelsiusTemp.value) {
-    case true:
-      if (currentRestaurant.frozen_temp.length === 1) {
-        isInValid = restaurantStore.frozen_temp > TempModule.toCelsius(currentRestaurant.frozen_temp[0])
-      } else {
-        isInValid =
-          restaurantStore.frozen_temp < TempModule.toCelsius(currentRestaurant.frozen_temp[0]) ||
-          restaurantStore.frozen_temp > TempModule.toCelsius(currentRestaurant.frozen_temp[1])
-      }
-
-      if (currentRestaurant.cold_temp.length === 1) {
-        isInValid = restaurantStore.cold_temp > TempModule.toCelsius(currentRestaurant.cold_temp[0])
-      } else {
-        isInValid =
-          restaurantStore.cold_temp < TempModule.toCelsius(currentRestaurant.cold_temp[0]) ||
-          restaurantStore.cold_temp > TempModule.toCelsius(currentRestaurant.cold_temp[1])
-      }
-
-      break
-
-    case false:
-      if (currentRestaurant.frozen_temp.length === 1) {
-        isInValid = restaurantStore.frozen_temp > currentRestaurant.frozen_temp[0]
-      } else {
-        isInValid =
-          restaurantStore.frozen_temp < currentRestaurant.frozen_temp[0] ||
-          restaurantStore.frozen_temp > currentRestaurant.frozen_temp[1]
-      }
-
-      if (currentRestaurant.cold_temp.length === 1) {
-        isInValid = restaurantStore.cold_temp > currentRestaurant.cold_temp[0]
-      } else {
-        isInValid =
-          restaurantStore.cold_temp < currentRestaurant.cold_temp[0] ||
-          restaurantStore.cold_temp > currentRestaurant.cold_temp[1]
-      }
-      break
-
-    default:
-      return
-  }
-
-  isTempInvalid.value = isInValid
-}
 
 const postTemperatureData = async () => {
   await restaurantStore.postLockTemperature(currentRestaurant.id)
