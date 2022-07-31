@@ -31,10 +31,8 @@ const useDispatchInfo = defineStore('dispatch', {
           cb()
         }
       } catch (err) {
-        this.status = err.status
-        this.message = err.message
         modal.open({
-          type: 'error', //required
+          type: 'error',
           title: '錯誤',
           content: err.message,
         })

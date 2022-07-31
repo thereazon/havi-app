@@ -94,7 +94,7 @@ const submitTemperature = () => {
 }
 
 const handleFetchTemp = () => {
-  if (route.query.car_id && route.query.container_id) {
+  if (route.query.car_id) {
     restaurantStore.getTemperatureAction(route.query.car_id, route.query.container_id)
   }
 }
@@ -128,11 +128,9 @@ watch(
 )
 
 const postTemperatureData = async () => {
-  await restaurantStore.postLockTemperature(currentRestaurant.id)
-  if (restaurantStore.status === 'success') {
-    isLockedTempAndFinishedPhoto.value = true
-  }
-  toggleShowLockTempConfirm()
+  const cb = () => (isLockedTempAndFinishedPhoto.value = true)
+  await restaurantStore.postLockTemperature(currentRestaurant.id, cb)
+  // toggleShowLockTempConfirm()
 }
 
 const toggleShowLockTempConfirm = () => {

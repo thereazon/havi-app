@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import ApiCaller from '../service'
 import dayjs from 'dayjs'
+import { useAlertModal } from '@/components/store/AlertModalStore'
 
 const useRestaurant = defineStore('restaurant', {
   state: () => ({
@@ -140,6 +141,7 @@ const useRestaurant = defineStore('restaurant', {
       this.temperatureImage = null
     },
     async postLockTemperature(restaurantId) {
+      const modal = useAlertModal()
       const formData = new FormData()
       const tempImageBlob = await fetch(this.temperatureImage).then((r) => r.blob())
       console.log('tempImageBlob', tempImageBlob)
@@ -161,8 +163,11 @@ const useRestaurant = defineStore('restaurant', {
           this.message = response.message
         }
       } catch (err) {
-        this.status = err.status
-        this.message = err.message
+        modal.open({
+          type: 'error',
+          title: '錯誤',
+          content: err.message,
+        })
       } finally {
         this.isLoading = false
       }
@@ -182,13 +187,14 @@ const useRestaurant = defineStore('restaurant', {
         this.isLoading = false
       }
     },
-    async postTemperatureFinish(restaurantId) {
+    async postTemperatureFinish(restaurantId, cb) {
       this.isLoading = true
       try {
         const response = await ApiCaller.postTemperatureFinish(restaurantId)
         if (response.status === 'success') {
           this.message = response.message
           this.status = response.status
+          cb()
         }
       } catch (err) {
         this.status = err.status
