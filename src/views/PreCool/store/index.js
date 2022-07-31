@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { TempModule } from '@/utils/common'
+import { useAlertModal } from '@/components/store/AlertModalStore'
 import ApiCaller from '../service'
 import dayjs from 'dayjs'
 
@@ -27,7 +28,8 @@ const usePreCool = defineStore('precool', {
     cleanSignImage() {
       this.signImage = null
     },
-    async postTemperature(id) {
+    async postTemperature(id, cb) {
+      const modal = useAlertModal()
       const formData = new FormData()
       const signPhotoBlob = await fetch(this.signImage).then((r) => r.blob())
       formData.append('signature_photo', signPhotoBlob)
@@ -51,10 +53,14 @@ const usePreCool = defineStore('precool', {
         if (response.status === 'success') {
           this.status = response.status
           this.message = response.message
+          cb()
         }
       } catch (err) {
-        this.status = err.status
-        this.message = err.message
+        modal.open({
+          type: 'error', //required
+          title: '錯誤',
+          content: err.message,
+        })
       } finally {
         this.isLoading = false
       }

@@ -18,8 +18,7 @@ const route = useRoute()
 const router = useRouter()
 
 const confirm = () => {
-  // isSecurityCodeDialog.value = true
-  preCoolStore.postTemperature(dispatchStore.dispatch.id)
+  preCoolStore.postTemperature(dispatchStore.dispatch.id, () => router.back())
 }
 onMounted(() => {
   if (!dispatchStore.dispatch) {

@@ -4,13 +4,16 @@ import { onMounted, computed } from 'vue'
 import useDispatchInfo from '@/views/Dispatch/store'
 import { useRoute, useRouter } from 'vue-router'
 import { showPreCoolChecked, DispatchStatusType } from '@/views/Dispatch/helper'
+import { useAlertModal } from '@/components/store/AlertModalStore'
 import ContainerOnloadCard from '@/components/ContainerOnloadRecord/ContainerOnloadCard.vue'
 
+const modal = useAlertModal()
 const dispatchStore = useDispatchInfo()
 const route = useRoute()
 const router = useRouter()
 
 const { car_id, container_id, container_number, car_number } = route.query
+
 const isCarIdExist = () => !!car_id
 
 onMounted(() => {
@@ -51,16 +54,30 @@ const handleToPallet = async (dispatch) => {
   })
 }
 const handleToPreCool = async (dispatch) => {
-  await dispatchStore.setCurrentDispatch(dispatch)
-  router.push({
-    path: '/precool',
-    query: {
-      car_id,
-      container_id,
-      container_number,
-      car_number,
-    },
-  })
+  if (dispatch.status === DispatchStatusType.NO_CHECK_IN) {
+    modal.open({
+      type: 'hint',
+      title: '提醒',
+      content: '請先完成報到，才能進行預冷溫度',
+    })
+  } else if (showPreCoolChecked(dispatch.status)) {
+    modal.open({
+      type: 'hint',
+      title: '提醒',
+      content: '已經完成遇冷溫度，請開始下一項作業',
+    })
+  } else {
+    await dispatchStore.setCurrentDispatch(dispatch)
+    router.push({
+      path: '/precool',
+      query: {
+        car_id,
+        container_id,
+        container_number,
+        car_number,
+      },
+    })
+  }
 }
 
 const handleToRestaurantList = async (dispatch) => {
@@ -133,7 +150,7 @@ const handleToRestaurantList = async (dispatch) => {
           <Button
             size="mini"
             round
-            class="border-2 border-solid border-neutral-500 bg-neutral-500 text-white px-3 py-1"
+            class="border-2 border-solid border-primary bg-primary text-white px-3 py-1"
             @click="handleToRestaurantList(dispatch)"
           >
             餐廳明細
