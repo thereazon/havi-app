@@ -1,7 +1,7 @@
 <script setup>
 import { NavBar, Tab, Tabs, Button } from 'vant'
 import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
 import { RestaurantStatusTypeToZh, RestaurantTab } from '@/views/Dispatch/helper'
 import DeliveringTab from './DeliveringTab.vue'
@@ -10,6 +10,7 @@ import UnableDeliverTab from './UnableDeliverTab.vue'
 import PendingDeliveryTab from './PendingDeliveryTab.vue'
 
 const router = useRouter()
+const route = useRoute()
 
 const dispatchStore = useDispatchInfo()
 onMounted(() => {
@@ -17,11 +18,20 @@ onMounted(() => {
     router.back()
   }
 })
+
+const handleRouterBack = () => {
+  router.push({
+    path: `/dispatch`,
+    query: {
+      ...route.query,
+    },
+  })
+}
 </script>
 
 <template>
   <div class="bg-primary/[.05] min-h-screen pt-[46px] box-border">
-    <NavBar safe-area-inset-top left-arrow fixed :onClick="router.back" :title="dispatchStore?.dispatch?.no">
+    <NavBar safe-area-inset-top left-arrow fixed :onClick="handleRouterBack" :title="dispatchStore?.dispatch?.no">
       <template #right>
         <Button round size="mini" class="bg-primary text-white px-3 py-1">出車</Button>
       </template>
