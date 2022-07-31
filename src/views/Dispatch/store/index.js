@@ -22,8 +22,8 @@ const useDispatchInfo = defineStore('dispatch', {
       this.dispatch = dispatch
     },
     async getDispatchDetailAction(id, cb) {
-      this.isLoading = true
       const modal = useAlertModal()
+      this.isLoading = true
       try {
         const response = await DispatchApiCaller.getDispatchDetail(id)
         if (response.status === 'success') {
@@ -42,7 +42,8 @@ const useDispatchInfo = defineStore('dispatch', {
         this.isLoading = false
       }
     },
-    async getRestaurantDetailAction(id) {
+    async getRestaurantDetailAction(id, cb) {
+      const modal = useAlertModal()
       this.isLoading = true
       try {
         const response = await DispatchApiCaller.getRestaurantDetail(id)
@@ -56,10 +57,14 @@ const useDispatchInfo = defineStore('dispatch', {
             ...response.data,
           }
           this.status = response.status
+          cb()
         }
       } catch (err) {
-        this.status = err.status
-        this.message = err.message
+        modal.open({
+          type: 'error', //required
+          title: '錯誤',
+          content: err.message,
+        })
       } finally {
         this.isLoading = false
       }
@@ -99,6 +104,23 @@ const useDispatchInfo = defineStore('dispatch', {
       } catch (err) {
         this.status = err.status
         this.message = err.message
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async postCheckOut() {
+      const modal = useAlertModal()
+      try {
+        const response = await DispatchApiCaller.postCheckOut(this.dispatch.id)
+        if (response.status === 'success') {
+          this.status = response.status
+        }
+      } catch (err) {
+        modal.open({
+          type: 'error', //required
+          title: '錯誤',
+          content: err.message,
+        })
       } finally {
         this.isLoading = false
       }

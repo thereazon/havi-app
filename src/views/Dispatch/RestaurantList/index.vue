@@ -27,13 +27,17 @@ const handleRouterBack = () => {
     },
   })
 }
+
+const handleCheckOut = () => {
+  dispatchStore.postCheckOut()
+}
 </script>
 
 <template>
   <div class="bg-primary/[.05] min-h-screen pt-[46px] box-border">
-    <NavBar safe-area-inset-top left-arrow fixed :onClick="handleRouterBack" :title="dispatchStore?.dispatch?.no">
+    <NavBar safe-area-inset-top left-arrow fixed :onClickLeft="handleRouterBack" :title="dispatchStore?.dispatch?.no">
       <template #right>
-        <Button round size="mini" class="bg-primary text-white px-3 py-1">出車</Button>
+        <Button :onClick="handleCheckOut" round size="mini" class="bg-primary text-white px-3 py-1">出車</Button>
       </template>
     </NavBar>
     <div class="pt-4 px-[26px] text-[13px]">

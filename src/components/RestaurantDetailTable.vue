@@ -1,10 +1,6 @@
 <script setup>
 import { Divider, Button } from 'vant'
-import { useRouter, useRoute } from 'vue-router'
 import dayjs from 'dayjs'
-
-const route = useRoute()
-const router = useRouter()
 
 defineProps({
   title: String,
