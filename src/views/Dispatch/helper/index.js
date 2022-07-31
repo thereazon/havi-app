@@ -145,7 +145,7 @@ export const RestaurantStatusNumberToType = {
   3: RestaurantStatusType.TEMP_CONFIRMATION, //  攜回配銷中心(3)
   4: RestaurantStatusType.DELIVERY_COMPLETED, //配送完成(4)
   11: RestaurantStatusType.DELAY, //延後配送(11)
-  12: RestaurantStatusType.UNABLE_DELIVERY, //無法配送(12)
+  10: RestaurantStatusType.UNABLE_DELIVERY, //無法配送(12)
 }
 
 export const RestaurantTab = {

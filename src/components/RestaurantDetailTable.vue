@@ -10,12 +10,18 @@ defineProps({
   dispatch: Object,
   restaurant: Object,
   handleRouteToDetail: Function,
+  handleOpenUnableDeliverMenu: Function,
 })
 </script>
 
 <template>
   <div class="shadow-md rounded-b-[20px]">
-    <div class="text-white bg-primary rounded-t-[20px] py-[12px] px-[20px]">{{ title }}</div>
+    <div class="text-white bg-primary rounded-t-[20px] py-[12px] px-[20px] flex justify-between items-center">
+      <div>
+        {{ title }}
+      </div>
+      <div v-if="handleOpenUnableDeliverMenu" :onClick="handleOpenUnableDeliverMenu">攜回/延後</div>
+    </div>
     <div class="my-[15px] px-[20px] pb-[20px]">
       <div class="flex items-center justify-between text-gray">
         <img class="w-[15px]" src="/dispatching_calendar.png" alt="icon" />

@@ -13,8 +13,15 @@ const useDispatchInfo = defineStore('dispatch', {
     isLoading: false,
     message: '',
     currentRestaurant: null,
+    showUnableDeliverMenu: false,
   }),
   actions: {
+    closeUnableDeliverMenu() {
+      this.showUnableDeliverMenu = false
+    },
+    openUnableDeliverMenu() {
+      this.showUnableDeliverMenu = true
+    },
     async setCurrentRestaurant(restaurant) {
       this.currentRestaurant = restaurant
     },
