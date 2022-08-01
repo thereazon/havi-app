@@ -1,17 +1,17 @@
 <script setup>
-import { computed, ref } from 'vue'
-import { Popup } from 'vant'
+import { computed } from 'vue'
 import useDispatchInfo from '@/views/Dispatch/store'
 import { restaurantStatusFromStatusToZh } from '@/views/Dispatch/helper'
 import RestaurantDetailTable from '@/components/RestaurantDetailTable.vue'
 
-const { dispatch, restaurant, openUnableDeliverMenu } = useDispatchInfo()
+const dispatchStore = useDispatchInfo()
+const { dispatch, openUnableDeliverMenu } = dispatchStore
 const restaurtants = computed(() => {
-  const unableDelivery = restaurant?.UNABLE_DELIVERY ? restaurant.UNABLE_DELIVERY : []
+  const unableDelivery = dispatchStore.restaurant?.UNABLE_DELIVERY ? dispatchStore.restaurant.UNABLE_DELIVERY : []
   return unableDelivery
 })
 
-const handleOpenUnableDeliverMenu = () => openUnableDeliverMenu()
+const handleOpenUnableDeliverMenu = (id) => () => openUnableDeliverMenu(id)
 </script>
 
 <template>
@@ -22,7 +22,7 @@ const handleOpenUnableDeliverMenu = () => openUnableDeliverMenu()
       :title="restaurantStatusFromStatusToZh(item.status)"
       :dispatch="dispatch"
       :restaurant="item"
-      :handleOpenUnableDeliverMenu="handleOpenUnableDeliverMenu"
+      :handleOpenUnableDeliverMenu="handleOpenUnableDeliverMenu(item.id)"
     />
   </div>
 </template>

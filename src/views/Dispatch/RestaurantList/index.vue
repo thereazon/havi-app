@@ -26,13 +26,13 @@ const openUndeliverableModal = () => {
   showUndeliverableModal.value = true
 }
 
-const confirmDelay = (data) => {
+const confirmDelay = async (data) => {
   showDelayModal.value = false
-  console.log('confirm Delay', data)
+  await dispatchStore.postDelayAction(data.id, data.message)
 }
-const confirmUndeliverable = (data) => {
+const confirmUndeliverable = async (data) => {
   showUndeliverableModal.value = false
-  console.log('confirm Undeliverable', data)
+  await dispatchStore.postBringAction(data.id, data.message)
 }
 
 onMounted(() => {

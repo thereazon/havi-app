@@ -10,11 +10,12 @@ import RestaurantDetailTable from '@/components/RestaurantDetailTable.vue'
 const route = useRoute()
 const router = useRouter()
 const modal = useAlertModal()
-const { dispatch, restaurant, postUndeliveredAction, getRestaurantDetailAction } = useDispatchInfo()
+const dispatchStore = useDispatchInfo()
+const { dispatch, postUndeliveredAction, getRestaurantDetailAction } = dispatchStore
 
 const currentRestaurant = computed(() => {
-  const arrival = restaurant?.ARRIVAL ? restaurant.ARRIVAL : []
-  const delivering = restaurant?.DELIVERING ? restaurant.DELIVERING : []
+  const arrival = dispatchStore.restaurant?.ARRIVAL ? dispatchStore.restaurant.ARRIVAL : []
+  const delivering = dispatchStore.restaurant?.DELIVERING ? dispatchStore.restaurant.DELIVERING : []
   const list = [...arrival, ...delivering]
   return list[0]
 })

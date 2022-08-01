@@ -1,5 +1,5 @@
 <script setup>
-import { Popup, Button } from 'vant'
+import { Popup, Button, Tag } from 'vant'
 import { computed, reactive } from 'vue'
 import useCommonStore from '@/common/useCommonStore.js'
 
@@ -15,10 +15,21 @@ const props = defineProps({
 const store = useCommonStore()
 const form = reactive({
   reason_id: '',
+  id: [],
   message: '',
 })
 
-const dataPassToParent = 'from child'
+const dataPassToParent = form
+const handleOnClick = (v) => {
+  if (form.id.find((id) => id === v.target.value)) {
+    return
+  }
+  form.id = [...form.id, v.target.value]
+}
+
+const handleRemoveTag = (value) => {
+  form.id = form.id.filter((v) => v !== value)
+}
 
 const isShow = computed({
   get: () => props.isShow,
@@ -26,13 +37,14 @@ const isShow = computed({
 })
 </script>
 <template>
-  <Popup class="rounded-[20px] w-[325px] h-[365px]" v-model:show="isShow">
+  <Popup class="rounded-[20px] w-[325px] min-h-[365px]" v-model:show="isShow">
     <div class="py-[26px] px-[36px]">
       <h1 class="text-center text-[#707070] text-[17px] mb-0">{{ props.title }}</h1>
       <h2 class="text-center text-[#a4a4a4] text-[12px]">{{ props.subTitle }}</h2>
       <form class="mt-3">
         <select
-          name=""
+          :onChange="handleOnClick"
+          name="menu"
           id="dispatch-no"
           class="bg-[#fffcf6] border-dashed border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2 px-4 h-[36px]"
           v-model="form.reason_id"
@@ -42,7 +54,19 @@ const isShow = computed({
             {{ reason.content }}
           </option>
         </select>
-
+        <div class="mt-2">
+          <Tag
+            class="ml-2 mt-2"
+            size="medium"
+            round
+            plain
+            closeable="true"
+            v-for="v in form.id"
+            v-bind:key="v"
+            :onClose="() => handleRemoveTag(v)"
+            >{{ store.undeliverableReasons.find((reason) => reason.id === v).content }}</Tag
+          >
+        </div>
         <textarea
           class="border-dashed border-gray-300 bg-[#fffcf6] mt-3 w-[252px] h-[101px]"
           v-model="form.message"

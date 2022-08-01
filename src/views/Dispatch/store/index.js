@@ -14,12 +14,14 @@ const useDispatchInfo = defineStore('dispatch', {
     message: '',
     currentRestaurant: null,
     showUnableDeliverMenu: false,
+    unableDeliverID: null,
   }),
   actions: {
     closeUnableDeliverMenu() {
       this.showUnableDeliverMenu = false
     },
-    openUnableDeliverMenu() {
+    openUnableDeliverMenu(id) {
+      this.unableDeliverID = id
       this.showUnableDeliverMenu = true
     },
     async setCurrentRestaurant(restaurant) {
@@ -66,7 +68,7 @@ const useDispatchInfo = defineStore('dispatch', {
         }
       } catch (err) {
         modal.open({
-          type: 'error', //required
+          type: 'error',
           title: '錯誤',
           content: err.message,
         })
@@ -119,6 +121,40 @@ const useDispatchInfo = defineStore('dispatch', {
         const response = await DispatchApiCaller.postCheckOut(this.dispatch.id)
         if (response.status === 'success') {
           this.status = response.status
+        }
+      } catch (err) {
+        modal.open({
+          type: 'error', //required
+          title: '錯誤',
+          content: err.message,
+        })
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async postBringAction(id, text) {
+      const modal = useAlertModal()
+      try {
+        const response = await DispatchApiCaller.postBring(this.unableDeliverID, id, text)
+        if (response.status === 'success') {
+          await this.getDispatchDetailAction(this.dispatch.id)
+        }
+      } catch (err) {
+        modal.open({
+          type: 'error', //required
+          title: '錯誤',
+          content: err.message,
+        })
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async postDelayAction(id, text) {
+      const modal = useAlertModal()
+      try {
+        const response = await DispatchApiCaller.postDelayed(this.unableDeliverID, id, text)
+        if (response.status === 'success') {
+          await this.getDispatchDetailAction(this.dispatch.id, () => null)
         }
       } catch (err) {
         modal.open({
