@@ -9,12 +9,21 @@ import CompletedTab from './CompletedTab.vue'
 import UnableDeliverTab from './UnableDeliverTab.vue'
 import PendingDeliveryTab from './PendingDeliveryTab.vue'
 import DelayModal from '@/components/DelayModal.vue'
+import ConfirmDialog from '@/components/ConfirmDialog.vue'
+
 const router = useRouter()
 const route = useRoute()
 const dispatchStore = useDispatchInfo()
 
 const showDelayModal = ref(false)
 const showUndeliverableModal = ref(false)
+const unableDeliveryId = ref(null)
+const isConfirmDialog = ref(false)
+
+const openConfirmDialog = (id) => {
+  isConfirmDialog.value = true
+  unableDeliveryId.value = id
+}
 
 const openDelayModal = () => {
   dispatchStore.closeUnableDeliverMenu()
@@ -53,6 +62,11 @@ const handleRouterBack = () => {
 const handleCheckOut = () => {
   dispatchStore.postCheckOut()
 }
+
+const handleUndelivered = async () => {
+  await dispatchStore.postUndeliveredAction(unableDeliveryId.value)
+  isConfirmDialog.value = false
+}
 </script>
 
 <template>
@@ -65,7 +79,7 @@ const handleCheckOut = () => {
     <div class="pt-4 px-[26px] text-[13px]">
       <Tabs :swipeable="true">
         <Tab v-for="item in RestaurantTab" :title="RestaurantStatusTypeToZh[item]" :key="item">
-          <DeliveringTab v-if="item === 'DELIVERING'" />
+          <DeliveringTab v-if="item === 'DELIVERING'" :openConfirmDialog="openConfirmDialog" />
           <CompletedTab v-if="item === 'DELIVERY_COMPLETED'" />
           <UnableDeliverTab v-if="item === 'UNABLE_DELIVERY'" />
           <PendingDeliveryTab v-if="item === 'PENDING_DELIVERY'" />
@@ -73,6 +87,17 @@ const handleCheckOut = () => {
       </Tabs>
     </div>
   </div>
+  <ConfirmDialog v-model:isShowDialog="isConfirmDialog" :isCloseOnClickOverlay="true">
+    <template v-slot:title>
+      <div>確認該訂單無法配送嗎？</div>
+    </template>
+    <template v-slot:footer>
+      <div class="mt-5 px-[10%] flex justify-between items-center font-bold text-white text-[1rem]">
+        <button class="w-[48%] h-[43px] bg-gray rounded-full border-0" @click="isConfirmDialog = false">取消</button>
+        <button class="w-[48%] h-[43px] bg-[#eb5e55] rounded-full border-0" @click="handleUndelivered">確認</button>
+      </div>
+    </template>
+  </ConfirmDialog>
   <DelayModal
     v-model:isShow="showDelayModal"
     title="延後配送"

@@ -1,11 +1,15 @@
 <script setup>
 import { Button } from 'vant'
-import { onMounted, computed } from 'vue'
+import { onMounted, computed, defineProps } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAlertModal } from '@/components/store/AlertModalStore'
 import useDispatchInfo from '@/views/Dispatch/store'
 import { RestaurantStatusTypeToZh } from '@/views/Dispatch/helper'
 import RestaurantDetailTable from '@/components/RestaurantDetailTable.vue'
+
+defineProps({
+  openConfirmDialog: Function,
+})
 
 const route = useRoute()
 const router = useRouter()
@@ -78,7 +82,7 @@ const handleUndelivered = (currentRestaurant) => {
       預先查看作業明細
     </Button>
     <div
-      :onClick="() => handleUndelivered(currentRestaurant)"
+      :onClick="() => openConfirmDialog(currentRestaurant.id)"
       class="w-full text-center text-[#707070] mt-20 underline pointer"
     >
       無法配送

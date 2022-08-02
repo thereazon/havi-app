@@ -6,24 +6,20 @@ const VanDialog = Dialog.Component
 const props = defineProps({
   title: String,
   isShowDialog: Boolean,
-  isCloseOnClickOverlay: Boolean
+  isCloseOnClickOverlay: Boolean,
 })
 const emit = defineEmits(['update:isShowDialog'])
 const isShow = computed({
   get: () => props.isShowDialog,
   set: (val) => {
     emit('update:isShowDialog', val)
-  }
+  },
 })
 </script>
 
 <template>
   <div>
-    <van-dialog
-      v-model:show="isShow"
-      :showConfirmButton="false"
-      :closeOnClickOverlay="props.isCloseOnClickOverlay"
-    >
+    <van-dialog v-model:show="isShow" :showConfirmButton="false" :closeOnClickOverlay="props.isCloseOnClickOverlay">
       <template v-slot:title>
         <div class="text-gray text-[1.25rem] font-bold text-center">
           <slot name="title">
@@ -35,10 +31,8 @@ const isShow = computed({
       <div>
         <slot></slot>
       </div>
-
       <template v-slot:footer>
-        <slot name="footer">
-        </slot>
+        <slot name="footer"> </slot>
       </template>
     </van-dialog>
   </div>

@@ -37,7 +37,7 @@ const useDispatchInfo = defineStore('dispatch', {
         const response = await DispatchApiCaller.getDispatchDetail(id)
         if (response.status === 'success') {
           this.restaurant = restaurantByStatus(response.data)
-          cb()
+          cb && cb()
         }
       } catch (err) {
         modal.open({
@@ -106,7 +106,7 @@ const useDispatchInfo = defineStore('dispatch', {
       try {
         const response = await DispatchApiCaller.postUndelivered(id)
         if (response.status === 'success') {
-          this.status = response.status
+          await this.getDispatchDetailAction(this.dispatch.id)
         }
       } catch (err) {
         this.status = err.status
