@@ -49,6 +49,20 @@ const getDelivery = async (id) => {
     .catch((err) => Promise.reject(err.response.data))
 }
 
+const postDelivery = async (id, data) => {
+  return await axios
+    .post(`/api/webDelivery/${id}/abnormal`, data)
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
+}
+
+const deleteDelivery = async (id) => {
+  return await axios
+    .delete(`/api/webDelivery/${id}/abnormal`)
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
+}
+
 const getContainer = async (id) => {
   return await axios
     .get(`/api/webStore/${id}/container`)
@@ -115,6 +129,8 @@ const postContainerSend = async (id) => {
 const ApiCaller = {
   getRestaurantDetail,
   getDelivery,
+  postDelivery,
+  deleteDelivery,
   getContainer,
   getReturned,
   getOSND,
