@@ -9,7 +9,7 @@ import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
 import OSNDTable from './components/OSNDTable.vue'
 
 const { dispatch, currentRestaurant } = useDispatchInfo()
-const { getOSNDAction } = useRestaurant()
+const restaurantStore = useRestaurant()
 const router = useRouter()
 const route = useRoute()
 
@@ -22,7 +22,7 @@ onMounted(() => {
       },
     })
   } else {
-    getOSNDAction(currentRestaurant.id)
+    restaurantStore.getOSNDAction(currentRestaurant.id)
   }
 })
 
@@ -56,18 +56,10 @@ const onClickRight = () => {
         :restaurant="currentRestaurant"
       />
       <div class="mt-10 pb-20">
-        <OSNDTable title="OSnD單號" />
+        <OSNDTable v-if="restaurantStore.osnd" :detailData="restaurantStore.osnd" title="OSnD單號" />
       </div>
     </div>
   </div>
 </template>
 
-<style scoped>
-/* :deep(.van-icon-arrow-left) {
-  color: gray;
-}
-:deep(.van-nav-bar__title) {
-  font-size: 12px;
-  color: #707070;
-} */
-</style>
+<style scoped></style>
