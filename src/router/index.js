@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import Login from '@/views/Login/index.vue'
 import Cars from '@/views/Cars/index.vue'
 import Temperature from '@/views/Temperature/index.vue'
@@ -20,7 +20,7 @@ import RestaurantOnkAbnormal from '@/views/Restaurant/onkAbnormal.vue'
 import RestaurantExceptionRegistration from '@/views/Restaurant/ExceptionRegistration.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
