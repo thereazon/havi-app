@@ -52,8 +52,6 @@ const filterData = computed({
   },
 })
 
-// 這兩個function還不確定功能先寫起來放
-
 const prevPage = () => {
   if (currentIndex.value === 0) {
     return
@@ -70,6 +68,14 @@ const nextPage = () => {
 }
 const handleTab = (id) => {
   select.value = id
+}
+
+const handleToAbnormalPage = (id) => () => {
+  alert('abnormal' + id)
+}
+
+const handleToAbnormalOPage = (id) => () => {
+  alert('abnormal O')
 }
 </script>
 
@@ -153,8 +159,9 @@ const handleTab = (id) => {
         </template>
         <li
           v-for="subitem in item.data"
-          :key="subitem.uid"
+          :key="subitem.id"
           class="detail-list list-none mx-4 leading-snug h-11 flex items-center text-gray"
+          :onClick="handleToAbnormalPage(subitem.id)"
         >
           <div class="bg-[#f2f2f2] w-full" v-for="(subitem, index) in item.data" :key="subitem.id">
             <div class="flex">
