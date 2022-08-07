@@ -152,6 +152,7 @@ watch(
       </li>
     </ul>
 
+    <!-- Card -->
     <div class="w-full rounded-xl shadow-md bg-white">
       <div class="px-6 pt-3 pb-4">
         <div class="h-6 mb-2 font-bold flex justify-between items-center">
@@ -217,7 +218,12 @@ watch(
                 <span>{{ item.qty }}</span>
                 <span>{{ item.uom }}</span>
               </div>
-              <Button color="#eb5e55" round type="danger" size="mini" @click="$emit('deliveryItemAbnormal', item)"
+              <Button
+                color="#eb5e55"
+                round
+                type="danger"
+                size="mini"
+                @click="$emit('deliveryItemAbnormal', item, product)"
                 >異常+</Button
               >
             </div>
@@ -225,6 +231,7 @@ watch(
         </CollapseItem>
       </Collapse>
     </div>
+    <!-- Card -->
   </div>
 </template>
 

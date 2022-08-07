@@ -39,12 +39,32 @@ const onClickRight = () => {}
 </script>
 
 <template>
-  <div class="bg-primary bg-opacity-[0.05] h-full">
+  <div>
     <NavBar safe-area-inset-top fixed left-arrow @click-left="onClickLeft" @click-right="onClickRight" title="異常登記">
       <template #right> <Icon name="wap-nav" size="18" /> </template
     ></NavBar>
-    <div class="flex flex-col items-stretch px-[40px] pt-10">
+    <div class="flex flex-col items-stretch px-[40px] pt-10 h-full bg-primary bg-opacity-[0.05]">
       <!-- todo: 插入單號component -->
+      <div class="w-full rounded-xl shadow-md bg-white mt-8 mb-5">
+        <div class="px-6 pt-3 pb-4">
+          <div class="h-6 mb-2 flex justify-between items-center">
+            <div class="flex items-center text-[13px] text-[#044d80]">
+              <span class="mr-[10px]">單號</span>
+              <span>XXXXXX</span>
+            </div>
+          </div>
+          <div class="text-gray text-[13px] flex justify-between items-center">
+            <div class="flex items-center">
+              <img src="/dispatching_calendar.png" class="w-4 h-4 mr-2" alt="" />
+              <div class="bg-[#f2f2f2] w-20 h-5 pl-2 flex items-center">11/23/2020</div>
+            </div>
+            <div class="flex items-center">
+              <img src="/dispatching_clock.png" class="w-4 h-4 mr-2" alt="" />
+              <div class="bg-[#f2f2f2] w-20 h-5 pl-2 flex items-center">20:20</div>
+            </div>
+          </div>
+        </div>
+      </div>
       <ExceptionReasonTable
         class="my-5"
         v-for="i in exRegistrationLength"
