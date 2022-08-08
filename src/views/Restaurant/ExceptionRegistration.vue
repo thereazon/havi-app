@@ -1,7 +1,8 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { Icon, NavBar } from 'vant'
 import { useRouter } from 'vue-router'
+import { v4 as uuidv4 } from 'uuid'
 import ExceptionReasonTable from '@/components/ExceptionReasonTable.vue'
 
 const router = useRouter()
