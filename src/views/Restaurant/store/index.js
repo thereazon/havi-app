@@ -15,6 +15,17 @@ const useRestaurant = defineStore('restaurant', {
     degree_type: 'c',
     cold_temp: null,
     frozen_temp: null,
+    currentException: {
+      deliveryNo: null,
+      deliveryDate: null,
+      item: null, // Current item {object}
+      item_desc: null,
+      qty: null,
+      type: null,
+      uid: null,
+      uom: null,
+      wrin: null,
+    },
     status: 'init',
     message: null,
     isLoading: null,
@@ -214,6 +225,28 @@ const useRestaurant = defineStore('restaurant', {
           content.return_total = content.return_qty + content.resource_qty
         }
       })
+    },
+    setCurrentException(currentItem, product, delivery) {
+      this.currentException.deliveryNo = delivery.no
+      this.currentException.deliveryDate = delivery.date
+      this.currentException.item = currentItem
+      this.currentException.item_desc = product.item_desc
+      this.currentException.qty = product.qty
+      this.currentException.type = product.type
+      this.currentException.uid = product.uid
+      this.currentException.uom = product.uom
+      this.currentException.wrin = product.wrin
+    },
+    resetCurrentException() {
+      this.currentException.deliveryNo = null
+      this.currentException.deliveryDate = null
+      this.currentException.item = null
+      this.currentException.item_desc = null
+      this.currentException.qty = null
+      this.currentException.type = null
+      this.currentException.uid = null
+      this.currentException.uom = null
+      this.currentException.wrin = null
     },
   },
 })

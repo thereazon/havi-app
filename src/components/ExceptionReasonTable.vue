@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, watch, ref } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
-import { Collapse, CollapseItem, Checkbox, Button, Switch, Icon } from 'vant'
+import { Switch, Icon } from 'vant'
 import useCommonStore from '@/common/useCommonStore'
 
 const props = defineProps({

@@ -223,7 +223,9 @@ watch(
                 round
                 type="danger"
                 size="mini"
-                @click="$emit('deliveryItemAbnormal', item, product)"
+                @click="
+                  $emit('deliveryItemAbnormal', item, product, { no: currentDelivery.no, date: currentDelivery.date })
+                "
                 >異常+</Button
               >
             </div>
