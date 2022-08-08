@@ -71,7 +71,9 @@ const onClickRight = () => {}
             </div>
             <div class="flex items-center">
               <img src="/dispatching_clock.png" class="w-4 h-4 mr-2" alt="" />
-              <div class="bg-[#f2f2f2] w-20 h-5 pl-2 flex items-center">20:20</div>
+              <div class="bg-[#f2f2f2] w-20 h-5 pl-2 flex items-center">
+                <!-- 20:20 -->
+              </div>
             </div>
           </div>
         </div>
