@@ -1,6 +1,10 @@
 <script setup>
 import { computed, reactive, ref, watch } from 'vue'
-import { Collapse, CollapseItem, Checkbox, Button, Icon } from 'vant'
+import { Collapse, CollapseItem, Checkbox, Button, Icon, RadioGroup, Radio } from 'vant'
+import useRestaurant from '@/views/Restaurant/store'
+import ConfirmDialog from './ConfirmDialog.vue'
+
+const { postDeliveryAction, deleteDeliveryAction } = useRestaurant()
 
 const props = defineProps({
   deliveries: {
@@ -44,8 +48,22 @@ const filterDeliveryItems = computed({
   },
 })
 
+const tabList = [
+  { value: 'all', title: '全部', bg: '#fff', color: '#044d80' },
+  { value: 'D', title: '常溫', bg: '#6dbe5b', color: '#fff' },
+  { value: 'C', title: '冷藏', bg: '#086eb6', color: '#fff' },
+  { value: 'F', title: '冷凍', bg: '#044d80', color: '#fff' },
+]
+const rejectTypeList = [
+  { code: 'F1', reason: '餐廳空間不足付費拒收' },
+  { code: 'F2', reason: '溫度品質拒收' },
+  { code: 'F3', reason: '產品品質拒收' },
+]
+
 const allChecked = ref(false)
 const isAllChecked = ref(false)
+const isConfirmDialog = ref(false)
+const rejectReason = ref('')
 const tabActive = ref('all')
 const collapseActiveNames = ref([])
 const MINIMUM_TOTAL = 1
@@ -53,13 +71,9 @@ const total = computed(() => deliveryTableData.value.length || MINIMUM_TOTAL)
 const currentIndex = ref(0)
 const currentPage = computed(() => currentIndex.value + 1)
 const pageTotal = computed(() => total.value)
-const state = reactive({
-  tabList: [
-    { value: 'all', title: '全部', bg: '#fff', color: '#044d80' },
-    { value: 'D', title: '常溫', bg: '#6dbe5b', color: '#fff' },
-    { value: 'C', title: '冷藏', bg: '#086eb6', color: '#fff' },
-    { value: 'F', title: '冷凍', bg: '#044d80', color: '#fff' },
-  ],
+const rejectData = reactive({
+  code: '',
+  ids: [],
 })
 
 const handleTab = (id) => {
@@ -78,6 +92,24 @@ const nextPage = () => {
   } else {
     currentIndex.value += 1
   }
+}
+
+const handleRejectType = (rejectType) => {
+  rejectData.code = rejectType.code
+  rejectReason.value = rejectType.reason
+}
+
+const openConfirmDialog = () => {
+  rejectData.ids = currentDelivery.value.items.filter((item) => item.checked).map((item) => item.uid)
+  if (rejectData.ids.length === 0) {
+    return
+  }
+  isConfirmDialog.value = true
+}
+
+const submitRejectCode = () => {
+  postDeliveryAction(currentDelivery.value.id, rejectData)
+  isConfirmDialog.value = false
 }
 
 watch(
@@ -141,7 +173,7 @@ watch(
 
     <ul class="w-[90%] h-7 mb-5 flex items-center justify-between">
       <li
-        v-for="tab in state.tabList"
+        v-for="tab in tabList"
         :key="tab.value"
         class="w-16 h-full text-[0.875rem] font-bold flex justify-center items-center rounded-full"
         :class="{ 'tab-active': tabActive === tab.value }"
@@ -177,12 +209,23 @@ watch(
 
       <div
         v-if="filterDeliveryItems.length"
-        class="flex items-center px-4 py-[10px] border-0 border-y border-solid border-[#f2f2f2]"
+        class="flex justify-between items-center px-4 py-[10px] border-0 border-y border-solid border-[#f2f2f2]"
       >
-        <div class="w-[10%]">
-          <Checkbox v-model="allChecked" @click.stop></Checkbox>
+        <div class="w-[50%] flex items-center">
+          <div class="w-[20%]">
+            <Checkbox v-model="allChecked" @click.stop></Checkbox>
+          </div>
+          <span class="text-[#044d80] text-[0.875rem] font-bold">全選</span>
         </div>
-        <span class="text-[#044d80] text-[0.875rem] font-bold">全選</span>
+        <div class="w-[50%] flex justify-end items-center">
+          <img src="/Restaurant_f2.png" class="w-14 h-14" alt="" @click="openConfirmDialog()" />
+          <img
+            src="/Restaurant_rotate.png"
+            class="w-14 h-14"
+            alt=""
+            @click="deleteDeliveryAction(currentDelivery.id)"
+          />
+        </div>
       </div>
       <Collapse v-model="collapseActiveNames">
         <CollapseItem v-for="product in filterDeliveryItems" :key="product.wrin" :name="product.wrin">
@@ -225,6 +268,42 @@ watch(
         </CollapseItem>
       </Collapse>
     </div>
+
+    <ConfirmDialog v-model:isShowDialog="isConfirmDialog" :isCloseOnClickOverlay="true">
+      <template v-slot:title>
+        <div>請選擇拒收形式</div>
+      </template>
+      <div class="h-6 flex justify-center items-center text-warning text-[0.8125rem] font-bold mt-5">
+        {{ rejectReason }}
+      </div>
+      <RadioGroup v-model="rejectData.code">
+        <ul class="flex justify-evenly items-center my-5">
+          <li
+            class="w-16 h-16 flex justify-center items-center font-bold text-[2.5rem] text-warning shadow-md rounded-md box-border"
+            :class="{ 'reject-checked': rejectData.code === item.code }"
+            v-for="item in rejectTypeList"
+            :key="item.code"
+            @click="handleRejectType(item)"
+          >
+            {{ item.code }}
+            <Radio :name="item.code" />
+          </li>
+        </ul>
+        <div class="flex justify-center items-center text-gray text-[0.8125rem] font-bold">是否確認拒收？</div>
+      </RadioGroup>
+      <template v-slot:footer>
+        <div class="px-[10%] mt-[42px] flex justify-between items-center font-bold text-white text-[1rem]">
+          <button class="w-[48%] h-[43px] bg-gray rounded-full border-0" @click="isConfirmDialog = false">取消</button>
+          <button
+            class="w-[48%] h-[43px] bg-[#eb5e55] rounded-full border-0"
+            :disabled="rejectData.code === ''"
+            @click="submitRejectCode()"
+          >
+            確認
+          </button>
+        </div>
+      </template>
+    </ConfirmDialog>
   </div>
 </template>
 
@@ -252,5 +331,11 @@ watch(
 }
 .detail-list:last-child {
   border-bottom: 0;
+}
+:deep(.van-radio__icon) {
+  display: none;
+}
+.reject-checked {
+  border: 2px solid #eb5e55;
 }
 </style>

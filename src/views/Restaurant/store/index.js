@@ -50,6 +50,36 @@ const useRestaurant = defineStore('restaurant', {
         this.isLoading = false
       }
     },
+    async postDeliveryAction(id, data) {
+      this.isLoading = true
+      try {
+        const response = await ApiCaller.postDelivery(id, data)
+        if (response.status === 'success') {
+          this.status = response.status
+          this.message = response.message
+        }
+      } catch (err) {
+        this.status = err.status
+        this.message = err.message
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async deleteDeliveryAction(id) {
+      this.isLoading = true
+      try {
+        const response = await ApiCaller.deleteDelivery(id)
+        if (response.status === 'success') {
+          this.status = response.status
+          this.message = response.message
+        }
+      } catch (err) {
+        this.status = err.status
+        this.message = err.message
+      } finally {
+        this.isLoading = false
+      }
+    },
     async getContainerAction(id) {
       this.isLoading = true
       try {
