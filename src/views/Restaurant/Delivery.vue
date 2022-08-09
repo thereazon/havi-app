@@ -41,7 +41,6 @@ const onClickRight = () => {
   isShowMenu.value = true
 }
 const deliveryItemAbnormalHandle = (item, product, delivery) => {
-  // TODO: 異常處理
   // console.log('delivery', delivery) // 送貨單
   // console.log('item', item) // 單項物品
   // console.log('product', product) // 整單的物品

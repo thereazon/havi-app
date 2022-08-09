@@ -152,7 +152,6 @@ watch(
       </li>
     </ul>
 
-    <!-- Card -->
     <div class="w-full rounded-xl shadow-md bg-white">
       <div class="px-6 pt-3 pb-4">
         <div class="h-6 mb-2 font-bold flex justify-between items-center">
@@ -233,7 +232,6 @@ watch(
         </CollapseItem>
       </Collapse>
     </div>
-    <!-- Card -->
   </div>
 </template>
 

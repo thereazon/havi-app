@@ -53,7 +53,6 @@ const onClickRight = () => {}
       <template #right> <Icon name="wap-nav" size="18" /> </template
     ></NavBar>
     <div class="flex flex-col items-stretch px-[40px] pt-10 h-full bg-primary bg-opacity-[0.05]">
-      <!-- todo: 插入單號component -->
       <div class="w-full rounded-xl shadow-md bg-white mt-8 mb-5">
         <div class="px-6 pt-3 pb-4">
           <div class="h-6 mb-2 flex justify-between items-center">
