@@ -260,7 +260,14 @@ watch(
                 <span>{{ item.qty }}</span>
                 <span>{{ item.uom }}</span>
               </div>
-              <Button color="#eb5e55" round type="danger" size="mini" @click="$emit('deliveryItemAbnormal', item)"
+              <Button
+                color="#eb5e55"
+                round
+                type="danger"
+                size="mini"
+                @click="
+                  $emit('deliveryItemAbnormal', item, product, { no: currentDelivery.no, date: currentDelivery.date })
+                "
                 >異常+</Button
               >
             </div>

@@ -40,8 +40,12 @@ const onClickLeft = () => {
 const onClickRight = () => {
   isShowMenu.value = true
 }
-const deliveryItemAbnormalHandle = (item) => {
-  // TODO: 異常處理
+const deliveryItemAbnormalHandle = (item, product, delivery) => {
+  // console.log('delivery', delivery) // 送貨單
+  // console.log('item', item) // 單項物品
+  // console.log('product', product) // 整單的物品
+  restaurantStore.setCurrentException(item, product, delivery)
+  router.push('/restaurant/ExceptionRegistration')
 }
 </script>
 
