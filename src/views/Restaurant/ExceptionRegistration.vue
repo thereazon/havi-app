@@ -24,6 +24,8 @@ onMounted(() => {
         ...route.query,
       },
     })
+  } else {
+    restaurantStore.getExceptionAction(currentException.uid, '1')
   }
 })
 
@@ -60,8 +62,8 @@ const onClickRight = () => {}
 <template>
   <div>
     <NavBar safe-area-inset-top fixed left-arrow @click-left="onClickLeft" @click-right="onClickRight" title="異常登記">
-      <template #right> <Icon name="wap-nav" size="18" /> </template
-    ></NavBar>
+      ></NavBar
+    >
     <div class="flex flex-col items-stretch px-[40px] pt-10 h-full bg-primary bg-opacity-[0.05]">
       <div class="w-full rounded-xl shadow-md bg-white mt-8 mb-5">
         <div class="px-6 pt-3 pb-4">

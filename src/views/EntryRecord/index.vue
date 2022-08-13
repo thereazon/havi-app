@@ -53,7 +53,7 @@ const onClickLeft = () => {
 }
 </script>
 <template>
-  <div class="bg-[#F2F8FB] h-screen">
+  <div class="bg-[#F2F8FB] pb-10">
     <NavBar safe-area-inset-top fixed left-arrow @click-left="onClickLeft" title="進場紀錄" />
     <div class="flex flex-col justify-center items-center">
       <div class="mt-24 border-solid border-success border-2 rounded-2xl h-[226px] w-[323px] bg-white">
@@ -89,7 +89,7 @@ const onClickLeft = () => {
           </div>
         </div>
       </div>
-      <form class="w-[277px]">
+      <form class="w-[277px] pb-5">
         <div class="mt-8">
           <label for="dispatch-no" class="block mb-2 text-[13px] font-medium text-gray-900">選擇派工單號</label>
           <select
@@ -113,7 +113,7 @@ const onClickLeft = () => {
           </div>
         </div>
         <Button
-          class="bg-success mt-28"
+          class="bg-success mt-16"
           loading-type="spinner"
           round
           block

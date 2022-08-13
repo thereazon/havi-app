@@ -101,17 +101,9 @@ const handleToRestaurantList = async (dispatch) => {
     <!-- 導航列 -->
     <NavBar safe-area-inset-top fixed title="派工單">
       <template #right>
-        <Button
-          @click="checkInBtn"
-          :disabled="currentDispatch?.status !== DispatchStatusType.NO_CHECK_IN"
-          round
-          size="mini"
-          class="bg-[#eb4e55] text-white px-3 py-1"
-          >報到</Button
-        >
+        <Button @click="checkInBtn" round size="mini" class="bg-[#eb4e55] text-white px-3 py-1">報到</Button>
       </template>
     </NavBar>
-
     <!-- 插件工作塊 -->
     <!-- <div class="py-2 w-full h-40"> -->
     <!-- <p class="text-center text-success m-0">插件工作</p> -->
