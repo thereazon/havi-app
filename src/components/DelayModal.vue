@@ -46,7 +46,7 @@ const isShow = computed({
           :onChange="handleOnClick"
           name="menu"
           id="dispatch-no"
-          class="bg-[#fffcf6] border-dashed border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2 px-4 h-[36px]"
+          class="havi-select"
           v-model="form.reason_id"
         >
           <option disabled value="">{{ props.optionFirst }}</option>
