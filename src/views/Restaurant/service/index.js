@@ -126,6 +126,20 @@ const postContainerSend = async (id) => {
     .catch((err) => Promise.reject(err.response.data))
 }
 
+const postException = async (id, data, type) => {
+  return await axios
+    .post(`/api/webDelivery/${id}?type=${type}`, data)
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
+}
+
+const getException = async (id, type) => {
+  return await axios
+    .get(`/api/webDelivery/${id}?type=${type}`)
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
+}
+
 const ApiCaller = {
   getRestaurantDetail,
   getDelivery,
@@ -135,10 +149,12 @@ const ApiCaller = {
   getReturned,
   getOSND,
   getTemperature,
+  getException,
   postLockTemperature,
   postTemperatureFinish,
   postContainerFinish,
   postContainerSend,
+  postException,
 }
 
 export default ApiCaller

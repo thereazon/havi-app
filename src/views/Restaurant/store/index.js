@@ -278,6 +278,42 @@ const useRestaurant = defineStore('restaurant', {
       this.currentException.uom = null
       this.currentException.wrin = null
     },
+    async getExceptionAction(id, type) {
+      const modal = useAlertModal()
+      try {
+        const response = await ApiCaller.getException(id, type)
+        if (response.status === 'success') {
+          this.status = response.status
+          this.message = response.message
+        }
+      } catch (err) {
+        modal.open({
+          type: 'error',
+          title: '錯誤',
+          content: err.message,
+        })
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async postExceptionAction(id, exceptionList, type) {
+      const modal = useAlertModal()
+      try {
+        const response = await ApiCaller.postException(id, exceptionList, type)
+        if (response.status === 'success') {
+          this.status = response.status
+          this.message = response.message
+        }
+      } catch (err) {
+        modal.open({
+          type: 'error',
+          title: '錯誤',
+          content: err.message,
+        })
+      } finally {
+        this.isLoading = false
+      }
+    },
   },
 })
 

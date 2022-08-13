@@ -45,7 +45,7 @@ const deliveryItemAbnormalHandle = (item, product, delivery) => {
   // console.log('item', item) // 單項物品
   // console.log('product', product) // 整單的物品
   restaurantStore.setCurrentException(item, product, delivery)
-  router.push('/restaurant/ExceptionRegistration')
+  router.push({ path: '/restaurant/ExceptionRegistration', query: { ...route.query } })
 }
 </script>
 

@@ -1,12 +1,11 @@
 <script setup>
-import { ref, onUnmounted } from 'vue'
+import { ref, onUnmounted, onMounted } from 'vue'
 import { Icon, NavBar, Collapse, CollapseItem, Checkbox } from 'vant'
-import { useRouter } from 'vue-router'
-import { v4 as uuidv4 } from 'uuid'
+import { useRouter, useRoute } from 'vue-router'
 import useRestaurant from '@/views/Restaurant/store'
 import ExceptionReasonTable from '@/components/ExceptionReasonTable.vue'
-
 const router = useRouter()
+const route = useRoute()
 const restaurantStore = useRestaurant()
 const { currentException } = restaurantStore
 
@@ -16,6 +15,17 @@ const imageArr = ref([])
 const exRegistrationLength = ref(1)
 const readyToPush = ref(false)
 const activeNames = ref(['1'])
+
+onMounted(() => {
+  if (!currentException.deliveryNo || !currentException.item) {
+    router.push({
+      path: '/dispatch',
+      query: {
+        ...route.query,
+      },
+    })
+  }
+})
 
 onUnmounted(() => {
   restaurantStore.resetCurrentException()
@@ -76,7 +86,7 @@ const onClickRight = () => {}
             </div>
           </div>
         </div>
-        <Collapse v-model="activeNames">
+        <Collapse v-if="currentException.item" v-model="activeNames">
           <CollapseItem name="1">
             <template #title>
               <div class="flex items-center">
