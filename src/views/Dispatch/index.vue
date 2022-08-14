@@ -94,6 +94,13 @@ const handleToRestaurantList = async (dispatch) => {
     }),
   )
 }
+
+const isDisabled = computed(() => {
+  return (
+    currentDispatch.value.status === DispatchStatusType.NO_CHECK_IN ||
+    currentDispatch.value.status !== DispatchStatusType.PRE_COOLING
+  )
+})
 </script>
 
 <template>
@@ -101,7 +108,14 @@ const handleToRestaurantList = async (dispatch) => {
     <!-- 導航列 -->
     <NavBar safe-area-inset-top fixed title="派工單">
       <template #right>
-        <Button @click="checkInBtn" round size="mini" class="bg-[#eb4e55] text-white px-3 py-1">報到</Button>
+        <Button
+          @click="checkInBtn"
+          :disabled="currentDispatch?.status !== DispatchStatusType.NO_CHECK_IN"
+          round
+          size="mini"
+          class="bg-[#eb4e55] text-white px-3 py-1"
+          >報到</Button
+        >
       </template>
     </NavBar>
     <!-- 插件工作塊 -->
@@ -134,6 +148,7 @@ const handleToRestaurantList = async (dispatch) => {
           <Button
             size="mini"
             round
+            :disabled="!showPreCoolChecked(dispatch.status)"
             @click="handleToPallet(dispatch)"
             class="border-2 border-solid border-emerald-500 bg-emerald-500 text-white px-3 py-1"
           >
@@ -142,6 +157,7 @@ const handleToRestaurantList = async (dispatch) => {
           <Button
             size="mini"
             round
+            :disabled="!showPreCoolChecked(dispatch.status)"
             class="border-2 border-solid border-primary bg-primary text-white px-3 py-1"
             @click="handleToRestaurantList(dispatch)"
           >
