@@ -92,11 +92,7 @@ const onClickLeft = () => {
       <form class="w-[277px] pb-5">
         <div class="mt-8">
           <label for="dispatch-no" class="block mb-2 text-[13px] font-medium text-gray-900">選擇派工單號</label>
-          <select
-            id="dispatch-no"
-            class="bg-[#fffcf6] border-dashed border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 px-4 h-[48px]"
-            disabled
-          >
+          <select id="dispatch-no" class="havi-select" disabled>
             <option>{{ dispatch_no }}</option>
           </select>
         </div>
@@ -105,7 +101,7 @@ const onClickLeft = () => {
           <div
             name=""
             id="dispatch-no"
-            class="bg-[#fffcf6] border-dashed border-gray-300 text-gray-900 text-sm w-[277px] h-[48px] flex justify-center items-center"
+            class="havi-select bg-[#fffcf6] border-gray-300 text-gray-900 text-sm w-[277px] h-[48px] flex justify-center items-center"
             @click="toggleTemperatureSheet"
           >
             <!-- 36.4 -->
@@ -113,7 +109,7 @@ const onClickLeft = () => {
           </div>
         </div>
         <Button
-          class="bg-success mt-16"
+          class="bg-success mt-20"
           loading-type="spinner"
           round
           block

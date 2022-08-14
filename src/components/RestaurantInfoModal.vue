@@ -35,7 +35,7 @@ const back = () => {
       </div>
       <div class="flex items-center mb-5">
         <img class="w-[28px] mr-1" src="/dispatching_phone.png" alt="icon" />
-        <div class="text-[13px] grow text-gray w-100 text-center p-3 bg-[#f2f2f2]">{{ infoData.tel }}</div>
+        <div class="text-[13px] grow text-gray w-100 p-3 bg-[#f2f2f2]">{{ infoData.tel }}</div>
       </div>
       <Button class="px-[50px] border-gray text-gray rounded-full border-2" @click="back()">返回</Button>
     </div>

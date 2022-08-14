@@ -94,13 +94,6 @@ const handleToRestaurantList = async (dispatch) => {
     }),
   )
 }
-
-const isDisabled = computed(() => {
-  return (
-    currentDispatch.value.status === DispatchStatusType.NO_CHECK_IN ||
-    currentDispatch.value.status !== DispatchStatusType.PRE_COOLING
-  )
-})
 </script>
 
 <template>
