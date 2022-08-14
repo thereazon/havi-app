@@ -103,7 +103,7 @@ const handleUndelivered = async () => {
     title="延後配送"
     subTitle="請填寫延後配送原因"
     optionFirst="請選擇延後配送原因"
-    warning="!請確認不再進行配送此單!"
+    warning="!確認後將此單延至最後一筆進行配送!"
     @confirm="confirmDelay"
   />
   <DelayModal
@@ -111,7 +111,7 @@ const handleUndelivered = async () => {
     title="攜回配銷中心"
     subTitle="請填寫無法配送原因"
     optionFirst="請選擇無法配送原因"
-    warning="!確認後將此單延至最後一筆進行配送!"
+    warning="!請確認不再進行配送此單!"
     @confirm="confirmUndeliverable"
   />
   <Popup position="bottom" v-model:show="dispatchStore.showUnableDeliverMenu">
