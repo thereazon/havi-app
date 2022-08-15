@@ -169,7 +169,6 @@ const toggleShowTempSubmitConfirm = () => {
         <div class="flex flex-col">
           <div class="text-[0.9375rem] mb-[4px] flex items-center">
             <span class="mr-[5px]">餐廳溫度確認</span>
-            <div class="w-[15px] h-[15px] text-white rounded-full bg-primary flex justify-center items-center">?</div>
           </div>
           <div class="text-[0.75rem] font-bold">
             <span class="mr-[10px]">11/23/2020</span>

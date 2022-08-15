@@ -12,7 +12,7 @@ const useRestaurant = defineStore('restaurant', {
     osnd: null,
     temperature: null,
     temperatureImage: null,
-    degree_type: 'c',
+    degree_type: 'f',
     cold_temp: null,
     frozen_temp: null,
     currentException: {
