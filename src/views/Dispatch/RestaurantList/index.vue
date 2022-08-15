@@ -19,6 +19,7 @@ const showDelayModal = ref(false)
 const showUndeliverableModal = ref(false)
 const unableDeliveryId = ref(null)
 const isConfirmDialog = ref(false)
+const isConfirmDialog2 = ref(false)
 
 const openConfirmDialog = (id) => {
   isConfirmDialog.value = true
@@ -60,6 +61,7 @@ const handleRouterBack = () => {
 }
 
 const handleCheckOut = () => {
+  isConfirmDialog2.value = false
   dispatchStore.postCheckOut()
 }
 
@@ -67,13 +69,28 @@ const handleUndelivered = async () => {
   await dispatchStore.postUndeliveredAction(unableDeliveryId.value)
   isConfirmDialog.value = false
 }
+
+const handleOpenDialog2 = async () => {
+  isConfirmDialog2.value = true
+}
 </script>
 
 <template>
+  <ConfirmDialog v-model:isShowDialog="isConfirmDialog2" :isCloseOnClickOverlay="true">
+    <template v-slot:title>
+      <div>是否確認出車?</div>
+    </template>
+    <template v-slot:footer>
+      <div class="px-[10%] mt-[42px] flex justify-between items-center font-bold text-white text-[1rem]">
+        <button class="w-[48%] h-[43px] bg-gray rounded-full border-0" @click="isConfirmDialog2 = false">取消</button>
+        <button class="w-[48%] h-[43px] bg-[#eb5e55] rounded-full border-0" @click="handleCheckOut">確認</button>
+      </div>
+    </template>
+  </ConfirmDialog>
   <div class="bg-primary/[.05] min-h-screen pt-[46px] box-border">
     <NavBar safe-area-inset-top left-arrow fixed :onClickLeft="handleRouterBack" :title="dispatchStore?.dispatch?.no">
       <template #right>
-        <Button :onClick="handleCheckOut" round size="mini" class="bg-primary text-white px-3 py-1">出車</Button>
+        <Button :onClick="handleOpenDialog2" round size="mini" class="bg-primary text-white px-3 py-1">出車</Button>
       </template>
     </NavBar>
     <div class="pt-4 px-[26px] text-[13px]">

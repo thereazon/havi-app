@@ -28,7 +28,7 @@ export const useAlertModal = defineStore('alertModal', {
     type: '',
     title: '',
     content: '',
-    callback: () => {},
+    callback: null,
     isShow: false,
     modalStyle: {},
   }),
@@ -46,7 +46,7 @@ export const useAlertModal = defineStore('alertModal', {
       }
     },
     close() {
-      this.callback()
+      this.callback && this.callback()
       this.isShow = false
     },
   },
