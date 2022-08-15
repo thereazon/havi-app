@@ -46,6 +46,7 @@ export const useAlertModal = defineStore('alertModal', {
       }
     },
     close() {
+      this.callback()
       this.isShow = false
     },
   },

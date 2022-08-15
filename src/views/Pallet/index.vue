@@ -6,8 +6,10 @@ import useDispatchInfo from '@/views/Dispatch/store'
 import { useRouter, useRoute } from 'vue-router'
 import ContainerOnloadCard from '@/components/ContainerOnloadRecord/ContainerOnloadCard.vue'
 import ContainerOnloadList from '@/components/ContainerOnloadRecord/ContainerOnloadList.vue'
+import { useAlertModal } from '@/components/store/AlertModalStore'
 
 const palletStore = usePallet()
+const modal = useAlertModal()
 const dispatchStore = useDispatchInfo()
 const router = useRouter()
 const route = useRoute()
@@ -30,7 +32,14 @@ const onClickLeft = () => {
 }
 
 const handleSubmit = () => {
-  palletStore.postPalletAction(dispatchStore.dispatch.id).then(() => router.back())
+  palletStore.postPalletAction(dispatchStore.dispatch.id).then(() => {
+    modal.open({
+      type: 'success', //required
+      title: '成功',
+      content: '裝車棧板已上傳成功',
+      callback: () => router.back(),
+    })
+  })
 }
 </script>
 

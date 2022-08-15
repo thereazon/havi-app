@@ -21,6 +21,7 @@ const props = defineProps({
         input-align="right"
         :key="ingredient.id"
         v-model="ingredient.qty"
+        type="digit"
         :label="ingredient.name"
       />
     </CellGroup>
