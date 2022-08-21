@@ -58,7 +58,7 @@ const clearcanvas = () => {
     <div class="mt-8 mb-[5px] text-[#959595] flex items-center justify-center relative">
       <div class="text-center text-[0.8125rem] font-bold">{{ props.title }}</div>
       <div
-        class="w-[16%] absolute top-0 right-0 text-center text-[#eb5e55] text-[0.75rem] border-1 border-solid border-[#eb5e55] rounded-full"
+        class="w-[16%] absolute top-0 right-0 text-center text-[#eb5e55] text-[0.75rem] border border-solid border-[#eb5e55] rounded-full"
         @click="clearcanvas()"
       >
         清除

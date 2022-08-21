@@ -91,7 +91,7 @@ const routeToSignPage = () => {
           v-on:click="handleFetchTemp"
           class="mr-2 border-2 border-solid border-primary text-primary px-3 py-1 flex-1"
         >
-          擷取目前溫度
+          擷取溫度
         </Button>
         <Button
           round

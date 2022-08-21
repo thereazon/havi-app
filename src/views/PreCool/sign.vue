@@ -1,6 +1,6 @@
 <script setup>
 import dayjs from 'dayjs'
-import { reactive, ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { Checkbox, CheckboxGroup, NavBar, Button, Field } from 'vant'
 import { useRouter } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
@@ -16,10 +16,6 @@ const isCelsiusTemp = ref(false)
 const currentTemp = ref('')
 
 const isSecurityCodeDialog = ref(false)
-
-const confirm = () => {
-  isSecurityCodeDialog.value = true
-}
 
 const preCoolStore = usePreCoolInfo()
 const dispatchStore = useDispatchInfo()
@@ -106,7 +102,7 @@ const isDisabled = computed(() => {
       <div class="mt-[37px] mb-4 flex justify-between items-center">
         <span class="text-primary text-[0.9375rem]">填寫溫度</span>
         <div
-          class="w-[30%] h-[14px] text-[0.75rem] rounded-md bg-primary border-[3px] border-solid border-primary flex items-center"
+          class="w-[30%] h-[14px] text-[0.75rem] rounded-md bg-primary border-[2px] border-solid border-primary flex items-center"
           @click="isCelsiusTemp = !isCelsiusTemp"
         >
           <span
@@ -133,8 +129,8 @@ const isDisabled = computed(() => {
       </div>
       <div class="w-full h-[42px] rounded-xl shadow-md bg-white flex items-center text-[0.75rem] font-bold">
         <CheckboxGroup v-model="checked" direction="horizontal">
-          <Checkbox shape="square" name="pest">蟲鼠害確認</Checkbox>
-          <Checkbox shape="square" name="clean">車廂清潔確認</Checkbox>
+          <Checkbox name="pest">蟲鼠害確認</Checkbox>
+          <Checkbox name="clean">車廂清潔確認</Checkbox>
         </CheckboxGroup>
       </div>
       <SignatureComponent title="櫃檯簽名" />
@@ -166,6 +162,7 @@ const isDisabled = computed(() => {
   background: #f2f2f2;
 }
 :deep(.van-checkbox__icon--checked .van-icon) {
-  color: #6dbe5b;
+  color: #fff;
+  background: #6dbe5b;
 }
 </style>
