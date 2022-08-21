@@ -31,17 +31,15 @@ onMounted(() => {
 })
 
 const userCheckIn = async () => {
-  await entryRecordStore.userCheckInAction(dispatch_id, computedTemperature.value)
-
-  if (entryRecordStore.status === 'success') {
+  await entryRecordStore.userCheckInAction(dispatch_id, computedTemperature.value, () =>
     router.push({
       path: '/dispatch',
       query: {
         car_id,
         container_id,
       },
-    })
-  }
+    }),
+  )
 }
 
 const toggleTemperatureSheet = () => {
@@ -118,9 +116,6 @@ const onClickLeft = () => {
           @click.prevent="userCheckIn"
           >報到</Button
         >
-        <div v-if="entryRecordStore.status === 'fail'" class="text-[#eb5e55] mt-4 text-center">
-          {{ entryRecordStore.message }}
-        </div>
       </form>
     </div>
     <ActionSheet v-model:show="openActionSheet" title="體溫">
