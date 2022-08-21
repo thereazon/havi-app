@@ -1,6 +1,6 @@
 <script setup>
-import { ref, reactive, onMounted, watch } from 'vue'
-import { NavBar, Button, Popup, Toast } from 'vant'
+import { ref, onMounted, watch } from 'vue'
+import { NavBar, Button, Popup } from 'vant'
 import { useRouter, useRoute } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
 import useRestaurant from './store'
@@ -158,7 +158,7 @@ const toggleShowTempSubmitConfirm = () => {
       @click-right="onClickRight"
       ><template #right> <van-icon name="wap-nav" size="14" color="black" /> </template>
     </NavBar>
-    <div class="px-[26px] bg-[#F2F8FB] pt-20">
+    <div class="px-[26px] bg-[#F2F8FB] pt-20 pb-20">
       <RestaurantInfoCard
         v-if="dispatch"
         :temp_zone="dispatch.temp_zone"
@@ -230,7 +230,12 @@ const toggleShowTempSubmitConfirm = () => {
           <Button class="rounded-full h-[36px] w-[134px] bg-primary text-white" @click="showPopup">實測溫度</Button>
         </div>
       </div>
-      <UploadImage title="實測溫度" @uploadImage="setTempImage" @resetImageToNull="cleanTempImage" />
+      <UploadImage
+        :defaultImage="currentRestaurant.lock_temp_photo"
+        title="實測溫度"
+        @uploadImage="setTempImage"
+        @resetImageToNull="cleanTempImage"
+      />
       <Button
         class="bg-success mt-8"
         loading-type="spinner"

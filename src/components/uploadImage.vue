@@ -1,14 +1,19 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, toRef } from 'vue'
 import { Popup } from 'vant'
 
 const emit = defineEmits(['uploadImage', 'resetImageToNull'])
-defineProps({
+const props = defineProps({
   title: String,
+  defaultImage: {
+    type: String,
+    required: false,
+    default: '',
+  },
 })
 
+const previewImage = ref(props.defaultImage)
 const camera = ref(null)
-const previewImage = ref('')
 const imageFile = ref(null)
 const showImage = ref(false)
 
