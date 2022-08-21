@@ -44,9 +44,6 @@ const handleRouteToDetail = (currentRestaurant) => {
     }),
   )
 }
-const handleUndelivered = (currentRestaurant) => {
-  postUndeliveredAction(currentRestaurant.id)
-}
 </script>
 
 <template>
@@ -71,7 +68,7 @@ const handleUndelivered = (currentRestaurant) => {
       type="primary"
       class="w-full bg-white border-none text-warning px-[43px] mt-20"
     >
-      已抵達 {{ currentRestaurant?.arrival_time }}</Button
+      已抵達 {{ currentRestaurant?.actual_arrival_time }}</Button
     >
     <Button
       :onClick="handleToDetail"

@@ -25,11 +25,11 @@ defineProps({
     <div class="my-[15px] px-[20px] pb-[20px]">
       <div class="flex items-center justify-between text-gray">
         <img class="w-[15px]" src="/dispatching_calendar.png" alt="icon" />
-        <div class="bg-[#f2f2f2] px-3 py-1 rounded">{{ dayjs(dispatch?.departure_time).format('MM/DD/YYYY') }}</div>
+        <div class="bg-[#f2f2f2] px-3 py-1 rounded">{{ dayjs(restaurant?.arrival_time).format('MM/DD/YYYY') }}</div>
         <img class="w-[15px]" src="/dispatching_clock.png" alt="icon" />
-        <div class="bg-[#f2f2f2] px-3 py-1 rounded">{{ dayjs(dispatch?.departure_time).format('HH:mm') }}</div>
+        <div class="bg-[#f2f2f2] px-3 py-1 rounded">{{ dayjs(restaurant?.arrival_time).format('HH:mm') }}</div>
         <img class="w-[15px]" src="/dispatching_box.png" alt="icon" />
-        <div class="bg-[#f2f2f2] px-3 py-1 rounded">{{ dispatch?.cube }}</div>
+        <div class="bg-[#f2f2f2] px-3 py-1 rounded">{{ restaurant?.cube }}</div>
       </div>
       <Divider dashed="true" class="border-primary" />
       <div class="flex items-center text-primary font-bold gap-2">
@@ -41,14 +41,13 @@ defineProps({
       </div>
       <div class="flex items-center text-gray font-bold gap-2 mt-[10px]">
         <div class="basis-1/12"><img class="w-[30px]" src="/dispatching_map.png" alt="icon" /></div>
-        <div class="flex justify-around bg-[#f2f2f2] px-3 py-[7px] rounded basis-11/12 text-center rounded-l-[10px]">
+        <div class="flex bg-[#f2f2f2] px-3 py-[7px] rounded basis-11/12 text-left rounded-l-[10px]">
           <div>{{ restaurant?.address }}</div>
-          <a class="font-bold">...</a>
         </div>
       </div>
       <div class="flex items-center text-gray font-bold gap-2 mt-[10px]">
         <div class="basis-1/12"><img class="w-[30px]" src="/dispatching_phone.png" alt="icon" /></div>
-        <div class="bg-[#f2f2f2] px-3 py-[7px] rounded basis-11/12 text-center rounded-l-[10px]">
+        <div class="bg-[#f2f2f2] px-3 py-[7px] rounded basis-11/12 text-left rounded-l-[10px]">
           {{ restaurant?.tel }}
         </div>
       </div>
