@@ -19,7 +19,7 @@ const temperature = reactive({
 })
 const currentDate = dayjs().format('MM/DD/YYYY')
 const currentTime = dayjs().format('HH:mm')
-const integerOptions = Array.from({ length: 30 }, (_, index) => index + 20)
+const integerOptions = [31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41]
 const decimalOptions = Array.from({ length: 10 }, (_, index) => index)
 const computedTemperature = computed(() => temperature.integer + temperature.decimal / 10)
 const openActionSheet = ref(false)
