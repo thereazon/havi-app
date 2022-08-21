@@ -24,9 +24,9 @@ const tempZones = computed(() => props.temp_zone.split(','))
   <section class="rounded-[20px] max-w-5xl shadow-lg overflow-hidden bg-white" v-bind="$attrs">
     <div class="flex justify-around items-baseline pt-1 px-7">
       <p class="text-primary text-[13px] mb-2"><b class="font-bold">單號 </b>{{ props.no }}</p>
-      <ul class="list-disc flex flex-nowrap mt-4 mb-2 list-inside justify-center font-bold text-[10px]">
+      <ul class="list-disc flex flex-nowrap mt-4 mb-2 list-inside justify-center font-bold text-[14px]">
         <li v-for="(temp, index) in tempZones" :key="index" :class="tempCode[temp].markerColor">
-          <small class="relative -left-3 whitespace-nowrap" :class="tempCode[temp].color">
+          <small class="relative -left-1 whitespace-nowrap" :class="tempCode[temp].color">
             {{ tempCode[temp].name }}
           </small>
         </li>

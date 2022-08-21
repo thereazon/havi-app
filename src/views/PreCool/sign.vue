@@ -65,6 +65,10 @@ const isDisabled = computed(() => {
     return false
   }
 })
+const isNormal = computed(() => {
+  const tempZones = dispatchStore?.dispatch?.temp_zone.split(',')
+  return tempZones.find((v) => v === 'D') && tempZones.length === 1
+})
 </script>
 
 <template>
@@ -87,6 +91,7 @@ const isDisabled = computed(() => {
         <div class="w-[18%] flex justify-center items-center">櫃台溫度</div>
       </div>
       <div
+        v-if="!isNormal"
         class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
       >
         <span class="w-[16%] text-primary">冷凍品溫</span>
@@ -99,7 +104,7 @@ const isDisabled = computed(() => {
           {{ preCoolStore.currentTemp ? `${preCoolStore.currentTemp}°${preCoolStore.degree_type}` : '-' }}
         </div>
       </div>
-      <div class="mt-[37px] mb-4 flex justify-between items-center">
+      <div v-if="!isNormal" class="mt-[37px] mb-4 flex justify-between items-center">
         <span class="text-primary text-[0.9375rem]">填寫溫度</span>
         <div
           class="w-[30%] h-[14px] text-[0.75rem] rounded-md bg-primary border-[2px] border-solid border-primary flex items-center"
@@ -118,6 +123,7 @@ const isDisabled = computed(() => {
         </div>
       </div>
       <div
+        v-if="!isNormal"
         class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
       >
         <span class="w-[16%] text-primary">冷凍品溫</span>

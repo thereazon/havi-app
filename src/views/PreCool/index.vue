@@ -1,6 +1,6 @@
 <script setup>
 import dayjs from 'dayjs'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { NavBar, Button } from 'vant'
 import { useRoute, useRouter } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
@@ -47,6 +47,10 @@ const routeToSignPage = () => {
     },
   })
 }
+const isNormal = computed(() => {
+  const tempZones = dispatchStore?.dispatch?.temp_zone.split(',')
+  return tempZones.find((v) => v === 'D') && tempZones.length === 1
+})
 </script>
 
 <template>
@@ -71,6 +75,7 @@ const routeToSignPage = () => {
         <div class="w-[18%] flex justify-center items-center">櫃台溫度</div>
       </div>
       <div
+        v-if="!isNormal"
         class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
       >
         <span class="w-[16%] text-primary">冷凍品溫</span>
@@ -85,6 +90,7 @@ const routeToSignPage = () => {
       </div>
       <div class="w-full flex mt-20 mb-5">
         <Button
+          v-if="!isNormal"
           round
           plain
           type="primary"
@@ -96,7 +102,7 @@ const routeToSignPage = () => {
         <Button
           round
           plain
-          :disabled="preCoolStore.temperature ? false : true"
+          :disabled="isNormal ? false : preCoolStore.temperature ? false : true"
           v-on:click="routeToSignPage"
           type="primary"
           class="ml-2 border-2 border-solid border-success bg-success text-white px-3 py-1 flex-1"
