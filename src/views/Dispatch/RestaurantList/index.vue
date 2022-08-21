@@ -3,7 +3,7 @@ import { NavBar, Tab, Tabs, Button, Popup } from 'vant'
 import { onMounted, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
-import { RestaurantStatusTypeToZh, RestaurantTab } from '@/views/Dispatch/helper'
+import { RestaurantStatusTypeToZh, RestaurantTab, DispatchStatusType } from '@/views/Dispatch/helper'
 import DeliveringTab from './DeliveringTab.vue'
 import CompletedTab from './CompletedTab.vue'
 import UnableDeliverTab from './UnableDeliverTab.vue'
@@ -90,7 +90,14 @@ const handleOpenDialog2 = async () => {
   <div class="bg-primary/[.05] min-h-screen pt-[46px] box-border">
     <NavBar safe-area-inset-top left-arrow fixed :onClickLeft="handleRouterBack" :title="dispatchStore?.dispatch?.no">
       <template #right>
-        <Button :onClick="handleOpenDialog2" round size="mini" class="bg-primary text-white px-3 py-1">出車</Button>
+        <Button
+          :disabled="dispatchStore?.dispatch?.status === DispatchStatusType.CHECK_OUT"
+          :onClick="handleOpenDialog2"
+          round
+          size="mini"
+          class="bg-primary text-white px-3 py-1"
+          >出車</Button
+        >
       </template>
     </NavBar>
     <div class="pt-4 px-[26px] text-[13px]">
