@@ -150,7 +150,7 @@ const handleToRestaurantList = async (dispatch) => {
           <Button
             size="mini"
             round
-            :disabled="!showPreCoolChecked(dispatch.status)"
+            :disabled="!showPreCoolChecked(dispatch.status) && !dispatch.is_loading"
             class="border-2 border-solid border-primary bg-primary text-white px-3 py-1"
             @click="handleToRestaurantList(dispatch)"
           >

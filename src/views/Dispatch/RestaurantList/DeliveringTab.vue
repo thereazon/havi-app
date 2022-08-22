@@ -35,7 +35,7 @@ onMounted(() => {
 })
 
 const handleRouteToDetail = (currentRestaurant) => {
-  dispatchStore.getRestaurantDetailAction(currentRestaurant.id, () =>
+  getRestaurantDetailAction(currentRestaurant.id, () =>
     router.push({
       path: '/restaurant/temperature',
       query: {

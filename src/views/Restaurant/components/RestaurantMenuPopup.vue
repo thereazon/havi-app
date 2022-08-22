@@ -46,7 +46,7 @@ const goto = (path) => {
   })
 }
 
-const lists = computed(() => {
+const filterNoValueList = computed(() => {
   return list.filter((item) => (item.value ? currentRestaurant[item.value] > 0 : item))
 })
 </script>
@@ -58,7 +58,7 @@ const lists = computed(() => {
       <div class="text-white text-center my-[30px] text-[20px]">作業步驟</div>
       <Divider :dashed="true" class="mb-[35px] mt-0"></Divider>
       <a
-        v-for="item in lists"
+        v-for="item in filterNoValueList"
         :key="item.text"
         :class="{ active: item.path == route.path }"
         class="grid grid-cols-3 pr-[30px] text-[17px]"
