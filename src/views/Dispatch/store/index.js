@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import DispatchApiCaller from '@/views/Dispatch/service'
-import { DispatchStatusNumberToType, restaurantByStatus } from '@/views/Dispatch/helper'
+import { DispatchStatusNumberToType, restaurantByStatus, LockTempNumberToType } from '@/views/Dispatch/helper'
 import { useAlertModal } from '@/components/store/AlertModalStore'
 import useAccountInfo from '@/views/Login/store'
 
@@ -56,12 +56,13 @@ const useDispatchInfo = defineStore('dispatch', {
         const response = await DispatchApiCaller.getRestaurantDetail(id)
         if (response.status === 'success') {
           this.currentRestaurant = {
+            ...response.data,
             temperature_count: 1, //餐廳溫度數量寫死1
             is_temp: !!response.data.is_temp,
             is_container: !!response.data.is_container,
             is_returned: !!response.data.is_returned,
             is_finish: !!response.data.is_finish,
-            ...response.data,
+            lock_temp_type: LockTempNumberToType[response.data.lock_temp_type],
           }
           this.status = response.status
           cb()

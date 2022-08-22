@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import ApiCaller from '../service'
+import { LockTempNumberToType } from '../helper'
 import dayjs from 'dayjs'
 import { useAlertModal } from '@/components/store/AlertModalStore'
 
@@ -194,8 +195,6 @@ const useRestaurant = defineStore('restaurant', {
       const modal = useAlertModal()
       const formData = new FormData()
       const tempImageBlob = await fetch(this.temperatureImage).then((r) => r.blob())
-      console.log('tempImageBlob', tempImageBlob)
-      console.log('this.temperatureImage', this.temperatureImage)
       formData.append('photo', tempImageBlob)
       const data = {
         temp_type: 2,

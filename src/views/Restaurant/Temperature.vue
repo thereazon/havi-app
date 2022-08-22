@@ -231,7 +231,7 @@ const toggleShowTempSubmitConfirm = () => {
         </div>
       </div>
       <UploadImage
-        :defaultImage="currentRestaurant.lock_temp_photo"
+        :defaultImage="currentRestaurant?.lock_temp_photo"
         title="實測溫度"
         @uploadImage="setTempImage"
         @resetImageToNull="cleanTempImage"
