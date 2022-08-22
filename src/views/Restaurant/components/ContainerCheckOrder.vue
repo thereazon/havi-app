@@ -1,6 +1,6 @@
 <script setup>
 import { computed, reactive, ref } from 'vue'
-import { Collapse, CollapseItem, Dialog, Button, Icon, Loading } from 'vant'
+import { Collapse, CollapseItem, Dialog, Button, Icon, Loading, Field } from 'vant'
 import { storeToRefs } from 'pinia'
 import useRestaurant from '@/views/Restaurant/store'
 import { useAlertModal } from '@/components/store/AlertModalStore'
@@ -11,6 +11,7 @@ const { containers, isLoading } = storeToRefs(useRestaurant())
 const { setContainersAction, postContainerFinishAction, postContainerSendAction } = useRestaurant()
 const modal = useAlertModal()
 const isConfirmDialog = ref(false)
+const isConfirmDialog2 = ref(false)
 const collapseActiveNames = ref([])
 const pageSize = 1
 const dataIndex = ref(0)
@@ -69,11 +70,11 @@ const nextPage = () => {
   }
 }
 const submit = (containerOrderId) => {
-  postContainerSendAction(containerOrderId).then(() => {
-    isConfirmDialog.value = false
-  })
+  isConfirmDialog.value = false
+  postContainerSendAction(containerOrderId)
 }
 const confirm = (containerOrder) => {
+  isConfirmDialog2.value = false
   postContainerFinishAction(containerOrder)
 }
 </script>
@@ -110,7 +111,7 @@ const confirm = (containerOrder) => {
 
       <div class="w-full rounded-xl shadow-md bg-white">
         <div class="flex flex-col justify-between box-border h-20 px-5 py-4 text-[0.8125rem]">
-          <div class="flex items-center text-[#044d80]">
+          <div class="flex items-center text-[#044d80] font-bold">
             <span class="mr-[10px]">送貨單號</span>
             <span>{{ containers[dataIndex].no }}</span>
           </div>
@@ -181,9 +182,7 @@ const confirm = (containerOrder) => {
       </div>
 
       <div class="w-full pt-9 pb-9 flex justify-between items-center font-bold text-white text-[1rem]">
-        <button class="w-[48%] h-[43px] bg-success rounded-full border-0" @click="confirm(containers[dataIndex])">
-          完成
-        </button>
+        <button class="w-[48%] h-[43px] bg-success rounded-full border-0" @click="isConfirmDialog2 = true">完成</button>
         <button class="w-[48%] h-[43px] bg-warning rounded-full border-0" @click="isConfirmDialog = true">發送</button>
       </div>
 
@@ -202,6 +201,7 @@ const confirm = (containerOrder) => {
             <div class="w-1/2 h-full bg-white text-[0.75rem] rounded-md flex justify-center items-center">
               <input
                 class="w-full h-full py-0 px-1 border border-solid border-gray"
+                type="number"
                 v-model="containerForm.backing_qty"
               />
             </div>
@@ -212,6 +212,7 @@ const confirm = (containerOrder) => {
               <input
                 class="w-full h-full py-0 px-1 border border-solid border-gray"
                 v-model="containerForm.short_qty"
+                type="number"
               />
             </div>
           </div>
@@ -223,6 +224,7 @@ const confirm = (containerOrder) => {
               <input
                 class="w-full h-full py-0 px-1 border border-solid border-gray"
                 v-model="containerForm.resource_qty"
+                type="number"
               />
             </div>
           </div>
@@ -232,6 +234,7 @@ const confirm = (containerOrder) => {
               <input
                 class="w-full h-full py-0 px-1 border border-solid border-gray"
                 v-model="containerForm.return_qty"
+                type="number"
               />
             </div>
           </div>
@@ -261,6 +264,25 @@ const confirm = (containerOrder) => {
               class="w-[48%] h-[43px] bg-[#eb5e55] rounded-full border-0"
               @click="submit(containers[dataIndex].id)"
             >
+              確認
+            </button>
+          </div>
+        </template>
+      </ConfirmDialog>
+
+      <ConfirmDialog v-model:isShowDialog="isConfirmDialog2" :isCloseOnClickOverlay="true">
+        <template v-slot:title>
+          <div className="mb-20">
+            請確認是否完成容器對點單，點 <br />擊確認後將
+            <span class="text-warning"> 『無法再異動』</span>
+          </div>
+        </template>
+        <template v-slot:footer>
+          <div class="px-[10%] flex justify-between items-center font-bold text-white text-[1rem]">
+            <button class="w-[48%] h-[43px] bg-gray rounded-full border-0" @click="isConfirmDialog2 = false">
+              取消
+            </button>
+            <button class="w-[48%] h-[43px] bg-[#eb5e55] rounded-full border-0" @click="confirm(containers[dataIndex])">
               確認
             </button>
           </div>

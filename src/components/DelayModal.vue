@@ -42,13 +42,7 @@ const isShow = computed({
       <h1 class="text-center text-[#707070] text-[17px] mb-0">{{ props.title }}</h1>
       <h2 class="text-center text-[#a4a4a4] text-[12px]">{{ props.subTitle }}</h2>
       <form class="mt-3">
-        <select
-          :onChange="handleOnClick"
-          name="menu"
-          id="dispatch-no"
-          class="havi-select"
-          v-model="form.reason_id"
-        >
+        <select :onChange="handleOnClick" name="menu" id="dispatch-no" class="havi-select" v-model="form.reason_id">
           <option disabled value="">{{ props.optionFirst }}</option>
           <option v-for="reason in store.undeliverableReasons" :value="reason.id" :key="reason.id">
             {{ reason.content }}
@@ -74,7 +68,7 @@ const isShow = computed({
           maxlength="150"
         />
       </form>
-      <div class="text-warning text-center mt-2 text-[13px]">{{ props.warning }}</div>
+      <!-- <div class="text-warning text-center mt-2 text-[13px]">{{ props.warning }}</div> -->
       <Button class="mt-2 text-white bg-success w-full" round @click="$emit('confirm', dataPassToParent)">完成</Button>
     </div>
   </Popup>

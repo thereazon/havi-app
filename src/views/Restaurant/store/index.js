@@ -160,6 +160,7 @@ const useRestaurant = defineStore('restaurant', {
       }
     },
     async postContainerFinishAction(containerOrder) {
+      const modal = useAlertModal()
       this.isLoading = true
       try {
         const { id, items } = containerOrder
@@ -170,10 +171,18 @@ const useRestaurant = defineStore('restaurant', {
         if (response.status === 'success') {
           this.status = response.status
           this.message = response.message
+          modal.open({
+            type: 'success',
+            title: '成功',
+            content: '資料儲存成功',
+          })
         }
       } catch (err) {
-        this.status = err.status
-        this.message = err.message
+        modal.open({
+          type: 'error',
+          title: '錯誤',
+          content: err.message,
+        })
       } finally {
         this.isLoading = false
       }
@@ -214,16 +223,25 @@ const useRestaurant = defineStore('restaurant', {
       }
     },
     async postContainerSendAction(id) {
+      const modal = useAlertModal()
       this.isLoading = true
       try {
         const response = await ApiCaller.postContainerSend(id)
         if (response.status === 'success') {
           this.status = response.status
           this.message = response.message
+          modal.open({
+            type: 'success',
+            title: '成功',
+            content: '資料儲存成功',
+          })
         }
-      } catch (error) {
-        this.status = error.status
-        this.message = error.message
+      } catch (err) {
+        modal.open({
+          type: 'error',
+          title: '錯誤',
+          content: err.message,
+        })
       } finally {
         this.isLoading = false
       }
