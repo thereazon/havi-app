@@ -62,7 +62,7 @@ const isShow = computed({
           >
         </div>
         <textarea
-          class="border-dashed border-gray-300 bg-[#fffcf6] mt-3 w-[252px] h-[101px]"
+          class="p-0 w-full border-dashed border-gray-300 bg-[#fffcf6] mt-3 h-[101px]"
           v-model="form.message"
           rows="5"
           maxlength="150"

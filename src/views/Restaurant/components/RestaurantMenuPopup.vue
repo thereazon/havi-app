@@ -3,8 +3,10 @@ import { Popup, Divider, Checkbox } from 'vant'
 import { computed, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
+import { useAlertModal } from '@/components/store/AlertModalStore'
 const { currentRestaurant } = useDispatchInfo()
 
+const modal = useAlertModal()
 const props = defineProps({
   isShow: Boolean,
 })
@@ -14,7 +16,7 @@ const route = useRoute()
 
 const router = useRouter()
 
-const isShow = computed({
+let isShow = computed({
   get: () => props.isShow,
   set: (val) => emit('update:isShow', val),
 })
@@ -37,13 +39,22 @@ const list = reactive([
 ])
 
 const goto = (path) => {
+  if (currentRestaurant.is_temp) {
+    router.push({
+      path: path,
+      query: {
+        ...route.query,
+      },
+    })
+  } else {
+    emit('update:isShow', false)
+    modal.open({
+      type: 'hint', //required
+      title: '提醒',
+      content: '請先完成餐廳溫度確認，才能進行其他作業',
+    })
+  }
   // 溫度未送出前不能點擊其他頁面
-  router.push({
-    path: path,
-    query: {
-      ...route.query,
-    },
-  })
 }
 
 const filterNoValueList = computed(() => {

@@ -35,4 +35,8 @@ const isShow = computed({
     </div>
   </ActionSheet>
 </template>
-<style src="vue-scroll-picker/lib/style.css"></style>
+<style src="vue-scroll-picker/lib/style.css">
+.flex {
+  transform: scale(1.2);
+}
+</style>
