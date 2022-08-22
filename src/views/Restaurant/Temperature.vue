@@ -1,8 +1,9 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { NavBar, Button, Popup } from 'vant'
 import { useRouter, useRoute } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
+import { LockTempType } from '@/views/Dispatch/helper'
 import useRestaurant from './store'
 import TemperatureActionSheet from './components/TemperatureActionSheet.vue'
 import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
@@ -29,13 +30,29 @@ onMounted(() => {
 const isCelsiusTemp = ref(restaurantStore.degree_type === 'c' ? true : false)
 const isShowMenu = ref(false)
 const isShowPopup = ref(false)
+const isLocked = currentRestaurant?.lock_temp_type !== LockTempType.UNLOCKED
 const isLockedTempAndFinishedPhoto = ref(false)
 const isShowLockTempConfirm = ref(false)
 const isShowTempSubmitConfirm = ref(false)
-
 const showPopup = () => {
   isShowPopup.value = true
 }
+
+const showLockCold = computed(() => {
+  if (currentRestaurant?.lock_degree_type && currentRestaurant.lock_degree_type === 'f') {
+    return currentRestaurant.lock_cold_f
+  } else if (currentRestaurant?.lock_degree_type) {
+    return currentRestaurant.lock_cold_c
+  } else return '-'
+})
+
+const showLockFrozen = computed(() => {
+  if (currentRestaurant?.lock_degree_type && currentRestaurant.lock_degree_type === 'f') {
+    return currentRestaurant.lock_frozen_f
+  } else if (currentRestaurant?.lock_degree_type) {
+    return currentRestaurant.lock_frozen_c
+  } else return '-'
+})
 
 const computeTemp = (data) => {
   let temp = null
@@ -54,6 +71,7 @@ const computeTemp = (data) => {
 
   return temp
 }
+
 // 冷凍溫度邏輯
 const isShowFreezing = ref(false)
 const showFreezingActionSheet = () => {
@@ -187,6 +205,7 @@ const toggleShowTempSubmitConfirm = () => {
           <div class="w-[18%] h-[50%] flex justify-center items-center text-gray">櫃台溫度</div>
         </div>
         <div
+          v-if="!isLocked"
           class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
         >
           <span class="w-[16%] text-primary">冷凍品溫</span>
@@ -203,6 +222,19 @@ const toggleShowTempSubmitConfirm = () => {
           </div>
         </div>
         <div
+          v-if="isLocked"
+          class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
+        >
+          <span class="w-[16%] text-primary">冷凍品溫</span>
+          <div class="w-[42%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">-</div>
+          <div class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
+            <!-- 冷凍品溫 -->
+            {{ showLockFrozen }}
+            °{{ currentRestaurant?.lock_degree_type.toUpperCase() }}
+          </div>
+        </div>
+        <div
+          v-if="!isLocked"
           class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
         >
           <span class="w-[16%] text-primary">冷藏品溫</span>
@@ -218,19 +250,37 @@ const toggleShowTempSubmitConfirm = () => {
             {{ isCelsiusTemp ? '°C' : '°F' }}
           </div>
         </div>
+        <div
+          v-if="isLocked"
+          class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
+        >
+          <span class="w-[16%] text-primary">冷藏品溫</span>
+          <div class="w-[42%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">-</div>
+          <div class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
+            <!-- 冷藏品溫 -->
+            {{ showLockCold }}
+            °{{ currentRestaurant?.lock_degree_type.toUpperCase() }}
+          </div>
+        </div>
 
         <div class="flex justify-around mt-10">
           <Button
             class="rounded-full h-[36px] w-[134px]"
             type="danger"
             @click="toggleShowLockTempConfirm"
-            :disabled="isLockedTempAndFinishedPhoto"
+            :disabled="isLockedTempAndFinishedPhoto || isLocked"
             >鎖定溫度</Button
           >
-          <Button class="rounded-full h-[36px] w-[134px] bg-primary text-white" @click="showPopup">實測溫度</Button>
+          <Button
+            :disabled="isLockedTempAndFinishedPhoto || isLocked"
+            class="rounded-full h-[36px] w-[134px] bg-primary text-white"
+            @click="showPopup"
+            >實測溫度</Button
+          >
         </div>
       </div>
       <UploadImage
+        :disabled="isLocked"
         :defaultImage="currentRestaurant?.lock_temp_photo"
         title="實測溫度"
         @uploadImage="setTempImage"

@@ -1,10 +1,15 @@
 <script setup>
-import { ref, toRef } from 'vue'
+import { ref } from 'vue'
 import { Popup } from 'vant'
 
 const emit = defineEmits(['uploadImage', 'resetImageToNull'])
 const props = defineProps({
   title: String,
+  disabled: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
   defaultImage: {
     type: String,
     required: false,
@@ -36,8 +41,10 @@ const uploadImage = (e) => {
 }
 
 const deletePreviewImage = () => {
-  previewImage.value = ''
-  emit('resetImageToNull')
+  if (!props.disabled) {
+    previewImage.value = ''
+    emit('resetImageToNull')
+  }
 }
 </script>
 
@@ -47,6 +54,7 @@ const deletePreviewImage = () => {
       <div class="text-center text-[0.8125rem] font-bold">{{ title }}</div>
       <div
         class="w-[16%] absolute top-0 right-0 text-center text-[#eb5e55] text-[0.75rem] border border-1 border-solid border-[#eb5e55] rounded-full"
+        disabled="props.disabled"
         @click="deletePreviewImage()"
       >
         清除
