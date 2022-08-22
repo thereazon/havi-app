@@ -194,7 +194,12 @@ const toggleShowTempSubmitConfirm = () => {
           </div>
         </div>
 
-        <Button class="rounded-full border-2 h-[31px] w-[97px]" plain type="success" @click="handleFetchTemp"
+        <Button
+          :disabled="isLocked"
+          class="rounded-full border-2 h-[31px] w-[97px]"
+          plain
+          type="success"
+          @click="handleFetchTemp"
           >擷取溫度</Button
         >
       </div>
@@ -204,6 +209,7 @@ const toggleShowTempSubmitConfirm = () => {
           <div class="w-[42%] h-[50%] flex justify-center items-center text-gray">目前溫度</div>
           <div class="w-[18%] h-[50%] flex justify-center items-center text-gray">櫃台溫度</div>
         </div>
+        <!--need to refactor this-->
         <div
           v-if="!isLocked"
           class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
@@ -233,6 +239,7 @@ const toggleShowTempSubmitConfirm = () => {
             °{{ currentRestaurant?.lock_degree_type.toUpperCase() }}
           </div>
         </div>
+        <!--need to refactor this-->
         <div
           v-if="!isLocked"
           class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
@@ -244,12 +251,14 @@ const toggleShowTempSubmitConfirm = () => {
               `${restaurantStore.temperature.c.cold}°C / ${restaurantStore.temperature.f.cold}°F`
             }}
           </div>
+          <!--need to refactor this-->
           <div class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
             <!-- 冷藏品溫 -->
             {{ restaurantStore.cold_temp !== null ? restaurantStore.cold_temp : '-' }}
             {{ isCelsiusTemp ? '°C' : '°F' }}
           </div>
         </div>
+        <!--need to refactor this-->
         <div
           v-if="isLocked"
           class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
@@ -262,7 +271,6 @@ const toggleShowTempSubmitConfirm = () => {
             °{{ currentRestaurant?.lock_degree_type.toUpperCase() }}
           </div>
         </div>
-
         <div class="flex justify-around mt-10">
           <Button
             class="rounded-full h-[36px] w-[134px]"

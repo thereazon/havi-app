@@ -46,7 +46,7 @@ const tempZones = computed(() => props.temp_zone.split(','))
     <div class="px-7 pb-3">
       <div class="flex items-center text-gray font-bold gap-2 mt-[15px]">
         <div class="basis-1/12"><img class="w-[30px]" src="/dispatching_map.png" alt="icon" /></div>
-        <div class="flex justify-around bg-[#f2f2f2] px-3 py-[7px] basis-11/12 text-left">
+        <div class="bg-[#f2f2f2] px-3 py-[7px] basis-11/12 text-left">
           <div>{{ props.restaurant.address }}</div>
         </div>
       </div>
