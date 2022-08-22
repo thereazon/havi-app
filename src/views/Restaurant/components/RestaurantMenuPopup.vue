@@ -31,6 +31,7 @@ const list = reactive([
   { check: null, text: '送貨單', value: 'delivery_count', path: '/restaurant/delivery' },
   { check: null, text: 'OSnD單', value: 'delivery_count', path: '/restaurant/osnd' },
   { check: 'is_container', text: '容器對點單', value: 'container_count', path: '/restaurant/container' },
+  { check: 'is_returned', text: '退貨單', value: 'returned_count', path: '/restaurant/returned' },
   { check: 'is_finish', text: '餐廳簽收', key: null, path: '/restaurant/signature' },
   // { check: false, text: '退貨單', value: 1, path: '/' },
 ])
@@ -44,6 +45,10 @@ const goto = (path) => {
     },
   })
 }
+
+const lists = computed(() => {
+  return list.filter((item) => (item.value ? currentRestaurant[item.value] > 0 : item))
+})
 </script>
 
 <!-- todo: checkBox完成的樣式,active上面會有border要拿掉 -->
@@ -53,7 +58,7 @@ const goto = (path) => {
       <div class="text-white text-center my-[30px] text-[20px]">作業步驟</div>
       <Divider :dashed="true" class="mb-[35px] mt-0"></Divider>
       <a
-        v-for="item in list"
+        v-for="item in lists"
         :key="item.text"
         :class="{ active: item.path == route.path }"
         class="grid grid-cols-3 pr-[30px] text-[17px]"
