@@ -15,6 +15,31 @@ const { dispatch, currentRestaurant } = useDispatchInfo()
 const restaurantStore = useRestaurant()
 const router = useRouter()
 const route = useRoute()
+const between = (x, min, max) => x >= min && x <= max
+
+const isTempRange = (rangeArr) => {
+  if (rangeArr.length === 2) {
+    return true
+  } else return false
+}
+
+const isInRange = (rangeArr, temp) => {
+  if (isTempRange(rangeArr)) {
+    return between(temp, rangeArr[0], rangeArr[1])
+  } else {
+    return temp <= rangeArr[0]
+  }
+}
+
+const isInRangeWithClassName = (rangeArr, temp) => {
+  if (!rangeArr || !temp) {
+    return ''
+  } else if (isTempRange(rangeArr)) {
+    return between(temp, rangeArr[0], rangeArr[1]) ? 'text-success' : 'text-warning'
+  } else {
+    return temp <= rangeArr[0] ? 'text-success' : 'text-warning'
+  }
+}
 
 onMounted(() => {
   if (!dispatch || !currentRestaurant) {
@@ -43,7 +68,8 @@ const showLockCold = computed(() => {
     return currentRestaurant.lock_cold_f
   } else if (currentRestaurant?.lock_degree_type) {
     return currentRestaurant.lock_cold_c
-  } else return '-'
+  }
+  return null
 })
 
 const showLockFrozen = computed(() => {
@@ -51,7 +77,24 @@ const showLockFrozen = computed(() => {
     return currentRestaurant.lock_frozen_f
   } else if (currentRestaurant?.lock_degree_type) {
     return currentRestaurant.lock_frozen_c
-  } else return '-'
+  }
+  return null
+})
+
+const lockColdIsOutInRange = computed(() => {
+  if (currentRestaurant) {
+    return isInRange(currentRestaurant.cold_temp, showLockCold.value)
+  } else {
+    return false
+  }
+})
+
+const locksFrozenIsInRange = computed(() => {
+  if (currentRestaurant) {
+    return isInRange(currentRestaurant.frozen_temp, showLockFrozen.value)
+  } else {
+    return false
+  }
 })
 
 const computeTemp = (data) => {
@@ -215,13 +258,19 @@ const toggleShowTempSubmitConfirm = () => {
           class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
         >
           <span class="w-[16%] text-primary">冷凍品溫</span>
-          <div class="w-[42%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
+          <div
+            :class="isInRangeWithClassName(currentRestaurant?.frozen_temp, restaurantStore?.temperature?.f?.frozen)"
+            class="w-[42%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center"
+          >
             {{
               restaurantStore.temperature &&
               `${restaurantStore.temperature.c.frozen}°C / ${restaurantStore.temperature.f.frozen}°F`
             }}
           </div>
-          <div class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
+          <div
+            :class="isInRangeWithClassName(currentRestaurant?.frozen_temp, restaurantStore?.frozen_temp)"
+            class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center"
+          >
             <!-- 冷凍品溫 -->
             {{ restaurantStore.frozen_temp !== null ? restaurantStore.frozen_temp : '-' }}
             {{ isCelsiusTemp ? '°C' : '°F' }}
@@ -233,9 +282,12 @@ const toggleShowTempSubmitConfirm = () => {
         >
           <span class="w-[16%] text-primary">冷凍品溫</span>
           <div class="w-[42%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">-</div>
-          <div class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
+          <div
+            :class="{ 'text-success': locksFrozenIsInRange, 'text-warning': !locksFrozenIsInRange }"
+            class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center"
+          >
             <!-- 冷凍品溫 -->
-            {{ showLockFrozen }}
+            {{ Number(showLockFrozen) ? Number(showLockFrozen) : '-' }}
             °{{ currentRestaurant?.lock_degree_type.toUpperCase() }}
           </div>
         </div>
@@ -245,14 +297,20 @@ const toggleShowTempSubmitConfirm = () => {
           class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
         >
           <span class="w-[16%] text-primary">冷藏品溫</span>
-          <div class="w-[42%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
+          <div
+            :class="isInRangeWithClassName(currentRestaurant?.cold_temp, restaurantStore?.temperature?.f?.cold)"
+            class="w-[42%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center"
+          >
             {{
               restaurantStore.temperature &&
               `${restaurantStore.temperature.c.cold}°C / ${restaurantStore.temperature.f.cold}°F`
             }}
           </div>
           <!--need to refactor this-->
-          <div class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
+          <div
+            :class="isInRangeWithClassName(currentRestaurant?.cold_temp, restaurantStore?.cold_temp)"
+            class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center"
+          >
             <!-- 冷藏品溫 -->
             {{ restaurantStore.cold_temp !== null ? restaurantStore.cold_temp : '-' }}
             {{ isCelsiusTemp ? '°C' : '°F' }}
@@ -265,9 +323,12 @@ const toggleShowTempSubmitConfirm = () => {
         >
           <span class="w-[16%] text-primary">冷藏品溫</span>
           <div class="w-[42%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">-</div>
-          <div class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
+          <div
+            class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center"
+            :class="{ 'text-success': lockColdIsOutInRange, 'text-warning': !lockColdIsOutInRange }"
+          >
             <!-- 冷藏品溫 -->
-            {{ showLockCold }}
+            {{ Number(showLockCold) ? Number(showLockCold) : '-' }}
             °{{ currentRestaurant?.lock_degree_type.toUpperCase() }}
           </div>
         </div>
