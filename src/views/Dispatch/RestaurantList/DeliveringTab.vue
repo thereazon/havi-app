@@ -15,7 +15,7 @@ const route = useRoute()
 const router = useRouter()
 const modal = useAlertModal()
 const dispatchStore = useDispatchInfo()
-const { dispatch, postUndeliveredAction, getRestaurantDetailAction } = dispatchStore
+const { dispatch, getRestaurantDetailAction, postArrivalAction } = dispatchStore
 
 const currentRestaurant = computed(() => {
   const arrival = dispatchStore.restaurant?.ARRIVAL ? dispatchStore.restaurant.ARRIVAL : []
@@ -44,6 +44,10 @@ const handleRouteToDetail = (currentRestaurant) => {
     }),
   )
 }
+
+const handleArrival = () => {
+  postArrivalAction(currentRestaurant.value.id)
+}
 </script>
 
 <template>
@@ -59,6 +63,7 @@ const handleRouteToDetail = (currentRestaurant) => {
       round
       type="primary"
       class="w-full bg-warning border-none text-white px-[43px] mt-20"
+      :onClick="handleArrival"
     >
       抵達餐廳
     </Button>

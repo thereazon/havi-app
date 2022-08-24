@@ -1,6 +1,11 @@
 import { defineStore } from 'pinia'
 import DispatchApiCaller from '@/views/Dispatch/service'
-import { DispatchStatusNumberToType, restaurantByStatus, LockTempNumberToType } from '@/views/Dispatch/helper'
+import {
+  DispatchStatusNumberToType,
+  restaurantByStatus,
+  LockTempNumberToType,
+  DispatchStatusType,
+} from '@/views/Dispatch/helper'
 import { useAlertModal } from '@/components/store/AlertModalStore'
 import useAccountInfo from '@/views/Login/store'
 
@@ -121,7 +126,14 @@ const useDispatchInfo = defineStore('dispatch', {
       try {
         const response = await DispatchApiCaller.postCheckOut(this.dispatch.id)
         if (response.status === 'success') {
-          this.status = response.status
+          modal.open({
+            type: 'success', //required
+            title: '報到成功',
+          })
+          this.dispatch = {
+            ...this.dispatch,
+            status: DispatchStatusType.CHECK_OUT,
+          }
         }
       } catch (err) {
         modal.open({
@@ -139,6 +151,23 @@ const useDispatchInfo = defineStore('dispatch', {
         const response = await DispatchApiCaller.postBring(this.unableDeliverID, id, text)
         if (response.status === 'success') {
           await this.getDispatchDetailAction(this.dispatch.id)
+        }
+      } catch (err) {
+        modal.open({
+          type: 'error', //required
+          title: '錯誤',
+          content: err.message,
+        })
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async postArrivalAction(id) {
+      const modal = useAlertModal()
+      try {
+        const response = await DispatchApiCaller.postArrival(id)
+        if (response.status === 'success') {
+          await this.getDispatchDetailAction(this.dispatch.id, () => null)
         }
       } catch (err) {
         modal.open({
