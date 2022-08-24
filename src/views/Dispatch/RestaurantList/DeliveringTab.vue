@@ -55,7 +55,7 @@ const handleRouteToDetail = (currentRestaurant) => {
       :handleRouteToDetail="() => handleRouteToDetail(currentRestaurant)"
     />
     <Button
-      v-if="currentRestaurant?.status === 0"
+      v-if="!currentRestaurant?.actual_arrival_time"
       round
       type="primary"
       class="w-full bg-warning border-none text-white px-[43px] mt-20"
@@ -63,7 +63,7 @@ const handleRouteToDetail = (currentRestaurant) => {
       抵達餐廳
     </Button>
     <Button
-      v-if="currentRestaurant?.arrival_time"
+      v-if="currentRestaurant?.actual_arrival_time"
       round
       type="primary"
       class="w-full bg-white border-none text-warning px-[43px] mt-20"
