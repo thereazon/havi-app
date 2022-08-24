@@ -190,8 +190,9 @@ watch(
 
 const postTemperatureData = async () => {
   const cb = () => (isLockedTempAndFinishedPhoto.value = true)
-  await restaurantStore.postLockTemperature(currentRestaurant.id, cb)
-  // toggleShowLockTempConfirm()
+  await restaurantStore.postLockTemperature(currentRestaurant.id, cb).then(() => {
+    toggleShowLockTempConfirm()
+  })
 }
 
 const toggleShowLockTempConfirm = () => {

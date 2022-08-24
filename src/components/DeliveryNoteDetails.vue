@@ -218,9 +218,9 @@ watch(
           <span class="text-[#044d80] text-[0.875rem] font-bold">全選</span>
         </div>
         <div class="w-[50%] flex justify-end items-center">
-          <img src="/Restaurant_f2.png" class="w-14 h-14" alt="" @click="openConfirmDialog()" />
+          <img src="/images/delivery/reject.png" class="w-14 h-14" alt="" @click="openConfirmDialog()" />
           <img
-            src="/Restaurant_rotate.png"
+            src="/images/delivery/restore.png"
             class="w-14 h-14"
             alt=""
             @click="deleteDeliveryAction(currentDelivery.id)"
@@ -253,7 +253,8 @@ watch(
             class="detail-list list-none mx-4 leading-snug h-11 flex items-center text-gray"
           >
             <div class="w-[50%] ml-[10%] leading-snug">
-              <span class="text-[0.875rem] truncate">{{ item.batch_no }}</span>
+              <div class="text-[0.875rem] truncate">{{ item.exp }}</div>
+              <div class="text-[0.875rem] truncate">#{{ item.batch_no }}</div>
             </div>
             <div class="w-[40%] flex justify-between items-center text-[0.875rem]">
               <div class="min-w-[40%] flex justify-between items-center">
