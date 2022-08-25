@@ -1,16 +1,36 @@
 <script setup>
-import { ref, reactive, watch } from 'vue'
-import { Icon, NavBar, DatetimePicker, Calendar, Popup, Switch } from 'vant'
-import { useRouter } from 'vue-router'
+import { ref, reactive, watch, onMounted, computed } from 'vue'
+import { Icon, NavBar, DatetimePicker, Popup, Switch } from 'vant'
+import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
+import useDispatchInfo from '@/views/Dispatch/store'
+import useRestaurant from '@/views/Restaurant/store'
+import { useRouter, useRoute } from 'vue-router'
 import dayjs from 'dayjs'
 import useCommonStore from '@/common/useCommonStore.js'
-
-const router = useRouter()
+import { useAlertModal } from '@/components/store/AlertModalStore'
 const store = useCommonStore()
+const modal = useAlertModal()
+const { dispatch, currentRestaurant } = useDispatchInfo()
+const { currentDelivery, postOnKAction } = useRestaurant()
+const router = useRouter()
+const route = useRoute()
+
+onMounted(() => {
+  if (!dispatch || !currentRestaurant || !currentDelivery) {
+    router.push({
+      path: '/dispatch',
+      query: {
+        ...route.query,
+      },
+    })
+  }
+})
+
+const isShowMenu = ref(false)
 const date = ref('')
 const today = ref(new Date())
 const show = ref(false)
-const noset = ref(true)
+const noset = ref(false)
 
 const formatDate = (date) => {
   return dayjs(date).format('MM/DD/YYYY')
@@ -20,10 +40,16 @@ const onConfirmDate = (value) => {
   date.value = formatDate(value)
 }
 
+const onClickRight = () => {
+  isShowMenu.value = true
+}
+
 const exReason = reactive({
-  selectReason: store.onkAbnormalReasons[0],
+  code: currentDelivery?.code,
   exp: date,
-  qty: null,
+  name: null,
+  no: null,
+  qty: 0,
   set_qty: null,
   note: '',
 })
@@ -34,32 +60,47 @@ watch(
   },
 )
 
+const reason = computed(() => {
+  if (store.onkAbnormalReasons && currentDelivery?.code) {
+    return store.onkAbnormalReasons.find((value) => value.code === currentDelivery.code)
+  } else return null
+})
+
 const onClickLeft = () => {
-  router.back()
-}
-const onClickRight = () => {
-  // 【餐廳明細 - 作業明細 – 餐廳溫度確認 - 確認送出後 - 查看menu】
-  //   router.push({
-  //     path: '/restaurant/temperature',
-  //     query: {
-  //
-  //     },
-  //   })
+  router.push({
+    path: '/restaurant/delivery',
+    query: {
+      ...route.query,
+    },
+  })
 }
 
-const handleToDeliveryDetail = () => {
-  // 【餐廳明細 - 作業明細 - 送貨單 - O代號 - 輸入產品資訊】
-  //   router.push({
-  //     path: '/restaurant/delivery',
-  //     query: {
-  //
-  //     },
-  //   })
+const handlePostOnK = () => {
+  if (!exReason.name || !exReason.no) {
+    modal.open({
+      type: 'error',
+      title: '錯誤',
+      content: '請確實填寫品號與名稱',
+    })
+  } else if (!exReason.note) {
+    modal.open({
+      type: 'error',
+      title: '錯誤',
+      content: '備註原因欄位為必填',
+    })
+  } else {
+    const payload = {
+      ...exReason,
+      exp: formatDate(today.value),
+    }
+    postOnKAction(currentDelivery.id, payload).then(() => onClickLeft())
+  }
 }
 </script>
 
 <template>
   <div class="bg-primary bg-opacity-[0.05] h-full pb-28">
+    <RestaurantMenuPopup v-model:isShow="isShowMenu" />
     <NavBar
       safe-area-inset-top
       fixed
@@ -77,20 +118,27 @@ const handleToDeliveryDetail = () => {
           <div class="flex">
             <div class="mr-2">
               <img src="/dispatching_calendar.png" class="h-4 align-sub pr-1" alt="calanderIcon" />
-              <span class="bg-zinc-100 text-[13px] px-2 py-px text-neutral-500">{{ '11/23/2020' }}</span>
+              <span class="bg-zinc-100 text-[13px] px-2 py-px text-neutral-500">{{
+                dayjs(currentRestaurant?.departure_time).format('MM/DD/YYYY')
+              }}</span>
             </div>
             <div>
               <img src="/dispatching_clock.png" class="h-4 align-sub px-1" alt="clockIcon" />
-              <span class="bg-zinc-100 text-[13px] px-2 py-px text-neutral-500">{{ '20:20' }}</span>
+              <span class="bg-zinc-100 text-[13px] px-2 py-px text-neutral-500">{{
+                dayjs(currentRestaurant?.departure_time).format('HH:mm')
+              }}</span>
             </div>
           </div>
         </section>
         <section
           class="rounded-b-[20px] max-w-5xl shadow-[0_0_2px_0_rgba(112,112,112,100)] overflow-hidden bg-white py-3 px-6"
         >
-          <div class="flex flex-col bg-zinc-100 px-2 py-3 text-neutral-500 rounded" @click="handleToDeliveryDetail">
-            <span class="text-[12px] font-bold leading-[1.17]">輸入品號</span>
-            <span class="text-[10px] leading-[1.3]">輸入產品名稱</span>
+          <div
+            class="input-wrap flex flex-col bg-zinc-100 px-2 py-3 text-neutral-500 rounded"
+            @click="handleToDeliveryDetail"
+          >
+            <input v-model="exReason.name" type="text" placeholder="輸入品號" class="py-2 col-span-4" />
+            <input v-model="exReason.no" type="text" placeholder="輸入產品名稱" class="py-2 col-span-4" />
           </div>
         </section>
       </div>
@@ -100,15 +148,15 @@ const handleToDeliveryDetail = () => {
           class="flex flex-col items-center bg-white text-gray text-[13px] shadow-[0_2px_10px_0_rgba(112,112,112,100)] border-[solid 1px #707070] rounded-[20px] px-8 py-4 my-6"
         >
           <div class="mb-3 font-bold text-[13px]">異常原因</div>
-          <select v-model="exReason.selectReason" class="w-full border-dashed p-3 text-gray bg-[#fffcf6]">
-            <option v-for="reason in store.onkAbnormalReasons" :key="reason.id" :value="reason">
-              {{ reason.code + ' ' + reason.content }}
-            </option>
-          </select>
-
+          <input
+            v-if="reason"
+            :value="reason.code + ' ' + reason.content"
+            name="reason"
+            class="w-11/12 border border-dashed p-3 text-gray bg-[#fffcf6] tracking-widest"
+          />
           <div class="mt-6 mb-3 font-bold text-[13px]">有效日期</div>
           <input
-            v-model="date"
+            :value="formatDate(today)"
             name="exp"
             @click="show = true"
             class="w-11/12 border border-dashed p-3 text-gray bg-[#fffcf6] tracking-widest"
@@ -154,14 +202,16 @@ const handleToDeliveryDetail = () => {
           <textarea v-model="exReason.note" class="py-2 bg-[#fffcf6] border-dashed w-full"></textarea>
         </div>
         <div class="m-auto mb-5">
-          <button class="bg-success border-0 text-white rounded-full py-3 px-28 text-bold">完成</button>
+          <button :onClick="handlePostOnK" class="bg-success border-0 text-white rounded-full py-3 px-28 text-bold">
+            完成
+          </button>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 /* 使用Calendar時開啟 */
 /* :deep(.van-popup) {
   height: 50%;
@@ -172,5 +222,17 @@ const handleToDeliveryDetail = () => {
 :deep(.van-nav-bar__title) {
   font-size: 12px;
   color: #707070;
+}
+
+.input-wrap {
+  input {
+    outline: 0;
+    border-width: 0 0 2px;
+    border-color: #000;
+    opacity: 0.7;
+  }
+  input:focus {
+    border-color: green;
+  }
 }
 </style>

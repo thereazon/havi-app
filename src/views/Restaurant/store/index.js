@@ -7,6 +7,7 @@ const useRestaurant = defineStore('restaurant', {
   state: () => ({
     restaurant: null,
     deliveries: null,
+    currentDelivery: null,
     containers: [],
     returned: null,
     osnd: null,
@@ -31,6 +32,9 @@ const useRestaurant = defineStore('restaurant', {
     isLoading: null,
   }),
   actions: {
+    setCurrentDelivery(delivery) {
+      this.currentDelivery = delivery
+    },
     async getRestaurantDetailAction(id) {
       this.isLoading = true
       try {
@@ -319,6 +323,52 @@ const useRestaurant = defineStore('restaurant', {
         if (response.status === 'success') {
           this.status = response.status
           this.message = response.message
+        }
+      } catch (err) {
+        modal.open({
+          type: 'error',
+          title: '錯誤',
+          content: err.message,
+        })
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async postOnKAction(id, data) {
+      const modal = useAlertModal()
+      try {
+        const response = await ApiCaller.postOnK(id, data)
+        if (response.status === 'success') {
+          this.status = response.status
+          this.message = response.message
+          modal.open({
+            type: 'success',
+            title: '成功',
+            content: '資料儲存完成',
+          })
+        }
+      } catch (err) {
+        modal.open({
+          type: 'error',
+          title: '錯誤',
+          content: err.message,
+        })
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async updateOnKAction(id, data) {
+      const modal = useAlertModal()
+      try {
+        const response = await ApiCaller.updateOnK(id, data)
+        if (response.status === 'success') {
+          this.status = response.status
+          this.message = response.message
+          modal.open({
+            type: 'success',
+            title: '成功',
+            content: '資料儲存完成',
+          })
         }
       } catch (err) {
         modal.open({

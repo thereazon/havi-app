@@ -1,10 +1,13 @@
 <script setup>
 import { computed, reactive, ref, watch } from 'vue'
 import { Collapse, CollapseItem, Checkbox, Button, Icon, RadioGroup, Radio } from 'vant'
+import { useRouter, useRoute } from 'vue-router'
 import useRestaurant from '@/views/Restaurant/store'
 import ConfirmDialog from './ConfirmDialog.vue'
 
-const { postDeliveryAction, deleteDeliveryAction } = useRestaurant()
+const { postDeliveryAction, deleteDeliveryAction, setCurrentDelivery } = useRestaurant()
+const router = useRouter()
+const route = useRoute()
 
 const props = defineProps({
   deliveries: {
@@ -112,6 +115,16 @@ const submitRejectCode = () => {
   isConfirmDialog.value = false
 }
 
+const handleToOnK = (delivery) => () => {
+  setCurrentDelivery(delivery)
+  router.push({
+    path: '/restaurant/onkabnormal',
+    query: {
+      ...route.query,
+    },
+  })
+}
+
 watch(
   () => allChecked.value,
   (newVal, oldVal) => {
@@ -191,7 +204,10 @@ watch(
             <span class="mr-[10px]">送貨單號</span>
             <span>{{ currentDelivery.no }}</span>
           </div>
-          <div class="w-14 h-full flex justify-center items-center bg-[#044d80] text-white text-[0.75rem] rounded-full">
+          <div
+            :onClick="handleToOnK(currentDelivery)"
+            class="w-14 h-full flex justify-center items-center bg-[#044d80] text-white text-[0.75rem] rounded-full"
+          >
             {{ currentDelivery.code }}代號
           </div>
         </div>
