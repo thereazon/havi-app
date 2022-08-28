@@ -34,9 +34,10 @@ const usePreCool = defineStore('precool', {
     cleanSignImage() {
       this.signImage = null
     },
-    async postTemperature(id, cb) {
+    async postTemperature(dispatch, cb) {
+      const { id, isNormal } = dispatch
       const modal = useAlertModal()
-      if (this.tempPhoto) {
+      if (this.tempPhoto || isNormal) {
         const formData = new FormData()
         const signPhotoBlob = await fetch(this.signImage).then((r) => r.blob())
         formData.append('signature_photo', signPhotoBlob)

@@ -15,8 +15,9 @@ const preCoolStore = usePreCoolInfo()
 const dispatchStore = useDispatchInfo()
 const route = useRoute()
 const router = useRouter()
+const isNormal = dispatchStore?.dispatch?.isNormal
 const confirm = () => {
-  preCoolStore.postTemperature(dispatchStore.dispatch.id, () => router.back())
+  preCoolStore.postTemperature(dispatchStore.dispatch, () => router.back())
 }
 onMounted(() => {
   if (!dispatchStore.dispatch) {
@@ -45,10 +46,6 @@ const routeToSignPage = () => {
     },
   })
 }
-const isNormal = computed(() => {
-  const tempZones = dispatchStore?.dispatch?.temp_zone.split(',')
-  return tempZones ? tempZones.find((v) => v === 'D') && tempZones.length === 1 : null
-})
 
 const isValidTemp = computed(() => {
   return preCoolStore.temperature ? validTempC(preCoolStore.temperature.c.frozen) : false

@@ -33,7 +33,12 @@ const useDispatchInfo = defineStore('dispatch', {
       this.currentRestaurant = restaurant
     },
     async setCurrentDispatch(dispatch) {
-      this.dispatch = dispatch
+      const tempZones = dispatch.temp_zone.split(',')
+      const isNormal = tempZones ? tempZones.find((v) => v === 'D') && tempZones.length === 1 : null
+      this.dispatch = {
+        ...dispatch,
+        isNormal,
+      }
     },
     async getDispatchDetailAction(id, cb) {
       const modal = useAlertModal()
