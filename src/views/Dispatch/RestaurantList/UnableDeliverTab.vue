@@ -11,7 +11,7 @@ const restaurtants = computed(() => {
   return unableDelivery
 })
 
-const handleOpenUnableDeliverMenu = (id) => () => openUnableDeliverMenu(id)
+const handleOpenUnableDeliverMenu = (id) => (type) => openUnableDeliverMenu(id, type)
 </script>
 
 <template>

@@ -1,5 +1,5 @@
 <script setup>
-import { NavBar, Tab, Tabs, Button, Popup } from 'vant'
+import { NavBar, Tab, Tabs, Button } from 'vant'
 import { onMounted, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
@@ -24,16 +24,6 @@ const isConfirmDialog2 = ref(false)
 const openConfirmDialog = (id) => {
   isConfirmDialog.value = true
   unableDeliveryId.value = id
-}
-
-const openDelayModal = () => {
-  dispatchStore.closeUnableDeliverMenu()
-  showDelayModal.value = true
-}
-
-const openUndeliverableModal = () => {
-  dispatchStore.closeUnableDeliverMenu()
-  showUndeliverableModal.value = true
 }
 
 const confirmDelay = async (data) => {
@@ -123,7 +113,7 @@ const handleOpenDialog2 = async () => {
     </template>
   </ConfirmDialog>
   <DelayModal
-    v-model:isShow="showDelayModal"
+    v-model:isShow="dispatchStore.showDelayMenu"
     title="延後配送"
     subTitle="請填寫延後配送原因"
     optionFirst="請選擇延後配送原因"
@@ -131,21 +121,13 @@ const handleOpenDialog2 = async () => {
     @confirm="confirmDelay"
   />
   <DelayModal
-    v-model:isShow="showUndeliverableModal"
     title="攜回配銷中心"
+    v-model:isShow="dispatchStore.showUnableDeliverMenu"
     subTitle="請填寫無法配送原因"
     optionFirst="請選擇無法配送原因"
     warning="!請確認不再進行配送此單!"
     @confirm="confirmUndeliverable"
   />
-  <Popup position="bottom" v-model:show="dispatchStore.showUnableDeliverMenu">
-    <div class="py-[26px] px-[28px] bg-[#707070]">
-      <ul>
-        <li :onClick="openDelayModal" class="text-white text-[17px] leading-10">延後配送</li>
-        <li :onClick="openUndeliverableModal" class="text-white text-[17px] leading-10">攜回配銷中心</li>
-      </ul>
-    </div>
-  </Popup>
 </template>
 
 <style scoped>

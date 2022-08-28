@@ -19,15 +19,21 @@ const useDispatchInfo = defineStore('dispatch', {
     message: '',
     currentRestaurant: null,
     showUnableDeliverMenu: false,
+    showDelayMenu: false,
     unableDeliverID: null,
   }),
   actions: {
     closeUnableDeliverMenu() {
       this.showUnableDeliverMenu = false
+      this.showDelayMenu = false
     },
-    openUnableDeliverMenu(id) {
+    openUnableDeliverMenu(id, type) {
       this.unableDeliverID = id
-      this.showUnableDeliverMenu = true
+      if (type === 'UNABLE') {
+        this.showUnableDeliverMenu = type
+      } else if (type === 'DELAY') {
+        this.showDelayMenu = type
+      }
     },
     async setCurrentRestaurant(restaurant) {
       this.currentRestaurant = restaurant
