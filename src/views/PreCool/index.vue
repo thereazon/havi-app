@@ -8,7 +8,6 @@ import useDispatchInfo from '@/views/Dispatch/store'
 import usePreCoolInfo from '@/views/PreCool/store'
 import ContainerOnloadCard from '@/components/ContainerOnloadRecord/ContainerOnloadCard.vue'
 import SecurityCodeDialog from '@/components/SecurityCodeDialog.vue'
-
 import UploadImage from '@/components/uploadImage.vue'
 
 const isSecurityCodeDialog = ref(false)
@@ -125,9 +124,7 @@ const isValidTemp = computed(() => {
           櫃檯簽名
         </Button>
       </div>
-
-      <UploadImage title="車機溫度" />
-
+      <UploadImage title="車機溫度" :uploadToStore="preCoolStore.setTempPhoto" />
       <div class="w-full">
         <div class="mt-8 mb-[5px] text-[#959595] flex items-center justify-center relative">
           <div class="text-center text-[0.8125rem] font-bold">櫃台簽名</div>

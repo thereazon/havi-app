@@ -17,8 +17,12 @@ const usePreCool = defineStore('precool', {
     checked: [],
     degree_type: 'C',
     isValidCurrentTemp: null,
+    tempPhoto: null,
   }),
   actions: {
+    setTempPhoto(photo) {
+      this.tempPhoto = photo
+    },
     setSignData(data) {
       const { degree_type, checked, currentTemp, signImage, isValidTemp } = data
       this.signImage = signImage
@@ -32,39 +36,46 @@ const usePreCool = defineStore('precool', {
     },
     async postTemperature(id, cb) {
       const modal = useAlertModal()
-      const formData = new FormData()
-      const signPhotoBlob = await fetch(this.signImage).then((r) => r.blob())
-      formData.append('signature_photo', signPhotoBlob)
-      // todo temp_photo
-      formData.append('temp_photo', signPhotoBlob)
-      const data = {
-        temp_type: 1,
-        degree_type: 'f',
-        temp_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-        frozen_c: this.degree_type === 'C' ? this.currentTemp : TempModule.toCelsius(this.currentTemp),
-        frozen_f: this.degree_type === 'F' ? this.currentTemp : TempModule.toFahrenheit(this.currentTemp),
-        is_clean: 1,
-        is_bug: 1,
-        signature_photo: this.signImage,
-        temp_photo: this.signImage,
-      }
-      Object.keys(data).forEach((key) => formData.append(key, data[key]))
-      try {
-        this.isLoading = true
-        const response = await ApiCaller.postPreCool(id, formData)
-        if (response.status === 'success') {
-          this.status = response.status
-          this.message = response.message
-          cb()
+      if (this.tempPhoto) {
+        const formData = new FormData()
+        const signPhotoBlob = await fetch(this.signImage).then((r) => r.blob())
+        formData.append('signature_photo', signPhotoBlob)
+        formData.append('temp_photo', this.tempPhoto)
+        const data = {
+          temp_type: 1,
+          degree_type: 'f',
+          temp_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+          frozen_c: this.degree_type === 'C' ? this.currentTemp : TempModule.toCelsius(this.currentTemp),
+          frozen_f: this.degree_type === 'F' ? this.currentTemp : TempModule.toFahrenheit(this.currentTemp),
+          is_clean: 1,
+          is_bug: 1,
+          signature_photo: this.signImage,
+          temp_photo: this.signImage,
         }
-      } catch (err) {
+        Object.keys(data).forEach((key) => formData.append(key, data[key]))
+        try {
+          this.isLoading = true
+          const response = await ApiCaller.postPreCool(id, formData)
+          if (response.status === 'success') {
+            this.status = response.status
+            this.message = response.message
+            cb()
+          }
+        } catch (err) {
+          modal.open({
+            type: 'error', //required
+            title: '錯誤',
+            content: err.message,
+          })
+        } finally {
+          this.isLoading = false
+        }
+      } else {
         modal.open({
-          type: 'error', //required
+          type: 'error',
           title: '錯誤',
-          content: err.message,
+          content: '車機溫度照片不可為空',
         })
-      } finally {
-        this.isLoading = false
       }
     },
     async setCurrentDispatch(dispatch) {

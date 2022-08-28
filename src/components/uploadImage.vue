@@ -5,6 +5,7 @@ import { Popup } from 'vant'
 const emit = defineEmits(['uploadImage', 'resetImageToNull'])
 const props = defineProps({
   title: String,
+  uploadToStore: Function,
   disabled: {
     type: Boolean,
     required: false,
@@ -33,6 +34,7 @@ const uploadImage = (e) => {
   const reader = new FileReader()
   let file = e.target.files[0]
   imageFile.value = file
+  props.uploadToStore(file)
   reader.readAsDataURL(file)
   reader.onload = (e) => {
     previewImage.value = e.target.result
@@ -42,6 +44,7 @@ const uploadImage = (e) => {
 
 const deletePreviewImage = () => {
   if (!props.disabled) {
+    props.uploadToStore(null)
     previewImage.value = ''
     emit('resetImageToNull')
   }
