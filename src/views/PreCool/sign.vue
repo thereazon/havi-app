@@ -87,6 +87,23 @@ const isValidTemp = computed(() => {
     : false
 })
 
+const handleSubmitCode = (code) => {
+  const canvas = document.getElementById('canvas')
+  const callBack = () => {
+    isSecurityCodeDialog.value = false
+    const data = {
+      degree_type: isCelsiusTemp.value ? 'C' : 'F',
+      checked: checked.value,
+      currentTemp: currentTemp.value,
+      signImage: getCanvasToImage(canvas),
+      isValidTemp: isValidTemp.value,
+    }
+    preCoolStore.setSignData(data)
+    router.back()
+  }
+  return preCoolStore.postSecurityCodeAction(code, callBack)
+}
+
 const handleFinished = () => {
   const canvas = document.getElementById('canvas')
   if (isCanvasEmpty(canvas)) {
@@ -96,15 +113,7 @@ const handleFinished = () => {
       content: '櫃檯簽名為必填',
     })
   } else {
-    const data = {
-      degree_type: isCelsiusTemp.value ? 'F' : 'C',
-      checked: checked.value,
-      currentTemp: currentTemp.value,
-      signImage: getCanvasToImage(canvas),
-      isValidTemp: isValidTemp.value,
-    }
-    preCoolStore.setSignData(data)
-    router.back()
+    isSecurityCodeDialog.value = true
   }
 }
 </script>
@@ -189,7 +198,11 @@ const handleFinished = () => {
       >
         完成
       </Button>
-      <SecurityCodeDialog v-model:isShowDialog="isSecurityCodeDialog" :isCloseOnClickOverlay="true" />
+      <SecurityCodeDialog
+        :handleSubmit="handleSubmitCode"
+        v-model:isShowDialog="isSecurityCodeDialog"
+        :isCloseOnClickOverlay="true"
+      />
     </div>
   </div>
   <TemperatureActionSheet title="冷凍品溫" v-model:isShow="isShowFreezing" @confirm="confirmFreezingTemperature" />

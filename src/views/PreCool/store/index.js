@@ -116,6 +116,24 @@ const usePreCool = defineStore('precool', {
         this.isLoading = false
       }
     },
+    async postSecurityCodeAction(code, cb) {
+      const modal = useAlertModal()
+      try {
+        this.isLoading = true
+        const response = await ApiCaller.postSecurityCode(code)
+        if (response.status === 'success') {
+          cb && cb()
+        }
+      } catch (err) {
+        modal.open({
+          type: 'error', //required
+          title: '錯誤',
+          content: err.message,
+        })
+      } finally {
+        this.isLoading = false
+      }
+    },
   },
 })
 

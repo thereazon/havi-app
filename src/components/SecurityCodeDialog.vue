@@ -5,6 +5,7 @@ import ConfirmDialog from './ConfirmDialog.vue'
 
 const VanDialog = Dialog.Component
 const props = defineProps({
+  handleSubmit: Function,
   isShowDialog: Boolean,
   isCloseOnClickOverlay: Boolean,
 })
@@ -23,11 +24,8 @@ const isShow = computed({
 const closeDialog = () => {
   emit('update:isShowDialog', false)
 }
-const confirm = () => {
-  closeDialog()
-  isConfirmDialog.value = true
-}
 const submitSecurityCode = () => {
+  props.handleSubmit(securityCode.value)
   isConfirmDialog.value = false
 }
 </script>
@@ -53,7 +51,7 @@ const submitSecurityCode = () => {
         </div>
         <div class="px-[10%] flex justify-between items-center font-bold text-white text-[1rem]">
           <button class="w-[48%] h-[43px] bg-gray rounded-full border-0" @click="closeDialog()">取消</button>
-          <button class="w-[48%] h-[43px] bg-[#eb5e55] rounded-full border-0" @click="confirm()">確認</button>
+          <button class="w-[48%] h-[43px] bg-[#eb5e55] rounded-full border-0" @click="submitSecurityCode">確認</button>
         </div>
       </div>
     </van-dialog>
@@ -65,20 +63,6 @@ const submitSecurityCode = () => {
       :show="showKeyboard"
       @blur="showKeyboard = false"
     />
-
-    <ConfirmDialog v-model:isShowDialog="isConfirmDialog" :isCloseOnClickOverlay="true">
-      <template v-slot:title>
-        <div>確認送出</div>
-      </template>
-      <template v-slot:footer>
-        <div class="px-[10%] mt-[42px] flex justify-between items-center font-bold text-white text-[1rem]">
-          <button class="w-[48%] h-[43px] bg-gray rounded-full border-0" @click="isConfirmDialog = false">取消</button>
-          <button class="w-[48%] h-[43px] bg-[#eb5e55] rounded-full border-0" @click="submitSecurityCode()">
-            確認
-          </button>
-        </div>
-      </template>
-    </ConfirmDialog>
   </div>
 </template>
 
