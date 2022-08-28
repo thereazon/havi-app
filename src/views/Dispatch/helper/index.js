@@ -155,6 +155,13 @@ export const RestaurantTab = {
   UNABLE_DELIVERY: RestaurantStatusType.UNABLE_DELIVERY, //無法配送(12)
 }
 
+export const RestaurantStatusBackgroundColor = {
+  DELIVERING: 'delivery',
+  PENDING_DELIVERY: 'pending',
+  DELIVERY_COMPLETED: 'completed',
+  UNABLE_DELIVERY: 'unable',
+}
+
 export const RestaurantStatusTypeToZh = {
   DELIVERING: '配送中',
   ARRIVAL: '已抵達',

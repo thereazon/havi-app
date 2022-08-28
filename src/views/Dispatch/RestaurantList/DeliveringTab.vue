@@ -4,7 +4,7 @@ import { onMounted, computed, defineProps } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAlertModal } from '@/components/store/AlertModalStore'
 import useDispatchInfo from '@/views/Dispatch/store'
-import { RestaurantStatusTypeToZh } from '@/views/Dispatch/helper'
+import { RestaurantStatusTypeToZh, RestaurantStatusBackgroundColor } from '@/views/Dispatch/helper'
 import RestaurantDetailTable from '@/components/RestaurantDetailTable.vue'
 
 defineProps({
@@ -56,6 +56,7 @@ const handleArrival = () => {
       :title="RestaurantStatusTypeToZh.DELIVERING"
       :dispatch="dispatch"
       :restaurant="currentRestaurant"
+      :backgroundColor="RestaurantStatusBackgroundColor.DELIVERING"
       :handleRouteToDetail="() => handleRouteToDetail(currentRestaurant)"
     />
     <Button

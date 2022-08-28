@@ -7,6 +7,7 @@ defineProps({
   date: String,
   time: String,
   kg: String,
+  backgroundColor: String,
   dispatch: Object,
   restaurant: Object,
   handleRouteToDetail: Function,
@@ -16,7 +17,10 @@ defineProps({
 
 <template>
   <div class="shadow-md rounded-b-[20px]">
-    <div class="text-white bg-primary rounded-t-[20px] py-[12px] px-[20px] flex justify-between items-center">
+    <div
+      class="font-bold rounded-t-[20px] py-[12px] px-[20px] flex justify-between items-center"
+      :class="`${backgroundColor}`"
+    >
       <div>
         {{ title }}
       </div>
@@ -57,3 +61,23 @@ defineProps({
     </div>
   </div>
 </template>
+
+<style scoped>
+.delivery {
+  background-color: #707070;
+  color: #fff;
+}
+
+.pending {
+  background-color: #f2f2f2;
+  color: #707070;
+}
+.completed {
+  background-color: #086eb6;
+  color: #fff;
+}
+.unable {
+  background-color: #000000;
+  color: #fff;
+}
+</style>

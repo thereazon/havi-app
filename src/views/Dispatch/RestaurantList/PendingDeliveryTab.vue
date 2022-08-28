@@ -3,7 +3,7 @@ import { Button } from 'vant'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
-import { restaurantStatusFromStatusToZh } from '@/views/Dispatch/helper'
+import { restaurantStatusFromStatusToZh, RestaurantStatusBackgroundColor } from '@/views/Dispatch/helper'
 import RestaurantDetailTable from '@/components/RestaurantDetailTable.vue'
 
 const route = useRoute()
@@ -27,6 +27,7 @@ const restaurtants = computed(() => {
       :title="restaurantStatusFromStatusToZh(item.status)"
       :dispatch="dispatch"
       :restaurant="item"
+      :backgroundColor="RestaurantStatusBackgroundColor.PENDING_DELIVERY"
     />
   </div>
 </template>

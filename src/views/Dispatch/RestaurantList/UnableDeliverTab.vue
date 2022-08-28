@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import useDispatchInfo from '@/views/Dispatch/store'
-import { restaurantStatusFromStatusToZh } from '@/views/Dispatch/helper'
+import { restaurantStatusFromStatusToZh, RestaurantStatusBackgroundColor } from '@/views/Dispatch/helper'
 import RestaurantDetailTable from '@/components/RestaurantDetailTable.vue'
 
 const dispatchStore = useDispatchInfo()
@@ -23,6 +23,7 @@ const handleOpenUnableDeliverMenu = (id) => () => openUnableDeliverMenu(id)
       :dispatch="dispatch"
       :restaurant="item"
       :handleOpenUnableDeliverMenu="handleOpenUnableDeliverMenu(item.id)"
+      :backgroundColor="RestaurantStatusBackgroundColor.UNABLE_DELIVERY"
     />
   </div>
 </template>
