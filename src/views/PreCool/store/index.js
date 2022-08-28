@@ -16,14 +16,16 @@ const usePreCool = defineStore('precool', {
     data: [],
     checked: [],
     degree_type: 'C',
+    isValidCurrentTemp: null,
   }),
   actions: {
     setSignData(data) {
-      const { degree_type, checked, currentTemp, signImage } = data
+      const { degree_type, checked, currentTemp, signImage, isValidTemp } = data
       this.signImage = signImage
       this.checked = checked
       this.degree_type = degree_type
       this.currentTemp = currentTemp
+      this.isValidCurrentTemp = isValidTemp
     },
     cleanSignImage() {
       this.signImage = null

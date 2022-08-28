@@ -2,21 +2,20 @@
 import dayjs from 'dayjs'
 import { ref, onMounted, computed } from 'vue'
 import { NavBar, Button } from 'vant'
+import { validTempC, validTempF } from './helper'
 import { useRoute, useRouter } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
 import usePreCoolInfo from '@/views/PreCool/store'
 import ContainerOnloadCard from '@/components/ContainerOnloadRecord/ContainerOnloadCard.vue'
 import SecurityCodeDialog from '@/components/SecurityCodeDialog.vue'
+
 import UploadImage from '@/components/uploadImage.vue'
 
 const isSecurityCodeDialog = ref(false)
-
 const preCoolStore = usePreCoolInfo()
 const dispatchStore = useDispatchInfo()
-
 const route = useRoute()
 const router = useRouter()
-
 const confirm = () => {
   preCoolStore.postTemperature(dispatchStore.dispatch.id, () => router.back())
 }
@@ -49,7 +48,11 @@ const routeToSignPage = () => {
 }
 const isNormal = computed(() => {
   const tempZones = dispatchStore?.dispatch?.temp_zone.split(',')
-  return tempZones.find((v) => v === 'D') && tempZones.length === 1
+  return tempZones ? tempZones.find((v) => v === 'D') && tempZones.length === 1 : null
+})
+
+const isValidTemp = computed(() => {
+  return preCoolStore.temperature ? validTempC(preCoolStore.temperature.c.frozen) : false
 })
 </script>
 
@@ -79,12 +82,24 @@ const isNormal = computed(() => {
         class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
       >
         <span class="w-[16%] text-primary">冷凍品溫</span>
-        <div class="w-[42%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
+        <div
+          class="w-[42%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center"
+          :class="isValidTemp ? 'text-success' : 'text-warning'"
+        >
           {{
             preCoolStore.temperature && `${preCoolStore.temperature.c.frozen}°C/${preCoolStore.temperature.f.frozen}°F`
           }}
         </div>
-        <div class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
+        <div
+          class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center"
+          :class="
+            preCoolStore.isValidCurrentTemp === null
+              ? ''
+              : preCoolStore.isValidCurrentTemp
+              ? 'text-success'
+              : 'text-warning'
+          "
+        >
           {{ preCoolStore.currentTemp ? `${preCoolStore.currentTemp}°${preCoolStore.degree_type}` : '-' }}
         </div>
       </div>
@@ -121,9 +136,8 @@ const isNormal = computed(() => {
           <img v-if="preCoolStore.signImage" alt="sign" class="w-full h-full" :src="preCoolStore.signImage" />
         </div>
       </div>
-
       <Button class="w-full h-11 mt-7 text-white font-bold text-[1.0625rem] bg-success rounded-full" @click="confirm()">
-        完成
+        提交溫度
       </Button>
       <SecurityCodeDialog v-model:isShowDialog="isSecurityCodeDialog" :isCloseOnClickOverlay="true" />
     </div>

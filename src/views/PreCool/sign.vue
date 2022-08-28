@@ -1,19 +1,39 @@
 <script setup>
 import dayjs from 'dayjs'
 import { ref, onMounted, computed } from 'vue'
-import { Checkbox, CheckboxGroup, NavBar, Button, Field } from 'vant'
+import { Checkbox, CheckboxGroup, NavBar, Button } from 'vant'
 import { useRouter } from 'vue-router'
+import { validTempC, validTempF } from './helper'
 import useDispatchInfo from '@/views/Dispatch/store'
 import usePreCoolInfo from '@/views/PreCool/store'
 import SignatureComponent from '@/components/SignatureComponent.vue'
 import SecurityCodeDialog from '@/components/SecurityCodeDialog.vue'
 import { useAlertModal } from '@/components/store/AlertModalStore'
 import { isCanvasEmpty, getCanvasToImage } from '@/utils/canvas'
+import TemperatureActionSheet from '@/components/TemperatureActionSheet.vue'
+
+const computeTemp = (data) => {
+  let temp = null
+  switch (data.sign) {
+    case '+':
+      temp = Math.abs(data.integer + data.decimal / 10)
+      break
+    case '-':
+      temp = Math.abs(data.integer + data.decimal / 10) * -1
+      break
+
+    default:
+      temp = Math.abs(data.integer + data.decimal / 10)
+      break
+  }
+
+  return temp
+}
 
 const modal = useAlertModal()
 const checked = ref([])
 const isCelsiusTemp = ref(false)
-const currentTemp = ref('')
+const currentTemp = ref(null)
 
 const isSecurityCodeDialog = ref(false)
 
@@ -21,6 +41,15 @@ const preCoolStore = usePreCoolInfo()
 const dispatchStore = useDispatchInfo()
 
 const router = useRouter()
+const isShowFreezing = ref(false)
+const showFreezingActionSheet = () => {
+  isShowFreezing.value = true
+}
+
+const confirmFreezingTemperature = (data) => {
+  currentTemp.value = computeTemp(data)
+  isShowFreezing.value = false
+}
 
 onMounted(() => {
   if (!dispatchStore.dispatch) {
@@ -34,6 +63,29 @@ onMounted(() => {
 const onClickLeft = () => {
   router.back()
 }
+
+const currentDate = dayjs().format('MM/DD/YYYY')
+const currentTime = dayjs().format('HH:mm')
+
+const isDisabled = computed(() => {
+  if (checked.value.length !== 2) {
+    return true
+  } else {
+    return false
+  }
+})
+const isNormal = computed(() => {
+  const tempZones = dispatchStore?.dispatch?.temp_zone.split(',')
+  return tempZones ? tempZones.find((v) => v === 'D') && tempZones.length === 1 : null
+})
+
+const isValidTemp = computed(() => {
+  return currentTemp.value
+    ? isCelsiusTemp.value
+      ? validTempC(currentTemp.value)
+      : validTempF(currentTemp.value)
+    : false
+})
 
 const handleFinished = () => {
   const canvas = document.getElementById('canvas')
@@ -49,26 +101,12 @@ const handleFinished = () => {
       checked: checked.value,
       currentTemp: currentTemp.value,
       signImage: getCanvasToImage(canvas),
+      isValidTemp: isValidTemp.value,
     }
     preCoolStore.setSignData(data)
     router.back()
   }
 }
-
-const currentDate = dayjs().format('MM/DD/YYYY')
-const currentTime = dayjs().format('HH:mm')
-
-const isDisabled = computed(() => {
-  if (checked.value.length !== 2) {
-    return true
-  } else {
-    return false
-  }
-})
-const isNormal = computed(() => {
-  const tempZones = dispatchStore?.dispatch?.temp_zone.split(',')
-  return tempZones.find((v) => v === 'D') && tempZones.length === 1
-})
 </script>
 
 <template>
@@ -107,17 +145,18 @@ const isNormal = computed(() => {
       <div v-if="!isNormal" class="mt-[37px] mb-4 flex justify-between items-center">
         <span class="text-primary text-[0.9375rem]">填寫溫度</span>
         <div
-          class="w-[30%] h-[14px] text-[0.75rem] rounded-md bg-primary border-[2px] border-solid border-primary flex items-center"
-          @click="isCelsiusTemp = !isCelsiusTemp"
+          class="w-[20%] h-[18px] text-[0.75rem] rounded-sm bg-primary border-[1px] border-solid border-primary flex items-center"
         >
           <span
             class="w-[50%] h-full flex justify-center items-center"
-            :class="[isCelsiusTemp ? 'text-white' : 'text-primary bg-white rounded-l-md']"
+            :class="[isCelsiusTemp ? 'text-white' : 'text-primary bg-white rounded-l-sm']"
+            @click="isCelsiusTemp = true"
             >°C</span
           >
           <span
             class="w-[50%] h-full flex justify-center items-center"
-            :class="[isCelsiusTemp ? 'text-primary bg-white rounded-r-md' : 'text-white']"
+            :class="[isCelsiusTemp ? 'text-primary bg-white rounded-r-sm' : 'text-white']"
+            @click="isCelsiusTemp = false"
             >°F</span
           >
         </div>
@@ -127,11 +166,14 @@ const isNormal = computed(() => {
         class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
       >
         <span class="w-[16%] text-primary">冷凍品溫</span>
-        <Field
-          class="w-[60%] h-[24px] py-0 px-1 border-0 text-center bg-[#f2f2f2] rounded-md text-[#242424]"
+        <div
+          class="w-[60%] h-[24px] text-center bg-[#f2f2f2] rounded-md flex justify-center items-center"
+          :class="isValidTemp ? 'text-success' : 'text-warning'"
           type="number"
-          v-model="currentTemp"
-        />
+          @click="showFreezingActionSheet"
+        >
+          {{ currentTemp }}
+        </div>
       </div>
       <div class="w-full h-[42px] rounded-xl shadow-md bg-white flex items-center text-[0.75rem] font-bold">
         <CheckboxGroup v-model="checked" direction="horizontal">
@@ -150,6 +192,7 @@ const isNormal = computed(() => {
       <SecurityCodeDialog v-model:isShowDialog="isSecurityCodeDialog" :isCloseOnClickOverlay="true" />
     </div>
   </div>
+  <TemperatureActionSheet title="冷凍品溫" v-model:isShow="isShowFreezing" @confirm="confirmFreezingTemperature" />
 </template>
 
 <style scoped>
