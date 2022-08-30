@@ -11,6 +11,8 @@ const useRestaurant = defineStore('restaurant', {
     containers: [],
     returned: null,
     osnd: null,
+    isGetCurrentTemp: false, // 獲取溫度
+    isGetCounterTemp: false, // 獲取櫃檯溫度
     temperature: null,
     temperatureImage: null,
     degree_type: 'f',
@@ -154,6 +156,7 @@ const useRestaurant = defineStore('restaurant', {
         const response = await ApiCaller.getTemperature(carId, containerId)
         if (response.status === 'success') {
           this.temperature = response.data
+          this.isGetCurrentTemp = true
           this.status = response.status
         }
       } catch (err) {
@@ -197,8 +200,10 @@ const useRestaurant = defineStore('restaurant', {
     async postLockTemperature(restaurantId) {
       const modal = useAlertModal()
       const formData = new FormData()
-      const tempImageBlob = await fetch(this.temperatureImage).then((r) => r.blob())
-      formData.append('photo', tempImageBlob)
+      if (this.temperatureImage) {
+        const tempImageBlob = await fetch(this.temperatureImage).then((r) => r.blob())
+        formData.append('photo', tempImageBlob)
+      }
       const data = {
         temp_type: 2,
         degree_type: this.degree_type,
