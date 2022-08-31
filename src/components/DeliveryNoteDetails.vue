@@ -5,7 +5,7 @@ import { useRouter, useRoute } from 'vue-router'
 import useRestaurant from '@/views/Restaurant/store'
 import ConfirmDialog from './ConfirmDialog.vue'
 
-const { postDeliveryAction, deleteDeliveryAction, setCurrentDelivery } = useRestaurant()
+const { postDeliveryAction, deleteDeliveryAction, setCurrentDelivery, isPreviewMode } = useRestaurant()
 const router = useRouter()
 const route = useRoute()
 
@@ -103,6 +103,7 @@ const handleRejectType = (rejectType) => {
 }
 
 const openConfirmDialog = () => {
+  if (isPreviewMode) return
   rejectData.ids = currentDelivery.value.items.filter((item) => item.checked).map((item) => item.uid)
   if (rejectData.ids.length === 0) {
     return
@@ -239,7 +240,7 @@ watch(
             src="/images/delivery/restore.png"
             class="w-14 h-14"
             alt=""
-            @click="deleteDeliveryAction(currentDelivery.id)"
+            @click="() => (isPreviewMode ? null : deleteDeliveryAction(currentDelivery.id))"
           />
         </div>
       </div>

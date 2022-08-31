@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch, computed } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { NavBar, Button, Popup } from 'vant'
 import { useRouter, useRoute } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
@@ -8,13 +8,13 @@ import { useAlertModal } from '@/components/store/AlertModalStore'
 import TemperatureActionSheet from '@/components/TemperatureActionSheet.vue'
 import RestaurantInfoCard from '@/components/RestaurantInfoCard.vue'
 import UploadImage from '@/components/uploadImage.vue'
-import { TempModule } from '@/utils/common'
 import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
 import useRestaurant from './store'
 
-const { dispatch, currentRestaurant } = useDispatchInfo()
 const modal = useAlertModal()
+const { dispatch, currentRestaurant } = useDispatchInfo()
 const restaurantStore = useRestaurant()
+const { isPreviewMode } = restaurantStore
 const router = useRouter()
 const route = useRoute()
 const between = (x, min, max) => x >= min && x <= max
@@ -223,6 +223,7 @@ const handleLockTemp = () => {
 
 const postTemperatureFinish = async () => {
   await restaurantStore.postTemperatureFinish(currentRestaurant.id)
+  isShowTempSubmitConfirm.value = false
 }
 
 const toggleShowTempSubmitConfirm = () => {
@@ -281,7 +282,7 @@ const coldTemp = computed(() => {
         </div>
 
         <Button
-          :disabled="isLocked"
+          :disabled="isLocked || isPreviewMode"
           class="rounded-full border-2 h-[31px] w-[97px]"
           plain
           type="success"
@@ -386,11 +387,11 @@ const coldTemp = computed(() => {
             class="rounded-full h-[36px] w-[134px]"
             type="danger"
             @click="handleLockTemp"
-            :disabled="isLockedTempAndFinishedPhoto || isLocked"
+            :disabled="isLockedTempAndFinishedPhoto || isLocked || isPreviewMode"
             >鎖定溫度</Button
           >
           <Button
-            :disabled="isLockedTempAndFinishedPhoto || isLocked"
+            :disabled="isLockedTempAndFinishedPhoto || isLocked || isPreviewMode"
             class="rounded-full h-[36px] w-[134px] bg-primary text-white"
             @click="showPopup"
             >實測溫度</Button
@@ -406,6 +407,7 @@ const coldTemp = computed(() => {
         @resetImageToNull="cleanTempImage"
       />
       <Button
+        v-if="!isPreviewMode"
         class="bg-success mt-8"
         loading-type="spinner"
         round
@@ -413,7 +415,6 @@ const coldTemp = computed(() => {
         type="success"
         native-type="submit"
         @click="toggleShowTempSubmitConfirm"
-        :disabled="!isLockedTempAndFinishedPhoto"
         >完成</Button
       >
     </div>
@@ -493,13 +494,11 @@ const coldTemp = computed(() => {
     <div class="py-[20px] px-[28px]">
       <h1 class="text-center text-[#707070] text-[20px] mb-0">確認送出</h1>
       <h2 class="text-center text-[#eb5e55] text-[13px]">
-        {{
-          isLockedTempAndFinishedPhoto ? '' : '您尚未『鎖定溫度』無法完成此步驟！ 請先『鎖定溫度』後，在點擊『完成』'
-        }}
+        {{ isLocked ? '' : '您尚未『鎖定溫度』無法完成此步驟！ 請先『鎖定溫度』後，在點擊『完成』' }}
       </h2>
       <div class="flex justify-around mt-10">
         <Button class="rounded-full h-[43px] w-[121px] bg-gray text-white" @click="toggleShowTempSubmitConfirm">{{
-          isLockedTempAndFinishedPhoto ? '取消' : '返回'
+          isLocked ? '取消' : '返回'
         }}</Button>
         <Button class="rounded-full h-[43px] w-[121px] bg-warning text-white" @click="postTemperatureFinish"
           >確認</Button

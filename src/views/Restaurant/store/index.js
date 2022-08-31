@@ -201,7 +201,7 @@ const useRestaurant = defineStore('restaurant', {
     cleanTempImage() {
       this.temperatureImage = null
     },
-    async postLockTemperature(restaurantId) {
+    async postLockTemperature(restaurantId, cb) {
       const modal = useAlertModal()
       const formData = new FormData()
       if (this.temperatureImage) {
@@ -220,8 +220,7 @@ const useRestaurant = defineStore('restaurant', {
       try {
         const response = await ApiCaller.postLockTemperature(restaurantId, formData)
         if (response.status === 'success') {
-          this.status = response.status
-          this.message = response.message
+          cb && cb()
         }
       } catch (err) {
         modal.open({
@@ -257,14 +256,17 @@ const useRestaurant = defineStore('restaurant', {
         this.isLoading = false
       }
     },
-    async postTemperatureFinish(restaurantId, cb) {
+    async postTemperatureFinish(restaurantId) {
+      const modal = useAlertModal()
       this.isLoading = true
       try {
         const response = await ApiCaller.postTemperatureFinish(restaurantId)
         if (response.status === 'success') {
-          this.message = response.message
-          this.status = response.status
-          cb()
+          modal.open({
+            type: 'success',
+            title: '成功',
+            content: '溫度儲存成功',
+          })
         }
       } catch (err) {
         this.status = err.status

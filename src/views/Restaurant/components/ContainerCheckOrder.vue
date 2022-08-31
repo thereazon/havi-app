@@ -1,6 +1,6 @@
 <script setup>
 import { computed, reactive, ref } from 'vue'
-import { Collapse, CollapseItem, Dialog, Button, Icon, Loading, Field } from 'vant'
+import { Collapse, CollapseItem, Dialog, Button, Icon, Loading } from 'vant'
 import { storeToRefs } from 'pinia'
 import useRestaurant from '@/views/Restaurant/store'
 import { useAlertModal } from '@/components/store/AlertModalStore'
@@ -8,7 +8,7 @@ import ConfirmDialog from '@/components/ConfirmDialog.vue'
 
 const VanDialog = Dialog.Component
 const { containers, isLoading } = storeToRefs(useRestaurant())
-const { setContainersAction, postContainerFinishAction, postContainerSendAction } = useRestaurant()
+const { setContainersAction, postContainerFinishAction, postContainerSendAction, isPreviewMode } = useRestaurant()
 const modal = useAlertModal()
 const isConfirmDialog = ref(false)
 const isConfirmDialog2 = ref(false)
@@ -182,8 +182,20 @@ const confirm = (containerOrder) => {
       </div>
 
       <div class="w-full pt-9 pb-9 flex justify-between items-center font-bold text-white text-[1rem]">
-        <button class="w-[48%] h-[43px] bg-success rounded-full border-0" @click="isConfirmDialog2 = true">完成</button>
-        <button class="w-[48%] h-[43px] bg-warning rounded-full border-0" @click="isConfirmDialog = true">發送</button>
+        <button
+          disabled="isPreviewMode"
+          class="w-[48%] h-[43px] bg-success rounded-full border-0"
+          @click="isConfirmDialog2 = true"
+        >
+          完成
+        </button>
+        <button
+          disabled="isPreviewMode"
+          class="w-[48%] h-[43px] bg-warning rounded-full border-0"
+          @click="isConfirmDialog = true"
+        >
+          發送
+        </button>
       </div>
 
       <!-- 輸入容器數量的彈窗 -->

@@ -3,9 +3,12 @@ import { ref, onMounted } from 'vue'
 import { NavBar, Button } from 'vant'
 import { useRouter, useRoute } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
+import useRestaurant from '@/views/Restaurant/store'
 import RestaurantSignInCard from '@/components/RestaurantSignInCard.vue'
 import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
 import SignatureComponent from '@/components/SignatureComponent.vue'
+
+const { isPreviewMode } = useRestaurant()
 const { dispatch, currentRestaurant } = useDispatchInfo()
 const router = useRouter()
 const route = useRoute()
@@ -52,7 +55,12 @@ const onClickRight = () => {
       />
       <SignatureComponent title="司機簽名" />
 
-      <Button class="w-full mt-7 text-white font-bold text-[1.0625rem] bg-success rounded-full"> 完成 </Button>
+      <Button
+        disabled="isPreviewMode"
+        class="w-full mt-7 text-white font-bold text-[1.0625rem] bg-success rounded-full"
+      >
+        完成
+      </Button>
     </div>
   </div>
 </template>

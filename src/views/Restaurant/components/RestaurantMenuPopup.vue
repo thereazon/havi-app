@@ -2,11 +2,14 @@
 import { Popup, Divider, Checkbox } from 'vant'
 import { computed, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import useRestaurant from '@/views/Restaurant/store'
 import useDispatchInfo from '@/views/Dispatch/store'
 import { useAlertModal } from '@/components/store/AlertModalStore'
 const { currentRestaurant } = useDispatchInfo()
 
 const modal = useAlertModal()
+const restaurantStore = useRestaurant()
+const { isPreviewMode } = restaurantStore
 const props = defineProps({
   isShow: Boolean,
 })
@@ -39,7 +42,7 @@ const list = reactive([
 ])
 
 const goto = (path) => {
-  if (currentRestaurant.is_temp) {
+  if (currentRestaurant.is_temp || isPreviewMode) {
     router.push({
       path: path,
       query: {
