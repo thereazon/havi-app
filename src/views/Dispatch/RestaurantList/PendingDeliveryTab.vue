@@ -1,15 +1,16 @@
 <script setup>
-import { Button } from 'vant'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
+import useRestaurant from '@/views/Restaurant/store'
 import { restaurantStatusFromStatusToZh, RestaurantStatusBackgroundColor } from '@/views/Dispatch/helper'
 import RestaurantDetailTable from '@/components/RestaurantDetailTable.vue'
 
 const route = useRoute()
 const router = useRouter()
 
-const { dispatch, restaurant } = useDispatchInfo()
+const restaurantStore = useRestaurant()
+const { dispatch, restaurant, getRestaurantDetailAction } = useDispatchInfo()
 
 const restaurtants = computed(() => {
   const delay = restaurant?.DELAY ? restaurant.DELAY : []
@@ -17,6 +18,18 @@ const restaurtants = computed(() => {
   const list = [...delay, ...pedingDelivery]
   return list
 })
+
+const handlePreview = (currentRestaurant) => {
+  restaurantStore.setPreviewMode(true)
+  getRestaurantDetailAction(currentRestaurant.id, () =>
+    router.push({
+      path: '/restaurant/temperature',
+      query: {
+        ...route.query,
+      },
+    }),
+  )
+}
 </script>
 
 <template>
@@ -28,6 +41,7 @@ const restaurtants = computed(() => {
       :dispatch="dispatch"
       :restaurant="item"
       :backgroundColor="RestaurantStatusBackgroundColor.PENDING_DELIVERY"
+      :handleRouteToDetail="() => handlePreview(item)"
     />
   </div>
 </template>

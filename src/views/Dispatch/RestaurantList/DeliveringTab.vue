@@ -4,6 +4,7 @@ import { onMounted, computed, defineProps } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAlertModal } from '@/components/store/AlertModalStore'
 import useDispatchInfo from '@/views/Dispatch/store'
+import useRestaurant from '@/views/Restaurant/store'
 import { RestaurantStatusTypeToZh, RestaurantStatusBackgroundColor } from '@/views/Dispatch/helper'
 import RestaurantDetailTable from '@/components/RestaurantDetailTable.vue'
 
@@ -15,6 +16,7 @@ const route = useRoute()
 const router = useRouter()
 const modal = useAlertModal()
 const dispatchStore = useDispatchInfo()
+const restaurantStore = useRestaurant()
 const { dispatch, getRestaurantDetailAction, postArrivalAction } = dispatchStore
 
 const currentRestaurant = computed(() => {
@@ -35,6 +37,19 @@ onMounted(() => {
 })
 
 const handleRouteToDetail = (currentRestaurant) => {
+  restaurantStore.setPreviewMode(false)
+  getRestaurantDetailAction(currentRestaurant.id, () =>
+    router.push({
+      path: '/restaurant/temperature',
+      query: {
+        ...route.query,
+      },
+    }),
+  )
+}
+
+const handlePreview = (currentRestaurant) => {
+  restaurantStore.setPreviewMode(true)
   getRestaurantDetailAction(currentRestaurant.id, () =>
     router.push({
       path: '/restaurant/temperature',
@@ -77,7 +92,7 @@ const handleArrival = () => {
       已抵達 {{ currentRestaurant?.actual_arrival_time }}</Button
     >
     <Button
-      :onClick="handleToDetail"
+      :onClick="() => handlePreview(currentRestaurant)"
       round
       type="primary"
       class="w-full bg-primary border-none text-white rounded-full px-[43px] mt-10"

@@ -5,6 +5,7 @@ import { useAlertModal } from '@/components/store/AlertModalStore'
 
 const useRestaurant = defineStore('restaurant', {
   state: () => ({
+    isPreviewMode: true,
     restaurant: null,
     deliveries: null,
     currentDelivery: null,
@@ -34,6 +35,9 @@ const useRestaurant = defineStore('restaurant', {
     isLoading: null,
   }),
   actions: {
+    setPreviewMode(bool) {
+      this.isPreviewMode = bool
+    },
     setCurrentDelivery(delivery) {
       this.currentDelivery = delivery
     },

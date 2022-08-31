@@ -1,15 +1,16 @@
 <script setup>
-import { Button } from 'vant'
-import { onMounted, computed } from 'vue'
+import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
+import useRestaurant from '@/views/Restaurant/store'
 import { RestaurantStatusBackgroundColor } from '@/views/Dispatch/helper'
 import RestaurantDetailTable from '@/components/RestaurantDetailTable.vue'
 
 const route = useRoute()
 const router = useRouter()
 
-const { dispatch, restaurant } = useDispatchInfo()
+const restaurantStore = useRestaurant()
+const { dispatch, restaurant, getRestaurantDetailAction } = useDispatchInfo()
 
 const restaurtants = computed(() => {
   const tempConfirmation = restaurant?.TEMP_CONFIRMATION ? restaurant.TEMP_CONFIRMATION : []
@@ -17,6 +18,18 @@ const restaurtants = computed(() => {
   const list = [...tempConfirmation, ...deliveryCompleted]
   return list
 })
+
+const handlePreview = (currentRestaurant) => {
+  restaurantStore.setPreviewMode(true)
+  getRestaurantDetailAction(currentRestaurant.id, () =>
+    router.push({
+      path: '/restaurant/temperature',
+      query: {
+        ...route.query,
+      },
+    }),
+  )
+}
 </script>
 
 <template>
@@ -28,6 +41,7 @@ const restaurtants = computed(() => {
       :dispatch="dispatch"
       :restaurant="item"
       :backgroundColor="RestaurantStatusBackgroundColor.DELIVERY_COMPLETED"
+      :handleRouteToDetail="() => handlePreview(item)"
     />
   </div>
 </template>
