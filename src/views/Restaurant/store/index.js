@@ -212,8 +212,8 @@ const useRestaurant = defineStore('restaurant', {
         temp_type: 2,
         degree_type: this.degree_type,
         temp_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-        cold: this.cold_temp,
-        frozen: this.frozen_temp,
+        cold: this.cold_temp ? this.cold_temp : this.temperature.f.cold,
+        frozen: this.frozen_temp ? this.frozen_temp : this.temperature.f.frozen,
       }
       Object.keys(data).forEach((key) => formData.append(key, data[key]))
       this.isLoading = true

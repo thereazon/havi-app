@@ -208,10 +208,7 @@ const handleLockTemp = () => {
       })
     }
   } else if (restaurantStore.isGetCurrentTemp) {
-    // isTempInvalid.value = true
-    if (dispatch.isNormal) {
-      isShowLockTempConfirm.value = true
-    }
+    isShowLockTempConfirm.value = true
   } else {
     modal.open({
       type: 'hint',
@@ -224,10 +221,6 @@ const handleLockTemp = () => {
 const postTemperatureFinish = async () => {
   await restaurantStore.postTemperatureFinish(currentRestaurant.id)
   isShowTempSubmitConfirm.value = false
-}
-
-const toggleShowTempSubmitConfirm = () => {
-  isShowTempSubmitConfirm.value = !isShowTempSubmitConfirm.value
 }
 
 const frozenTemp = computed(() => {
@@ -414,7 +407,7 @@ const coldTemp = computed(() => {
         block
         type="success"
         native-type="submit"
-        @click="toggleShowTempSubmitConfirm"
+        @click="postTemperatureFinish"
         >完成</Button
       >
     </div>
@@ -490,7 +483,7 @@ const coldTemp = computed(() => {
       </div>
     </div>
   </Popup>
-  <Popup v-model:show="isShowTempSubmitConfirm" class="w-[325px] h-[202px] rounded-[20px]">
+  <!-- <Popup v-model:show="isShowTempSubmitConfirm" class="w-[325px] h-[202px] rounded-[20px]">
     <div class="py-[20px] px-[28px]">
       <h1 class="text-center text-[#707070] text-[20px] mb-0">確認送出</h1>
       <h2 class="text-center text-[#eb5e55] text-[13px]">
@@ -505,7 +498,7 @@ const coldTemp = computed(() => {
         >
       </div>
     </div>
-  </Popup>
+  </Popup> -->
   <TemperatureActionSheet
     title="冷藏品溫"
     v-model:isShow="isShowRefrigeration"
