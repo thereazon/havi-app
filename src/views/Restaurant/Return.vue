@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { NavBar, Button } from 'vant'
+import { NavBar } from 'vant'
 import { useRouter, useRoute } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
 import useRestaurant from '@/views/Restaurant/store'
@@ -57,7 +57,6 @@ const onClickRight = () => {
       />
       <div class="mt-10 pb-20">
         <ReturnedTable v-if="restaurantStore.returned" :detailData="restaurantStore.returned" title="退貨單號" />
-        <Button class="bg-success mt-8" loading-type="spinner" round block type="success">完成</Button>
       </div>
     </div>
   </div>

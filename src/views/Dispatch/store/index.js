@@ -23,6 +23,9 @@ const useDispatchInfo = defineStore('dispatch', {
     unableDeliverID: null,
   }),
   actions: {
+    updateCurrentRestaurantStatus(restaurant) {
+      this.currentRestaurant = restaurant
+    },
     closeUnableDeliverMenu() {
       this.showUnableDeliverMenu = false
       this.showDelayMenu = false

@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import ApiCaller from '../service'
 import dayjs from 'dayjs'
 import { useAlertModal } from '@/components/store/AlertModalStore'
-
+import useDispatchStore from '@/views/Dispatch/store'
 const useRestaurant = defineStore('restaurant', {
   state: () => ({
     isPreviewMode: true,
@@ -180,8 +180,6 @@ const useRestaurant = defineStore('restaurant', {
         })
         const response = await ApiCaller.postContainerFinish(id, newItems)
         if (response.status === 'success') {
-          this.status = response.status
-          this.message = response.message
           modal.open({
             type: 'success',
             title: '成功',
@@ -375,6 +373,54 @@ const useRestaurant = defineStore('restaurant', {
         if (response.status === 'success') {
           this.status = response.status
           this.message = response.message
+          modal.open({
+            type: 'success',
+            title: '成功',
+            content: '資料儲存完成',
+          })
+        }
+      } catch (err) {
+        modal.open({
+          type: 'error',
+          title: '錯誤',
+          content: err.message,
+        })
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async postReturnStatusAction(id, type) {
+      const dispatchStore = useDispatchStore()
+      const modal = useAlertModal()
+      try {
+        const response = await ApiCaller.postReturnStatus(id, { type })
+        if (response.status === 'success') {
+          this.getReturnedAction(dispatchStore.currentRestaurant.id)
+          dispatchStore.updateCurrentRestaurantStatus({
+            ...dispatchStore.currentRestaurant,
+            is_returned: false,
+          })
+        }
+      } catch (err) {
+        modal.open({
+          type: 'error',
+          title: '錯誤',
+          content: err.message,
+        })
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async postReturnFinishAction(id) {
+      const dispatchStore = useDispatchStore()
+      const modal = useAlertModal()
+      try {
+        const response = await ApiCaller.postReturnFinish(id)
+        if (response.status === 'success') {
+          dispatchStore.updateCurrentRestaurantStatus({
+            ...dispatchStore.currentRestaurant,
+            is_returned: true,
+          })
           modal.open({
             type: 'success',
             title: '成功',

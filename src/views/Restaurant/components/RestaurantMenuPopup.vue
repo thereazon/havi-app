@@ -5,7 +5,8 @@ import { useRoute, useRouter } from 'vue-router'
 import useRestaurant from '@/views/Restaurant/store'
 import useDispatchInfo from '@/views/Dispatch/store'
 import { useAlertModal } from '@/components/store/AlertModalStore'
-const { currentRestaurant } = useDispatchInfo()
+const dispatchStore = useDispatchInfo()
+const { currentRestaurant } = dispatchStore
 
 const modal = useAlertModal()
 const restaurantStore = useRestaurant()
@@ -79,18 +80,21 @@ const filterNoValueList = computed(() => {
         @click="goto(item.path)"
       >
         <Checkbox
-          v-model="currentRestaurant[item.check]"
+          v-model="dispatchStore.currentRestaurant[item.check]"
           disabled
           checked-color="#6dbe5b"
           class="mx-[25px]"
-          :class="{ finish: currentRestaurant[item.check], invisible: item.check === null ? true : false }"
+          :class="{
+            finish: dispatchStore.currentRestaurant[item.check],
+            invisible: item.check === null ? true : false,
+          }"
         ></Checkbox>
         <div
-          :class="{ 'text-success': currentRestaurant[item.check] }"
+          :class="{ 'text-success': dispatchStore.currentRestaurant[item.check] }"
           class="py-[10px] col-span-2 flex justify-between w-full"
         >
           <div class="mr-[60px]">{{ item.text }}</div>
-          <div v-if="item.value">{{ currentRestaurant[item.value] }}</div>
+          <div v-if="item.value">{{ dispatchStore.currentRestaurant[item.value] }}</div>
         </div>
       </a>
     </div>

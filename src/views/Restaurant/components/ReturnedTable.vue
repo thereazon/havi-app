@@ -2,6 +2,10 @@
 import { ref, reactive, computed } from 'vue'
 import { Collapse, CollapseItem, Button, Icon } from 'vant'
 
+import useRestaurant from '@/views/Restaurant/store'
+
+const restaurantStore = useRestaurant()
+
 const props = defineProps({
   title: String,
   detailData: {
@@ -70,8 +74,15 @@ const handleToAbnormalPage = (id) => () => {
   alert('abnormal' + id)
 }
 
-const allClear = () => {}
-const reWrite = () => {}
+const handleFinish = () => {
+  const id = props.detailData[currentIndex.value].id
+  restaurantStore.postReturnFinishAction(id)
+}
+
+const handleUpdateStatus = (type) => {
+  const id = props.detailData[currentIndex.value].id
+  restaurantStore.postReturnStatusAction(id, type)
+}
 </script>
 
 <template>
@@ -133,11 +144,11 @@ const reWrite = () => {}
         </div>
       </div>
       <div class="flex">
-        <button class="text-warning border-0 bg-white rounded-[5px] text-[12px]" @click="allClear">
+        <button class="text-warning border-0 bg-white rounded-[5px] text-[12px]" @click="() => handleUpdateStatus('2')">
           <Icon name="cross" color="#eb5e55" size="30" />
           <div>全部不提</div>
         </button>
-        <button class="border-0 bg-white text-gray text-[12px]" @click="reWrite">
+        <button class="border-0 bg-white text-gray text-[12px]" @click="() => handleUpdateStatus('1')">
           <Icon name="replay" color="#707070" size="30" />
           <div>重新填寫</div>
         </button>
@@ -204,7 +215,6 @@ const reWrite = () => {}
                 </div>
               </div>
             </div>
-
             <div
               v-show="!(item.data.length - 1 == index)"
               class="w-[90%] border-solid border-x-0 border-t-0 mx-auto"
@@ -214,6 +224,9 @@ const reWrite = () => {}
       </CollapseItem>
     </Collapse>
   </div>
+  <Button :onClick="handleFinish" class="bg-success mt-8" loading-type="spinner" round block type="success"
+    >完成</Button
+  >
 </template>
 
 <style lang="scss" scoped>

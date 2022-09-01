@@ -1,12 +1,4 @@
 import axios from 'axios'
-
-const getRestaurantDetail = async (id) => {
-  return await axios
-    .get(`/api/webStore/${id}`)
-    .then((res) => res.data)
-    .catch((err) => Promise.reject(err.response.data))
-}
-
 // const mockGetDeliveryResponse = (id) => {
 //   return new Promise((resolve) => {
 //     setTimeout(() => {
@@ -41,6 +33,12 @@ const getRestaurantDetail = async (id) => {
 //     }, 2000)
 //   })
 // }
+const getRestaurantDetail = async (id) => {
+  return await axios
+    .get(`/api/webStore/${id}`)
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
+}
 
 const getDelivery = async (id) => {
   return await axios
@@ -73,6 +71,19 @@ const getContainer = async (id) => {
 const getReturned = async (id) => {
   return await axios
     .get(`/api/webStore/${id}/returned`)
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
+}
+
+const postReturnStatus = async (id, data) => {
+  return await axios
+    .post(`/api/webReturned/${id}/status`, data)
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
+}
+const postReturnFinish = async (id) => {
+  return await axios
+    .post(`/api/webReturned/${id}/finish`)
     .then((res) => res.data)
     .catch((err) => Promise.reject(err.response.data))
 }
@@ -115,7 +126,6 @@ const postLockTemperature = async (id, data) => {
     .catch((err) => Promise.reject(err.response.data))
 }
 
-//POST /api/webStore/{id}/temperature_finish 餐廳溫度完成
 const postTemperatureFinish = async (id) => {
   return await axios
     .post(`/api/webStore/${id}/temperature_finish`)
@@ -174,6 +184,8 @@ const ApiCaller = {
   postException,
   postOnK,
   updateOnK,
+  postReturnStatus,
+  postReturnFinish,
 }
 
 export default ApiCaller
