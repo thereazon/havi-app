@@ -200,6 +200,7 @@ const useRestaurant = defineStore('restaurant', {
       this.temperatureImage = null
     },
     async postLockTemperature(restaurantId, cb) {
+      const dispatchStore = useDispatchStore()
       const modal = useAlertModal()
       const formData = new FormData()
       if (this.temperatureImage) {
@@ -207,7 +208,7 @@ const useRestaurant = defineStore('restaurant', {
         formData.append('photo', tempImageBlob)
       }
       const data = {
-        temp_type: 2,
+        temp_type: dispatchStore.dispatch.isNormal ? 4 : this.cold_temp ? 2 : 1,
         degree_type: this.degree_type,
         temp_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
         cold: this.cold_temp ? this.cold_temp : this.temperature.f.cold,
@@ -255,6 +256,7 @@ const useRestaurant = defineStore('restaurant', {
       }
     },
     async postTemperatureFinish(restaurantId) {
+      const dispatchStore = useDispatchStore()
       const modal = useAlertModal()
       this.isLoading = true
       try {
@@ -264,6 +266,10 @@ const useRestaurant = defineStore('restaurant', {
             type: 'success',
             title: '成功',
             content: '溫度儲存成功',
+          })
+          dispatchStore.updateCurrentRestaurantStatus({
+            ...dispatchStore.currentRestaurant,
+            is_temp: true,
           })
         }
       } catch (err) {
