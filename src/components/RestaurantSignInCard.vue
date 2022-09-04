@@ -19,7 +19,7 @@ const props = defineProps({
 })
 
 const departureDt = computed(() =>
-  splitFullDateTimeAsDateAndTime(props.departure_time, { dateFormat: 'DD/MM/YYYY', timeFormat: 'HH:mm' }),
+  splitFullDateTimeAsDateAndTime(props.departure_time, { dateFormat: 'MM/DD/YYYY', timeFormat: 'HH:mm' }),
 )
 </script>
 
