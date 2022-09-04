@@ -10,7 +10,6 @@ const { currentRestaurant } = dispatchStore
 
 const modal = useAlertModal()
 const restaurantStore = useRestaurant()
-const { isPreviewMode } = restaurantStore
 const props = defineProps({
   isShow: Boolean,
 })
@@ -43,7 +42,7 @@ const list = reactive([
 ])
 
 const goto = (path) => {
-  if (currentRestaurant.is_temp || isPreviewMode) {
+  if (dispatchStore.currentRestaurant.is_temp || restaurantStore.isPreviewMode) {
     router.push({
       path: path,
       query: {

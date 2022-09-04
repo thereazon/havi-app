@@ -17,6 +17,7 @@ import RestaurantSignature from '@/views/Restaurant/Signature.vue'
 import RestaurantDelivery from '@/views/Restaurant/Delivery.vue'
 import RestaurantOsnd from '@/views/Restaurant/Osnd.vue'
 import RestaurantReturn from '@/views/Restaurant/Return.vue'
+import RestaurantReturnDetail from '@/views/Restaurant/ReturnDetail.vue'
 import RestaurantOnkAbnormal from '@/views/Restaurant/onkAbnormal.vue'
 import RestaurantExceptionRegistration from '@/views/Restaurant/ExceptionRegistration.vue'
 import OnKAbnormal from '@/views/Restaurant/OnKAbnormal.vue'
@@ -104,6 +105,10 @@ const router = createRouter({
     {
       path: '/restaurant/returned',
       component: RestaurantReturn,
+    },
+    {
+      path: '/restaurant/returned/detail',
+      component: RestaurantReturnDetail,
     },
     {
       path: '/restaurant/onkabnormal',

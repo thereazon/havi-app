@@ -1,10 +1,13 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
-import { Collapse, CollapseItem, Button, Icon } from 'vant'
+import { Collapse, CollapseItem, Button, Icon, Toast } from 'vant'
 
 import useRestaurant from '@/views/Restaurant/store'
+import { useRouter, useRoute } from 'vue-router'
 
 const restaurantStore = useRestaurant()
+const router = useRouter()
+const route = useRoute()
 
 const props = defineProps({
   title: String,
@@ -70,8 +73,24 @@ const handleTab = (id) => {
   select.value = id
 }
 
-const handleToAbnormalPage = (id) => () => {
-  alert('abnormal' + id)
+const handleToDetailPage = (item, subItem) => () => {
+  console.log(item)
+
+  const currentReturned = {
+    ...item,
+    no: selectDetailData.value.no,
+    date: selectDetailData.value.date,
+    items: {
+      ...subItem,
+    },
+  }
+  restaurantStore.setCurrentReturned(currentReturned)
+  router.push({
+    path: '/restaurant/returned/detail',
+    query: {
+      ...route.query,
+    },
+  })
 }
 
 const handleFinish = () => {
@@ -81,7 +100,11 @@ const handleFinish = () => {
 
 const handleUpdateStatus = (type) => {
   const id = props.detailData[currentIndex.value].id
-  restaurantStore.postReturnStatusAction(id, type)
+  const typeToZh = {
+    1: '重新填寫',
+    2: '全部不提',
+  }
+  restaurantStore.postReturnStatusAction(id, type).then(() => Toast({ message: typeToZh[type], position: 'bottom' }))
 }
 </script>
 
@@ -189,7 +212,7 @@ const handleUpdateStatus = (type) => {
           v-for="subitem in item.data"
           :key="subitem.id"
           class="detail-list list-none mx-4 leading-snug h-11 flex items-center text-gray"
-          :onClick="handleToAbnormalPage(subitem.id)"
+          :onClick="handleToDetailPage(item, subitem)"
         >
           <div class="bg-[#f2f2f2] w-full" v-for="(subitem, index) in item.data" :key="subitem.id">
             <div class="flex">

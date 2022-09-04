@@ -5,6 +5,9 @@
     .havi-select {
         @apply w-full h-[48px] bg-[#fffcf6] border border-gray border-dashed mb-4
     }
+    .havi-input {
+        @apply w-full h-[33px] bg-[#fffcf6] border border-gray border-dashed
+    }
 }
 
 html {
@@ -14,6 +17,11 @@ html {
 
 .van-nav-bar--fixed {
     z-index: 999;
+}
+
+
+.havi-input:disabled {
+    background-color:#f2f2f2;
 }
 
 button:disabled {

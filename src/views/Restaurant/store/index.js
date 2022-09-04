@@ -30,6 +30,7 @@ const useRestaurant = defineStore('restaurant', {
       uom: null,
       wrin: null,
     },
+    currentReturned: null,
     status: 'init',
     message: null,
     isLoading: null,
@@ -37,6 +38,9 @@ const useRestaurant = defineStore('restaurant', {
   actions: {
     setPreviewMode(bool) {
       this.isPreviewMode = bool
+    },
+    setCurrentReturned(returned) {
+      this.currentReturned = returned
     },
     setCurrentDelivery(delivery) {
       this.currentDelivery = delivery
