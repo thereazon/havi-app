@@ -75,6 +75,19 @@ const getReturned = async (id) => {
     .catch((err) => Promise.reject(err.response.data))
 }
 
+const getReturnedDetail = async (id) => {
+  return await axios
+    .get(`/api/webReturned/${id}`)
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
+}
+const postReturnDetail = async (id, data) => {
+  return await axios
+    .post(`/api/webReturned/${id}`, data)
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
+}
+
 const postReturnStatus = async (id, data) => {
   return await axios
     .post(`/api/webReturned/${id}/status`, data)
@@ -184,8 +197,10 @@ const ApiCaller = {
   postException,
   postOnK,
   updateOnK,
+  getReturnedDetail,
   postReturnStatus,
   postReturnFinish,
+  postReturnDetail,
 }
 
 export default ApiCaller

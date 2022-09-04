@@ -31,6 +31,7 @@ const useRestaurant = defineStore('restaurant', {
       wrin: null,
     },
     currentReturned: null,
+    returnDetail: null,
     status: 'init',
     message: null,
     isLoading: null,
@@ -399,6 +400,25 @@ const useRestaurant = defineStore('restaurant', {
         this.isLoading = false
       }
     },
+    async getReturnedDetailAction(id, cb) {
+      const modal = useAlertModal()
+      this.isLoading = true
+      try {
+        const response = await ApiCaller.getReturnedDetail(id)
+        if (response.status === 'success') {
+          this.returnDetail = response.data
+          cb()
+        }
+      } catch (err) {
+        modal.open({
+          type: 'error',
+          title: '錯誤',
+          content: err.message,
+        })
+      } finally {
+        this.isLoading = false
+      }
+    },
     async postReturnStatusAction(id, type) {
       const dispatchStore = useDispatchStore()
       const modal = useAlertModal()
@@ -435,6 +455,29 @@ const useRestaurant = defineStore('restaurant', {
             type: 'success',
             title: '成功',
             content: '資料儲存完成',
+          })
+        }
+      } catch (err) {
+        modal.open({
+          type: 'error',
+          title: '錯誤',
+          content: err.message,
+        })
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async postReturnDetailAction(id, data, cb) {
+      const modal = useAlertModal()
+      try {
+        const response = await ApiCaller.postReturnDetail(id, data)
+        if (response.status === 'success') {
+          cb()
+        } else {
+          modal.open({
+            type: 'error',
+            title: '錯誤',
+            content: response.message,
           })
         }
       } catch (err) {

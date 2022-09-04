@@ -85,11 +85,13 @@ const handleToDetailPage = (item, subItem) => () => {
     },
   }
   restaurantStore.setCurrentReturned(currentReturned)
-  router.push({
-    path: '/restaurant/returned/detail',
-    query: {
-      ...route.query,
-    },
+  restaurantStore.getReturnedDetailAction(subItem.id, () => {
+    return router.push({
+      path: '/restaurant/returned/detail',
+      query: {
+        ...route.query,
+      },
+    })
   })
 }
 
@@ -196,11 +198,11 @@ const handleUpdateStatus = (type) => {
                   </div>
                   <div class="text-gray text-[12px]">{{ item.no }}</div>
                   <div class="flex justify-between text-[12px] pr-5">
-                    <div class="text-primary font-bold">{{ item.qty }}</div>
+                    <div class="text-primary font-bold">{{ item.m_qty > 0 ? item.m_qty : item.qty }}</div>
                     <div>{{ item.unit }}</div>
-                    <div class="text-primary font-bold">{{ item.set_qty }}</div>
+                    <div class="text-primary font-bold">{{ item.m_set_qty > 0 ? item.m_set_qty : item.set_qty }}</div>
                     <div>{{ item.set_unit }}</div>
-                    <div class="text-primary font-bold">{{ item.pcs_qty }}</div>
+                    <div class="text-primary font-bold">{{ item.m_pcs_qty > 0 ? item.m_pcs_qty : item.pcs_qty }}</div>
                     <div>{{ item.pcs_unit }}</div>
                   </div>
                 </div>
@@ -227,11 +229,15 @@ const handleUpdateStatus = (type) => {
                       <div v-if="subitem.batch_no">#{{ subitem.batch_no }}</div>
                     </div>
                     <div class="flex justify-between text-[12px] mr-5">
-                      <div class="text-primary font-bold">{{ subitem.qty }}</div>
+                      <div class="text-primary font-bold">{{ subitem.m_qty > 0 ? subitem.m_qty : subitem.qty }}</div>
                       <div>{{ subitem.unit }}</div>
-                      <div class="text-primary font-bold">{{ subitem.set_qty }}</div>
+                      <div class="text-primary font-bold">
+                        {{ subitem.m_set_qty > 0 ? subitem.m_set_qty : subitem.set_qty }}
+                      </div>
                       <div>{{ subitem.set_unit }}</div>
-                      <div class="text-primary font-bold">{{ subitem.pcs_qty }}</div>
+                      <div class="text-primary font-bold">
+                        {{ subitem.m_pcs_qty > 0 ? subitem.m_pcs_qty : subitem.pcs_qty }}
+                      </div>
                       <div>{{ subitem.pcs_unit }}</div>
                     </div>
                   </div>

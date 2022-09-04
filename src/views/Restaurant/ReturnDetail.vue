@@ -1,18 +1,15 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { Collapse, CollapseItem, Button, NavBar, Switch } from 'vant'
+import { Collapse, CollapseItem, Button, NavBar, Switch, Field } from 'vant'
 import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
 import useRestaurant from '@/views/Restaurant/store'
 import { useRouter, useRoute } from 'vue-router'
-
+import { useAlertModal } from '@/components/store/AlertModalStore'
+const modal = useAlertModal()
 const restaurantStore = useRestaurant()
 const { currentReturned } = restaurantStore
 const router = useRouter()
 const route = useRoute()
-const note = ref('')
-const unit = ref(null)
-const set_qty = ref(null)
-const pcs_qty = ref(null)
 const isShowMenu = ref(false)
 const toggleSet = ref(true)
 const togglePcs = ref(false)
@@ -43,7 +40,23 @@ const onClickRight = () => {
 
 const collapseActiveNames = ref(['open'])
 
-const handleFinish = () => {}
+const handleUpdateDetail = () => {
+  if (restaurantStore.returnDetail.m_qty > currentReturned.items.qty) {
+    modal.open({
+      type: 'error',
+      title: '錯誤',
+      content: '數量不可大於該品項的最大數',
+    })
+  } else {
+    const data = {
+      qty: restaurantStore.returnDetail.m_qty,
+      set_qty: restaurantStore.returnDetail.m_set_qty,
+      pcs_qty: restaurantStore.returnDetail.m_pcs_qty,
+      note: restaurantStore.returnDetail.note2,
+    }
+    restaurantStore.postReturnDetailAction(currentReturned.items.id, data, onClickLeft)
+  }
+}
 </script>
 
 <template>
@@ -92,11 +105,17 @@ const handleFinish = () => {}
                     </div>
                     <div class="text-gray text-[12px]">{{ currentReturned.no }}</div>
                     <div class="flex justify-between text-[12px] pr-5">
-                      <div class="text-primary font-bold">{{ currentReturned.qty }}</div>
+                      <div class="text-primary font-bold">
+                        {{ currentReturned.m_qty > 0 ? currentReturned.m_qty : currentReturned.qty }}
+                      </div>
                       <div>{{ currentReturned.unit }}</div>
-                      <div class="text-primary font-bold">{{ currentReturned.set_qty }}</div>
+                      <div class="text-primary font-bold">
+                        {{ currentReturned.m_set_qty > 0 ? currentReturned.m_set_qty : currentReturned.set_qty }}
+                      </div>
                       <div>{{ currentReturned.set_unit }}</div>
-                      <div class="text-primary font-bold">{{ currentReturned.pcs_qty }}</div>
+                      <div class="text-primary font-bold">
+                        {{ currentReturned.m_pcs_qty > 0 ? currentReturned.m_pcs_qty : currentReturned.pcs_qty }}
+                      </div>
                       <div>{{ currentReturned.pcs_unit }}</div>
                     </div>
                   </div>
@@ -118,11 +137,27 @@ const handleFinish = () => {}
                         <div v-if="currentReturned.items.batch_no">#{{ currentReturned.items.batch_no }}</div>
                       </div>
                       <div class="flex justify-between text-[12px] mr-5">
-                        <div class="text-primary font-bold">{{ currentReturned.items.qty }}</div>
+                        <div class="text-primary font-bold">
+                          {{
+                            currentReturned.items.m_qty > 0 ? currentReturned.items.m_qty : currentReturned.items.qty
+                          }}
+                        </div>
                         <div>{{ currentReturned.items.unit }}</div>
-                        <div class="text-primary font-bold">{{ currentReturned.items.set_qty }}</div>
+                        <div class="text-primary font-bold">
+                          {{
+                            currentReturned.items.m_set_qty > 0
+                              ? currentReturned.items.m_set_qty
+                              : currentReturned.items.set_qty
+                          }}
+                        </div>
                         <div>{{ currentReturned.items.set_unit }}</div>
-                        <div class="text-primary font-bold">{{ currentReturned.items.pcs_qty }}</div>
+                        <div class="text-primary font-bold">
+                          {{
+                            currentReturned.items.m_pcs_qty > 0
+                              ? currentReturned.items.m_pcs_qty
+                              : currentReturned.items.pcs_qty
+                          }}
+                        </div>
                         <div>{{ currentReturned.items.pcs_unit }}</div>
                       </div>
                     </div>
@@ -136,29 +171,39 @@ const handleFinish = () => {}
       <div class="mt-5 p-5 rounded-[20px] border border-solid bg-white">
         <div class="text-[#707070] text-center">備註</div>
         <div>
-          <input v-model="note" type="text" class="input" />
-          <div class="note">商品破損嚴重，內部進水。</div>
+          <input v-model="restaurantStore.returnDetail.note2" type="text" class="input" />
+          <div class="note">{{ restaurantStore.returnDetail.note }}</div>
         </div>
       </div>
 
       <div class="mt-5 p-5 rounded-[20px] border border-solid bg-white">
         <div class="mb-[13px] text-[#707070] text-center">變更實際退貨量</div>
         <div class="grid grid-cols-6 w-full mb-[9px] items-center">
-          <div class="text-[15px] text-[#707070] col-span-1">單位</div>
-          <input v-model="unit" type="text" class="havi-input col-span-4" />
+          <div class="text-[15px] text-[#707070] col-span-1">{{ currentReturned.items.unit }}</div>
+          <Field v-model="restaurantStore.returnDetail.m_qty" type="digit" class="havi-input col-span-4" />
         </div>
         <div class="grid grid-cols-6 w-full items-center mb-[9px]">
           <div class="text-[15px] text-[#707070] col-span-1" :class="{ 'text-[#bbb]': !toggleSet }">內包</div>
-          <input v-model="set_qty" :disabled="!toggleSet" type="text" class="havi-input col-span-4" />
+          <Field
+            v-model="restaurantStore.returnDetail.m_set_qty"
+            :disabled="!toggleSet"
+            type="digit"
+            class="havi-input col-span-4"
+          />
           <Switch v-model="toggleSet" active-color="#6dbe5b" size="15px" class="mx-auto"></Switch>
         </div>
         <div class="grid grid-cols-6 w-full items-center mb-[9px]">
           <div class="text-[15px] text-[#707070] col-span-1" :class="{ 'text-[#bbb]': !togglePcs }">零散</div>
-          <input v-model="pcs_qty" :disabled="!togglePcs" type="text" class="havi-input col-span-4" />
+          <Field
+            v-model="restaurantStore.returnDetail.m_pcs_qty"
+            :disabled="!togglePcs"
+            type="digit"
+            class="havi-input col-span-4"
+          />
           <Switch v-model="togglePcs" active-color="#6dbe5b" size="15px" class="mx-auto"></Switch>
         </div>
       </div>
-      <Button :onClick="handleFinish" class="bg-success mt-8" loading-type="spinner" round block type="success"
+      <Button :onClick="handleUpdateDetail" class="bg-success mt-8" loading-type="spinner" round block type="success"
         >完成</Button
       >
     </div>

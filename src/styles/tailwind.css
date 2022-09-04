@@ -6,7 +6,7 @@
         @apply w-full h-[48px] bg-[#fffcf6] border border-gray border-dashed mb-4
     }
     .havi-input {
-        @apply w-full h-[33px] bg-[#fffcf6] border border-gray border-dashed
+        @apply w-full h-[48px] bg-[#fffcf6] border border-gray border-dashed
     }
 }
 
