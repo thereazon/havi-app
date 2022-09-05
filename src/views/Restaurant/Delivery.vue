@@ -53,7 +53,7 @@ const deliveryItemAbnormalHandle = (item, product, delivery) => {
 </script>
 
 <template>
-  <div class="bg-[#F2F8FB] h-screen">
+  <div class="bg-[#F2F8FB] pb-5">
     <RestaurantMenuPopup v-model:isShow="isShowMenu" />
     <NavBar safe-area-inset-top fixed left-arrow title="送貨單" @click-left="onClickLeft" @click-right="onClickRight"
       ><template #right> <van-icon name="wap-nav" size="14" color="black" /> </template>
@@ -66,7 +66,7 @@ const deliveryItemAbnormalHandle = (item, product, delivery) => {
         :restaurant="currentRestaurant"
       />
     </div>
-    <div class="px-[26px] bg-[#F2F8FB] pt-8 pb-4">
+    <div class="px-[26px] bg-[#F2F8FB] pt-8 pb-5">
       <DeliveryNoteDetails
         v-if="restaurantStore.deliveries"
         :deliveries="restaurantStore.deliveries"

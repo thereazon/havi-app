@@ -158,7 +158,7 @@ watch(
 </script>
 
 <template>
-  <div class="h-auto max-h-screen pt-[26px] flex flex-col items-center">
+  <div class="pt-[26px] flex flex-col items-center">
     <div class="w-[50%] h-8 flex justify-between items-center mb-5">
       <Button
         type="primary"
