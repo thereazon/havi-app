@@ -1,13 +1,17 @@
 <script setup>
 import { ref, onUnmounted, onMounted } from 'vue'
-import { Icon, NavBar, Collapse, CollapseItem, Checkbox } from 'vant'
+import { Icon, NavBar, Collapse, CollapseItem } from 'vant'
 import { useRouter, useRoute } from 'vue-router'
 import useRestaurant from '@/views/Restaurant/store'
+import useDispatch from '@/views/Dispatch/store'
+import dayjs from 'dayjs'
 import ExceptionReasonTable from '@/components/ExceptionReasonTable.vue'
 const router = useRouter()
 const route = useRoute()
+const dispatchStore = useDispatch()
 const restaurantStore = useRestaurant()
 const { currentException } = restaurantStore
+const { currentRestaurant } = dispatchStore
 
 const exRegistration = ref([])
 const imageArr = ref([])
@@ -17,7 +21,7 @@ const readyToPush = ref(false)
 const activeNames = ref(['1'])
 
 onMounted(() => {
-  if (!currentException.deliveryNo || !currentException.item) {
+  if (!currentRestaurant || !currentException.deliveryNo || !currentException.item) {
     router.push({
       path: '/dispatch',
       query: {
@@ -70,20 +74,20 @@ const onClickRight = () => {}
           <div class="h-6 mb-2 flex justify-between items-center">
             <div class="flex items-center text-[13px] text-[#044d80]">
               <span class="mr-[10px]">單號</span>
-              <span>{{ currentException.deliveryNo }}</span>
+              <span>{{ currentRestaurant?.trip_no }}</span>
             </div>
           </div>
-          <div class="text-gray text-[13px] flex justify-between items-center">
-            <div class="flex items-center">
+          <div class="text-gray text-[13px] flex items-center">
+            <div class="flex items-center mr-4">
               <img src="/dispatching_calendar.png" class="w-4 h-4 mr-2" alt="" />
               <div class="bg-[#f2f2f2] w-20 h-5 pl-2 flex items-center">
-                {{ currentException.deliveryDate }}
+                {{ dayjs(currentRestaurant.departure_time).format('MM/DD/YYYY') }}
               </div>
             </div>
             <div class="flex items-center">
               <img src="/dispatching_clock.png" class="w-4 h-4 mr-2" alt="" />
               <div class="bg-[#f2f2f2] w-20 h-5 pl-2 flex items-center">
-                <!-- 20:20 -->
+                {{ dayjs(currentRestaurant.departure_time).format('HH:mm') }}
               </div>
             </div>
           </div>
@@ -92,9 +96,7 @@ const onClickRight = () => {}
           <CollapseItem name="1">
             <template #title>
               <div class="flex items-center">
-                <div class="w-[10%]">
-                  <Checkbox disabled></Checkbox>
-                </div>
+                <div class="w-[10%]"></div>
                 <div class="w-[50%] flex flex-col leading-snug">
                   <span class="text-[#044d80] text-[0.875rem] font-bold truncate">
                     {{ currentException.item_desc }}
@@ -111,7 +113,8 @@ const onClickRight = () => {}
             </template>
             <li class="detail-list list-none mx-4 leading-snug h-11 flex items-center text-gray">
               <div class="w-[50%] ml-[10%] leading-snug">
-                <span class="text-[0.875rem] truncate"> {{ currentException.item.batch_no }} </span>
+                <div class="text-[0.875rem] truncate">{{ currentException.item.exp }}</div>
+                <div class="text-[0.875rem] truncate">#{{ currentException.item.batch_no }}</div>
               </div>
               <div class="w-[40%] flex justify-between items-center text-[0.875rem]">
                 <div class="min-w-[40%] flex justify-between items-center">
