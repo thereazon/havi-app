@@ -1,5 +1,6 @@
 <script setup>
-import { ref, onUnmounted, onMounted } from 'vue'
+import { v4 as uuidv4 } from 'uuid'
+import { ref, onUnmounted, onMounted, reactive } from 'vue'
 import { Icon, NavBar, Collapse, CollapseItem } from 'vant'
 import { useRouter, useRoute } from 'vue-router'
 import useRestaurant from '@/views/Restaurant/store'
@@ -12,13 +13,21 @@ const dispatchStore = useDispatch()
 const restaurantStore = useRestaurant()
 const { currentException } = restaurantStore
 const { currentRestaurant } = dispatchStore
-
 const exRegistration = ref([])
 const imageArr = ref([])
-
-const exRegistrationLength = ref(1)
+const exRegistrationLength = ref(0)
 const readyToPush = ref(false)
 const activeNames = ref(['1'])
+
+const initReason = () => ({
+  id: uuidv4(),
+  selectReason: null,
+  unit: null,
+  set_qty: null,
+  pcs_qty: null,
+  note: '',
+  file: null,
+})
 
 onMounted(() => {
   if (!currentRestaurant || !currentException.deliveryNo || !currentException.item) {
@@ -37,23 +46,17 @@ onUnmounted(() => {
   restaurantStore.resetCurrentException()
 })
 
-const updateData = (item) => {
-  exRegistration.value.push(item.data)
-  imageArr.value.push(item.img)
-}
-
 const addReason = () => {
-  exRegistrationLength.value++
+  exRegistration.value = [...exRegistration.value, initReason()]
 }
 
-const deleteReason = () => {
-  if (exRegistrationLength.value == 1) return
-  exRegistrationLength.value--
-}
+const deleteReason = (id) => () => (exRegistration.value = exRegistration.value.filter((v) => v.id !== id))
 
 const confirm = () => {
   readyToPush.value = true
-  console.log(exRegistration.value, imageArr.value)
+  console.log(exRegistration.value.length)
+  exRegistration.value.forEach((v) => console.log(v))
+  // restaurantStore.postExceptionAction('abc', exRegistration.value, 1)
 }
 
 const onClickLeft = () => {
@@ -81,13 +84,13 @@ const onClickRight = () => {}
             <div class="flex items-center mr-4">
               <img src="/dispatching_calendar.png" class="w-4 h-4 mr-2" alt="" />
               <div class="bg-[#f2f2f2] w-20 h-5 pl-2 flex items-center">
-                {{ dayjs(currentRestaurant.departure_time).format('MM/DD/YYYY') }}
+                {{ dayjs(currentRestaurant?.departure_time).format('MM/DD/YYYY') }}
               </div>
             </div>
             <div class="flex items-center">
               <img src="/dispatching_clock.png" class="w-4 h-4 mr-2" alt="" />
               <div class="bg-[#f2f2f2] w-20 h-5 pl-2 flex items-center">
-                {{ dayjs(currentRestaurant.departure_time).format('HH:mm') }}
+                {{ dayjs(currentRestaurant?.departure_time).format('HH:mm') }}
               </div>
             </div>
           </div>
@@ -128,11 +131,10 @@ const onClickRight = () => {}
       </div>
       <ExceptionReasonTable
         class="my-5"
-        v-for="i in exRegistrationLength"
-        :readyToPush="readyToPush"
-        @update:data="updateData"
-        @delete:reason="deleteReason"
-        :key="i"
+        v-for="(reason, index) in exRegistration"
+        :deleteReason="deleteReason(reason.id)"
+        v-model:reason="exRegistration[index]"
+        :key="reason.id"
       ></ExceptionReasonTable>
       <div class="m-auto">
         <button class="bg-white border-0 rounded-full h-[33px] w-[33px] mb-5 shadow-lg" @click="addReason">

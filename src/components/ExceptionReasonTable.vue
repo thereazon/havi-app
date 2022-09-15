@@ -1,14 +1,18 @@
 <script setup>
-import { reactive, watch, ref } from 'vue'
+import { reactive, watch, ref, computed } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 import { Switch, Icon } from 'vant'
 import useCommonStore from '@/common/useCommonStore'
 
 const props = defineProps({
-  readyToPush: Boolean,
+  reason: {
+    type: Object,
+  },
+  deleteReason: Function,
 })
 
-const emits = defineEmits(['update:data', 'delete:reason'])
+const commonStore = useCommonStore()
+const emit = defineEmits(['update:reason'])
 
 const toggleSet = ref(true)
 const togglePcs = ref(true)
@@ -19,18 +23,10 @@ const fileStructure = reactive({
   previewImage: null,
 })
 
-const commonStore = useCommonStore()
-
-const remove = () => {
-  emits('delete:reason')
-}
-
-watch(
-  () => props.readyToPush,
-  () => {
-    if (props.readyToPush) emits('update:data', { data: exReason, img: fileStructure.base64 })
-  },
-)
+const theReason = computed({
+  get: () => props.reason,
+  set: (value) => emit('update:reason', value),
+})
 
 watch(
   () => toggleSet.value,
@@ -82,12 +78,12 @@ const handleFileUpload = () => {
     <div class="mb-3 flex items-center justify-center w-full relative">
       <div class="mb-[13px]">異常原因</div>
       <div class="absolute top-0 right-0">
-        <button @click="remove" class="rounded-full bg-transparent border-warning border-solid text-warning px-3">
+        <button @click="deleteReason" class="rounded-full bg-transparent border-warning border-solid text-warning px-3">
           刪除
         </button>
       </div>
     </div>
-    <select v-model="exReason.selectReason" class="w-full border-dashed p-5 text-gray bg-[#fffcf6] mb-4" id="">
+    <select v-model="theReason.selectReason" class="w-full border-dashed p-5 text-gray bg-[#fffcf6] mb-4" id="">
       <option v-for="reason in commonStore.abnormalReasons" :key="reason.id" :value="reason.id">
         {{ reason.code + ' ' + reason.content }}
       </option>
@@ -95,12 +91,12 @@ const handleFileUpload = () => {
     <div class="mt-[23px] mb-[13px]">異常數量</div>
     <div class="grid grid-cols-6 w-full mb-[9px] items-center">
       <div class="text-[15px] col-span-1">單位</div>
-      <input v-model="exReason.unit" type="text" class="py-2 bg-[#fffcf6] border-dashed col-span-4" />
+      <input v-model="theReason.unit" type="text" class="py-2 bg-[#fffcf6] border-dashed col-span-4" />
     </div>
     <div class="grid grid-cols-6 w-full items-center mb-[9px]">
       <div class="text-[15px] col-span-1" :class="{ 'text-[#bbb]': !toggleSet }">內包</div>
       <input
-        v-model="exReason.set_qty"
+        v-model="theReason.set_qty"
         :disabled="!toggleSet"
         type="text"
         class="py-2 bg-[#fffcf6] border-dashed col-span-4"
@@ -110,7 +106,7 @@ const handleFileUpload = () => {
     <div class="grid grid-cols-6 w-full items-center mb-[9px]">
       <div class="text-[15px] col-span-1" :class="{ 'text-[#bbb]': !togglePcs }">零散</div>
       <input
-        v-model="exReason.pcs_qty"
+        v-model="theReason.pcs_qty"
         :disabled="!togglePcs"
         type="text"
         class="py-2 bg-[#fffcf6] border-dashed col-span-4"
@@ -127,8 +123,8 @@ const handleFileUpload = () => {
         <img class="h-full" :src="fileStructure.previewImage" alt="" />
       </div>
     </button>
-    <input type="file" accept="image/*" capture="camera" ref="file" class="hidden" @change="handleFileUpload" />
+    <input type="file" accept="image/*" ref="file" class="hidden" @change="handleFileUpload" />
     <div class="mt-[23px] mb-[13px]">備註原因</div>
-    <textarea v-model="exReason.note" class="py-2 bg-[#fffcf6] border-dashed w-full"></textarea>
+    <textarea v-model="theReason.note" class="py-2 bg-[#fffcf6] border-dashed w-full"></textarea>
   </div>
 </template>

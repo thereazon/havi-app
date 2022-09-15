@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import useDispatchInfo from '@/views/Dispatch/store'
 import useRestaurant from '@/views/Restaurant/store'
-import { RestaurantStatusBackgroundColor } from '@/views/Dispatch/helper'
+import { RestaurantStatusBackgroundColor, RestaurantStatusTypeToZh } from '@/views/Dispatch/helper'
 import RestaurantDetailTable from '@/components/RestaurantDetailTable.vue'
 
 const route = useRoute()
@@ -37,7 +37,7 @@ const handlePreview = (currentRestaurant) => {
     <RestaurantDetailTable
       v-for="item in restaurtants"
       :key="item.id"
-      :title="item.status"
+      :title="RestaurantStatusTypeToZh.DELIVERY_COMPLETED"
       :dispatch="dispatch"
       :restaurant="item"
       :backgroundColor="RestaurantStatusBackgroundColor.DELIVERY_COMPLETED"
