@@ -511,6 +511,37 @@ const useRestaurant = defineStore('restaurant', {
         this.isLoading = false
       }
     },
+    async postStoreFinish(restaurantId, data, cb) {
+      const modal = useAlertModal()
+      const formData = new FormData()
+
+      const signImageBlob = await fetch(data).then((r) => r.blob())
+      formData.append('driver_photo', signImageBlob)
+      try {
+        const response = await ApiCaller.postStoreFinish(restaurantId, formData)
+        if (response.status === 'success') {
+          modal.open({
+            type: 'success',
+            title: '成功',
+            content: response.message,
+          })
+        } else {
+          modal.open({
+            type: 'error',
+            title: '錯誤',
+            content: response.message,
+          })
+        }
+      } catch (err) {
+        modal.open({
+          type: 'error',
+          title: '錯誤',
+          content: err.message,
+        })
+      } finally {
+        this.isLoading = false
+      }
+    },
   },
 })
 

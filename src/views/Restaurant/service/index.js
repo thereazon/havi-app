@@ -101,6 +101,17 @@ const postReturnFinish = async (id) => {
     .catch((err) => Promise.reject(err.response.data))
 }
 
+const postStoreFinish = async (id, data) => {
+  return await axios
+    .post(`/api/webStore/${id}/finish`, data, {
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+    })
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
+}
+
 const getOSND = async (id) => {
   return await axios
     .get(`/api/webStore/${id}/osnd`)
@@ -201,6 +212,7 @@ const ApiCaller = {
   postReturnStatus,
   postReturnFinish,
   postReturnDetail,
+  postStoreFinish,
 }
 
 export default ApiCaller

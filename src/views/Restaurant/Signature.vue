@@ -6,9 +6,10 @@ import useDispatchInfo from '@/views/Dispatch/store'
 import useRestaurant from '@/views/Restaurant/store'
 import RestaurantSignInCard from '@/components/RestaurantSignInCard.vue'
 import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
+import { getCanvasToImage } from '@/utils/canvas'
 import SignatureComponent from '@/components/SignatureComponent.vue'
 
-const { isPreviewMode } = useRestaurant()
+const store = useRestaurant()
 const { dispatch, currentRestaurant } = useDispatchInfo()
 const router = useRouter()
 const route = useRoute()
@@ -38,6 +39,12 @@ const onClickLeft = () => {
 const onClickRight = () => {
   isShowMenu.value = true
 }
+
+const handleFinish = () => {
+  const canvas = document.getElementById('canvas')
+  const sign = getCanvasToImage(canvas)
+  store.postStoreFinish(currentRestaurant.id, sign)
+}
 </script>
 
 <template>
@@ -56,7 +63,8 @@ const onClickRight = () => {
       <SignatureComponent title="司機簽名" />
 
       <Button
-        disabled="isPreviewMode"
+        :disabled="store.isPreviewMode"
+        :onClick="handleFinish"
         class="w-full mt-7 text-white font-bold text-[1.0625rem] bg-success rounded-full"
       >
         完成

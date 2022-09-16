@@ -1,6 +1,6 @@
 <script setup>
 import { Popup, Button, Tag } from 'vant'
-import { computed, reactive } from 'vue'
+import { computed, reactive, watch } from 'vue'
 import useCommonStore from '@/common/useCommonStore.js'
 
 const emit = defineEmits(['update:isShow', 'confirm'])
@@ -13,7 +13,7 @@ const props = defineProps({
 })
 
 const store = useCommonStore()
-const form = reactive({
+let form = reactive({
   reason_id: '',
   id: [],
   message: '',
@@ -35,6 +35,22 @@ const isShow = computed({
   get: () => props.isShow,
   set: (val) => emit('update:isShow', val),
 })
+
+watch(
+  () => isShow.value,
+  () => {
+    form.reason_id = ''
+    form.id = []
+    form.message = ''
+  },
+)
+
+const handleFinish = () => {
+  emit('confirm', dataPassToParent)
+  form.reason_id = ''
+  form.id = []
+  form.message = ''
+}
 </script>
 <template>
   <Popup class="rounded-[20px] w-[325px] min-h-[365px]" v-model:show="isShow">
@@ -69,7 +85,7 @@ const isShow = computed({
         />
       </form>
       <!-- <div class="text-warning text-center mt-2 text-[13px]">{{ props.warning }}</div> -->
-      <Button class="mt-2 text-white bg-success w-full" round @click="$emit('confirm', dataPassToParent)">完成</Button>
+      <Button class="mt-2 text-white bg-success w-full" round @click="handleFinish">完成</Button>
     </div>
   </Popup>
 </template>
