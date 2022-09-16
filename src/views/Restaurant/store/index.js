@@ -176,6 +176,7 @@ const useRestaurant = defineStore('restaurant', {
       }
     },
     async postContainerFinishAction(containerOrder) {
+      const dispatchStore = useDispatchStore()
       const modal = useAlertModal()
       this.isLoading = true
       try {
@@ -185,6 +186,10 @@ const useRestaurant = defineStore('restaurant', {
         })
         const response = await ApiCaller.postContainerFinish(id, newItems)
         if (response.status === 'success') {
+          dispatchStore.updateCurrentRestaurantStatus({
+            ...dispatchStore.currentRestaurant,
+            is_container: true,
+          })
           modal.open({
             type: 'success',
             title: '成功',
