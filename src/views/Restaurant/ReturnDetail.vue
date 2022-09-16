@@ -103,7 +103,7 @@ const handleUpdateDetail = () => {
                     <div class="text-primary font-bold">
                       {{ currentReturned.name }}
                     </div>
-                    <div class="text-gray text-[12px]">{{ currentReturned.no }}</div>
+                    <div class="text-gray text-[12px]">{{ currentReturned.return_no }}</div>
                     <div class="flex justify-between text-[12px] pr-5">
                       <div class="text-primary font-bold">
                         {{ currentReturned.m_qty > 0 ? currentReturned.m_qty : currentReturned.qty }}

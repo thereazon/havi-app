@@ -79,6 +79,7 @@ const handleToDetailPage = (item, subItem) => () => {
   const currentReturned = {
     ...item,
     no: selectDetailData.value.no,
+    return_no: item.no,
     date: selectDetailData.value.date,
     items: {
       ...subItem,
