@@ -36,22 +36,30 @@ const usePreCool = defineStore('precool', {
     },
     async postTemperature(dispatch, cb) {
       const { id, isNormal } = dispatch
+      const formData = new FormData()
+      const signPhotoBlob = await fetch(this.signImage).then((r) => r.blob())
       const modal = useAlertModal()
       if (this.tempPhoto || isNormal) {
-        const formData = new FormData()
-        const signPhotoBlob = await fetch(this.signImage).then((r) => r.blob())
         formData.append('signature_photo', signPhotoBlob)
         formData.append('temp_photo', this.tempPhoto)
         const data = {
           temp_type: 1,
           degree_type: 'f',
           temp_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-          frozen_c: this.degree_type === 'C' ? this.currentTemp : TempModule.toCelsius(this.currentTemp),
-          frozen_f: this.degree_type === 'F' ? this.currentTemp : TempModule.toFahrenheit(this.currentTemp),
+          frozen_c:
+            this.degree_type === 'C'
+              ? this.currentTemp
+                ? this.currentTemp
+                : -1
+              : TempModule.toCelsius(this.currentTemp),
+          frozen_f:
+            this.degree_type === 'F'
+              ? this.currentTemp
+                ? this.currentTemp
+                : -1
+              : TempModule.toFahrenheit(this.currentTemp),
           is_clean: 1,
           is_bug: 1,
-          signature_photo: this.signImage,
-          temp_photo: this.signImage,
         }
         Object.keys(data).forEach((key) => formData.append(key, data[key]))
         try {
