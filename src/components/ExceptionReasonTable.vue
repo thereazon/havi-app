@@ -90,7 +90,7 @@ const handleFileUpload = () => {
     </select>
     <div class="mt-[23px] mb-[13px]">異常數量</div>
     <div class="grid grid-cols-6 w-full mb-[9px] items-center">
-      <div class="text-[15px] col-span-1">單位</div>
+      <div class="text-[15px] col-span-1">箱</div>
       <input v-model="theReason.unit" type="text" class="py-2 bg-[#fffcf6] border-dashed col-span-4" />
     </div>
     <div class="grid grid-cols-6 w-full items-center mb-[9px]">

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { Collapse, CollapseItem, Button, Icon } from 'vant'
 
 const props = defineProps({
@@ -11,6 +11,7 @@ const props = defineProps({
   detailData: {
     type: Array,
     required: true,
+    default: [],
   },
 })
 // 自製折疊面板的高度css in js 變數
@@ -29,13 +30,14 @@ const state = reactive({
     { value: 'F', title: '冷凍', bg: '#044d80', color: '#fff' },
   ],
 })
-const collapseActiveNames = ref([])
+const collapseActiveNames = ref(props.detailData[currentIndex.value].items.filter((v) => v.data).map((v) => v.name))
 
 const data = computed(() => props.detailData)
 
 const selectDetailData = computed(() => data.value[currentIndex.value])
 
 let _filterDeliveriesItems = ref([])
+
 const filterData = computed({
   get() {
     const filterByActiveTemperature = (item) => {
@@ -51,6 +53,24 @@ const filterData = computed({
     _filterDeliveriesItems.value = [...val]
   },
 })
+
+// watch(
+//   () => data.value,
+//   (newVal, oldVal) => {
+//     console.log(newVal)
+//     if (oldVal) {
+//       console.log(oldVal[0].items.map((v) => v.name))
+//       collapseActiveNames.value = oldVal[currentIndex].items.map((v) => v.name)
+//     }
+//   },
+// )
+
+// watch(
+//   () => collapseActiveNames.value,
+//   (newVal, oldVal) => {
+//     console.log(newVal)
+//   },
+// )
 
 const prevPage = () => {
   if (currentIndex.value === 0) {
@@ -126,7 +146,7 @@ const handleToAbnormalOPage = (id) => () => {
 
   <!-- table內容 -->
   <div class="rounded-[20px] border border-solid border-gray-300 overflow-hidden">
-    <div class="flex border-b-0 px-[20px] py-[15px] justify-between items-center">
+    <div class="bg-white vflex border-b-0 px-[20px] py-[15px] justify-between items-center">
       <div>
         <div class="flex text-primary gap-4 mb-5">
           <div class="font-bold">{{ props.title }}</div>
@@ -140,7 +160,7 @@ const handleToAbnormalOPage = (id) => () => {
     </div>
 
     <Collapse v-model="collapseActiveNames">
-      <CollapseItem v-for="item in filterData" :key="item.id" :name="item.name">
+      <CollapseItem :readonly="item.data ? false : true" v-for="item in filterData" :key="item.id" :name="item.name">
         <template #title>
           <div class="flex gap-4 px-5">
             <div class="w-full">
