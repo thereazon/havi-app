@@ -160,13 +160,26 @@ const useRestaurant = defineStore('restaurant', {
       }
     },
     async getTemperatureAction(carId, containerId) {
+      const modal = useAlertModal()
       this.isLoading = true
       try {
         const response = await ApiCaller.getTemperature(carId, containerId)
         if (response.status === 'success') {
-          this.temperature = response.data
-          this.isGetCurrentTemp = true
-          this.status = response.status
+          // if(response.data.f.frozen) {
+
+          // }
+
+          if (response.data.f.frozen && response.data.f.cold) {
+            this.temperature = response.data
+            this.isGetCurrentTemp = true
+            this.status = response.status
+          } else {
+            modal.open({
+              type: 'hint',
+              title: '提醒',
+              content: '無溫度資料',
+            })
+          }
         }
       } catch (err) {
         this.status = err.status

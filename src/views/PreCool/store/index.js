@@ -87,6 +87,10 @@ const usePreCool = defineStore('precool', {
       try {
         const response = await ApiCaller.getTemperature(carId, containerId)
         if (response.status === 'success') {
+          // if(response.data.f.frozen) {
+
+          // }
+          console.log(response.data.f.frozen)
           this.temperature = response.data
           this.status = response.status
         }
