@@ -8,7 +8,6 @@ const commonStore = useCommonStore()
 onMounted(async () => {
   await commonStore.getAllInfosAction()
 })
-
 </script>
 <template>
   <RouterView />
