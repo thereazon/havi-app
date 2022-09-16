@@ -1,6 +1,6 @@
 <script setup>
 import { Button } from 'vant'
-import { onMounted, computed, defineProps } from 'vue'
+import { onMounted, computed, defineProps, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAlertModal } from '@/components/store/AlertModalStore'
 import useDispatchInfo from '@/views/Dispatch/store'
@@ -35,6 +35,19 @@ onMounted(() => {
     })
   }
 })
+
+watch(
+  () => currentRestaurant.value,
+  (newVal) => {
+    if (!newVal) {
+      modal.open({
+        type: 'hint', //required
+        title: '提示',
+        content: '沒有訂單需配送',
+      })
+    }
+  },
+)
 
 const handleRouteToDetail = (currentRestaurant) => {
   restaurantStore.setPreviewMode(false)
