@@ -65,29 +65,22 @@ onMounted(() => {
       <div class="mt-[75px] m-auto"><img src="/login_car.png" alt="icon" /></div>
       <div class="mt-[20px]">
         <div class="text-gray">您的車隊</div>
-        <Cell value-class="text-[#828282] text-[22px]" class="bg-white border border-solid border-gray mt-2 mb-[67px]">{{
-          accountStore.account.fleet
-        }}</Cell>
+        <Cell
+          value-class="text-[#828282] text-[22px]"
+          class="bg-white border border-solid border-gray mt-2 mb-[67px]"
+          >{{ accountStore.account.fleet }}</Cell
+        >
       </div>
       <div>
         <div class="text-gray mb-2">選擇車號</div>
-        <select
-          v-model="selectCarId"
-          class="havi-select"
-          name="選擇車號"
-          id="select-car-number"
-        >
+        <select v-model="selectCarId" class="havi-select" name="選擇車號" id="select-car-number">
           <option v-for="car in carsStore.cars" :key="car.id" :value="car.id">{{ car.number }}</option>
         </select>
       </div>
       <div>
         <div class="text-gray mb-2">選擇櫃號</div>
-        <select
-          v-model="selectContainerId"
-          class="havi-select"
-          name="選擇櫃號"
-          id="select-container-number"
-        >
+        <select v-model="selectContainerId" class="havi-select" name="選擇櫃號" id="select-container-number">
+          <option value="">請選擇</option>
           <option v-for="container in carsStore.containers" :key="container.id" :value="container.id">
             {{ container.number }}
           </option>
