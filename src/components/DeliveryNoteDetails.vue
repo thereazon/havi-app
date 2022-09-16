@@ -4,10 +4,12 @@ import { Collapse, CollapseItem, Checkbox, Button, Icon, RadioGroup, Radio } fro
 import { useRouter, useRoute } from 'vue-router'
 import useRestaurant from '@/views/Restaurant/store'
 import ConfirmDialog from './ConfirmDialog.vue'
+import { useAlertModal } from '@/components/store/AlertModalStore'
 
 const { postDeliveryAction, deleteDeliveryAction, setCurrentDelivery, isPreviewMode } = useRestaurant()
 const router = useRouter()
 const route = useRoute()
+const modal = useAlertModal()
 
 const props = defineProps({
   deliveries: {
@@ -143,6 +145,19 @@ watch(
   () => filterDeliveryItems.value,
   (newVal, oldVal) => {
     if (newVal.length === 0) {
+      modal.open({
+        type: 'hint', //required
+        title: '提醒',
+        content: '沒有資料',
+      })
+    }
+  },
+  { deep: true },
+)
+watch(
+  () => filterDeliveryItems.value,
+  (newVal, oldVal) => {
+    if (newVal.length === 0) {
       allChecked.value = false
       return
     }
@@ -219,7 +234,7 @@ watch(
           </div>
           <div class="flex items-center">
             <img src="/dispatching_box.png" class="w-4 h-4 mr-2" alt="" />
-            <div class="bg-[#f2f2f2] w-20 h-5 pl-2 flex items-center">{{ currentDelivery.cube }}</div>
+            <div class="bg-[#f2f2f2] w-20 h-5 pl-2 flex items-center">{{ currentDelivery.ctn }}</div>
           </div>
         </div>
       </div>
