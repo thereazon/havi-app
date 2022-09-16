@@ -69,6 +69,7 @@ const rejectTypeList = [
 const allChecked = ref(false)
 const isAllChecked = ref(false)
 const isConfirmDialog = ref(false)
+const isConfirmDialog2 = ref(false)
 const rejectReason = ref('')
 const tabActive = ref('all')
 const collapseActiveNames = ref([])
@@ -171,6 +172,15 @@ watch(
   },
   { deep: true },
 )
+
+const openDialog2 = () => {
+  isConfirmDialog2.value = true
+}
+
+const handleRestore = () => {
+  deleteDeliveryAction(currentDelivery.value.id)
+  isConfirmDialog2.value = false
+}
 </script>
 
 <template>
@@ -256,7 +266,7 @@ watch(
             src="/images/delivery/restore.png"
             class="w-14 h-14"
             alt=""
-            @click="() => (isPreviewMode ? null : deleteDeliveryAction(currentDelivery.id))"
+            @click="() => (isPreviewMode ? null : openDialog2())"
           />
         </div>
       </div>
@@ -342,6 +352,18 @@ watch(
           >
             確認
           </button>
+        </div>
+      </template>
+    </ConfirmDialog>
+
+    <ConfirmDialog v-model:isShowDialog="isConfirmDialog2" :isCloseOnClickOverlay="true">
+      <template v-slot:title>
+        <div className="mb-20">是否要全部還原</div>
+      </template>
+      <template v-slot:footer>
+        <div class="px-[10%] flex justify-between items-center font-bold text-white text-[1rem]">
+          <button class="w-[48%] h-[43px] bg-gray rounded-full border-0" @click="isConfirmDialog2 = false">取消</button>
+          <button class="w-[48%] h-[43px] bg-[#eb5e55] rounded-full border-0" @click="handleRestore">確認</button>
         </div>
       </template>
     </ConfirmDialog>
