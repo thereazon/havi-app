@@ -59,9 +59,10 @@ const tabList = [
   { value: 'C', title: '冷藏', bg: '#086eb6', color: '#fff' },
   { value: 'F', title: '冷凍', bg: '#044d80', color: '#fff' },
 ]
+
 const rejectTypeList = [
-  { code: 'F1', reason: '餐廳空間不足付費拒收' },
-  { code: 'F2', reason: '溫度品質拒收' },
+  { code: 'F1', reason: '溫度品質拒收' },
+  { code: 'F2', reason: '餐廳空間不足付費拒收' },
   { code: 'F3', reason: '產品品質拒收' },
 ]
 
