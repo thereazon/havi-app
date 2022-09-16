@@ -225,6 +225,9 @@ const handleUpdateStatus = (type) => {
                     <div class="w-[20px] h-[20px]" />
                   </div>
                   <div class="flex-1">
+                    <div class="w-full flex justify-end">
+                      <Button type="danger" class="rounded-full w-[88px] h-[25px]"> 變更數量 </Button>
+                    </div>
                     <div class="flex text-gray text-[12px] mb-2 gap-12">
                       <div>{{ subitem.exp }}</div>
                       <div v-if="subitem.batch_no">#{{ subitem.batch_no }}</div>
