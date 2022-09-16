@@ -15,8 +15,6 @@ const router = useRouter()
 const route = useRoute()
 const dispatchStore = useDispatchInfo()
 
-const showDelayModal = ref(false)
-const showUndeliverableModal = ref(false)
 const unableDeliveryId = ref(null)
 const isConfirmDialog = ref(false)
 const isConfirmDialog2 = ref(false)
@@ -27,12 +25,12 @@ const openConfirmDialog = (id) => {
 }
 
 const confirmDelay = async (data) => {
-  showDelayModal.value = false
   await dispatchStore.postDelayAction(data.id, data.message)
+  dispatchStore.closeUnableDeliverMenu()
 }
 const confirmUndeliverable = async (data) => {
-  showUndeliverableModal.value = false
   await dispatchStore.postBringAction(data.id, data.message)
+  dispatchStore.closeUnableDeliverMenu()
 }
 
 onMounted(() => {
@@ -122,7 +120,7 @@ const handleOpenDialog2 = async () => {
   />
   <DelayModal
     title="攜回配銷中心"
-    v-model:isShow="dispatchStore.showUnableDeliverMenu"
+    v-model:isShow="dispatchStore.RestaurantDetailTable"
     subTitle="請填寫無法配送原因"
     optionFirst="請選擇無法配送原因"
     warning="!請確認不再進行配送此單!"
