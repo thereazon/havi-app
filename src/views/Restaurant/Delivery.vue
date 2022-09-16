@@ -53,7 +53,7 @@ const deliveryItemAbnormalHandle = (item, product, delivery) => {
 </script>
 
 <template>
-  <div class="bg-[#F2F8FB] pb-5">
+  <div class="bg-[#F2F8FB] pb-5 min-h-[100vh]">
     <RestaurantMenuPopup v-model:isShow="isShowMenu" />
     <NavBar safe-area-inset-top fixed left-arrow title="送貨單" @click-left="onClickLeft" @click-right="onClickRight"
       ><template #right> <van-icon name="wap-nav" size="14" color="black" /> </template>

@@ -225,7 +225,7 @@ watch(
       </div>
 
       <div
-        v-if="filterDeliveryItems.length"
+        v-if="filterDeliveryItems.length && tabActive !== 'all'"
         class="flex justify-between items-center px-4 py-[10px] border-0 border-y border-solid border-[#f2f2f2]"
       >
         <div class="w-[50%] flex items-center">

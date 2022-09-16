@@ -296,8 +296,11 @@ const useRestaurant = defineStore('restaurant', {
           })
         }
       } catch (err) {
-        this.status = err.status
-        this.message = err.message
+        modal.open({
+          type: 'error',
+          title: '警告',
+          content: '您尚未『鎖定溫度』無法完成此步驟！ 請先『鎖定溫度』後，在點擊『完成』',
+        })
       } finally {
         this.isLoading = false
       }
