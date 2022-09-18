@@ -33,7 +33,7 @@ const { account } = useAccountInfo()
       </div>
 
       <div class="font-black mt-8 w-[315px] text-[15px] leading-normal text-gray">
-        <div class="bg-[#fff] border border-gray border-dashed h-[70px] mb-3 rounded-lg flex items-center">
+        <!-- <div class="bg-[#fff] border border-gray border-dashed h-[70px] mb-3 rounded-lg flex items-center">
           <div class="basis-1/5 flex justify-center items-center">
             <img class="h-[30px]" src="/gear_Version.png" />
           </div>
@@ -41,7 +41,7 @@ const { account } = useAccountInfo()
             <span>版本資訊</span>
             <span class="text-success text-[13px] leading-relaxed">1.3.2</span>
           </div>
-        </div>
+        </div> -->
 
         <div class="bg-[#fff] border border-gray border-dashed h-auto py-3 mb-3 rounded-lg flex items-center">
           <div class="basis-1/5 flex justify-center items-center">

@@ -232,6 +232,7 @@ const handleRestore = () => {
             <span>{{ currentDelivery.no }}</span>
           </div>
           <div
+            v-if="!isPreviewMode"
             :onClick="handleToOnK(currentDelivery)"
             class="w-14 h-full flex justify-center items-center bg-[#044d80] text-white text-[0.75rem] rounded-full"
           >

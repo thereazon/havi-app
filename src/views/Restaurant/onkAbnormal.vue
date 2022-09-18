@@ -114,7 +114,7 @@ const handlePostOnK = () => {
     <div class="px-7 bg-[#F2F8FB] pt-20">
       <div class="rounded-[20px] shadow-lg">
         <section class="rounded-t-[20px] max-w-5xl overflow-hidden bg-white py-4 px-6">
-          <div class="text-primary text-[13px] mb-2"><span class="font-bold">單號 </span>{{ '202020430' }}</div>
+          <div class="text-primary text-[13px] mb-2"><span class="font-bold">單號 </span>{{ currentDelivery.no }}</div>
           <div class="flex">
             <div class="mr-2">
               <img src="/dispatching_calendar.png" class="h-4 align-sub pr-1" alt="calanderIcon" />

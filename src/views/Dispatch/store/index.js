@@ -142,7 +142,7 @@ const useDispatchInfo = defineStore('dispatch', {
         if (response.status === 'success') {
           modal.open({
             type: 'success', //required
-            title: '報到成功',
+            title: '完成出車',
           })
           this.dispatch = {
             ...this.dispatch,
