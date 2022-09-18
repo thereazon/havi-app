@@ -294,6 +294,9 @@ const handleRestore = () => {
           <li
             v-for="item in product.data"
             :key="item.uid"
+            @click="
+              $emit('deliveryItemAbnormal', item, product, { no: currentDelivery.no, date: currentDelivery.date })
+            "
             class="detail-list list-none mx-4 leading-snug h-11 flex items-center text-gray"
           >
             <div class="w-[50%] ml-[10%] leading-snug">
@@ -305,16 +308,7 @@ const handleRestore = () => {
                 <span>{{ item.qty }}</span>
                 <span>{{ item.uom }}</span>
               </div>
-              <Button
-                color="#eb5e55"
-                round
-                type="danger"
-                size="mini"
-                @click="
-                  $emit('deliveryItemAbnormal', item, product, { no: currentDelivery.no, date: currentDelivery.date })
-                "
-                >異常+</Button
-              >
+              <Button color="#eb5e55" round type="danger" size="mini">異常+</Button>
             </div>
           </li>
         </CollapseItem>

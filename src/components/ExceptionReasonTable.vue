@@ -14,8 +14,8 @@ const props = defineProps({
 const commonStore = useCommonStore()
 const emit = defineEmits(['update:reason'])
 
-const toggleSet = ref(true)
-const togglePcs = ref(true)
+const toggleSet = ref(false)
+const togglePcs = ref(false)
 const file = ref()
 const fileStructure = reactive({
   fileName: '',
@@ -27,6 +27,16 @@ const theReason = computed({
   get: () => props.reason,
   set: (value) => emit('update:reason', value),
 })
+
+const handleToggleSet = () => {
+  toggleSet.value = !toggleSet.value
+  theReason.value.set_qty = null
+}
+
+const handleTogglePcs = () => {
+  togglePcs.value = !togglePcs.value
+  theReason.value.pcs_qty = null
+}
 
 watch(
   () => toggleSet.value,
@@ -101,7 +111,13 @@ const handleFileUpload = () => {
         type="text"
         class="py-2 bg-[#fffcf6] border-dashed col-span-4"
       />
-      <Switch v-model="toggleSet" active-color="#6dbe5b" size="15px" class="mx-auto"></Switch>
+      <Switch
+        @update:model-value="handleToggleSet"
+        :model-value="toggleSet"
+        active-color="#6dbe5b"
+        size="15px"
+        class="mx-auto"
+      ></Switch>
     </div>
     <div class="grid grid-cols-6 w-full items-center mb-[9px]">
       <div class="text-[15px] col-span-1" :class="{ 'text-[#bbb]': !togglePcs }">零散</div>
@@ -111,7 +127,13 @@ const handleFileUpload = () => {
         type="text"
         class="py-2 bg-[#fffcf6] border-dashed col-span-4"
       />
-      <Switch v-model="togglePcs" active-color="#6dbe5b" size="15px" class="mx-auto"></Switch>
+      <Switch
+        @update:model-value="handleTogglePcs"
+        :model-value="togglePcs"
+        active-color="#6dbe5b"
+        size="15px"
+        class="mx-auto"
+      ></Switch>
     </div>
     <button class="bg-[#fffcf6] border-dashed w-full py-4 mt-[23px]" @click="$refs.file.click()">
       <div v-if="fileStructure.previewImage === null" class="flex justify-center gap-2">

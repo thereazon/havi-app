@@ -161,31 +161,33 @@ const useRestaurant = defineStore('restaurant', {
     },
     async getTemperatureAction(carId, containerId) {
       const modal = useAlertModal()
+      const dispatchStore = useDispatchStore()
       this.isLoading = true
-      try {
-        const response = await ApiCaller.getTemperature(carId, containerId)
-        if (response.status === 'success') {
-          // if(response.data.f.frozen) {
 
-          // }
-
-          if (response.data.f.frozen && response.data.f.cold) {
-            this.temperature = response.data
-            this.isGetCurrentTemp = true
-            this.status = response.status
-          } else {
-            modal.open({
-              type: 'hint',
-              title: '提醒',
-              content: '無溫度資料',
-            })
+      if (dispatchStore.dispatch.isNormal) {
+        this.isGetCurrentTemp = true
+      } else {
+        try {
+          const response = await ApiCaller.getTemperature(carId, containerId)
+          if (response.status === 'success') {
+            if (response.data.f.frozen && response.data.f.cold) {
+              this.temperature = response.data
+              this.isGetCurrentTemp = true
+              this.status = response.status
+            } else {
+              modal.open({
+                type: 'hint',
+                title: '提醒',
+                content: '無溫度資料',
+              })
+            }
           }
+        } catch (err) {
+          this.status = err.status
+          this.message = err.message
+        } finally {
+          this.isLoading = false
         }
-      } catch (err) {
-        this.status = err.status
-        this.message = err.message
-      } finally {
-        this.isLoading = false
       }
     },
     async postContainerFinishAction(containerOrder) {
@@ -234,8 +236,12 @@ const useRestaurant = defineStore('restaurant', {
         temp_type: dispatchStore.dispatch.isNormal ? 4 : this.cold_temp ? 2 : 1,
         degree_type: this.degree_type,
         temp_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-        cold: this.cold_temp ? this.cold_temp : this.temperature.f.cold,
-        frozen: this.frozen_temp ? this.frozen_temp : this.temperature.f.frozen,
+        cold: dispatchStore.dispatch.isNormal ? null : this.cold_temp ? this.cold_temp : this.temperature.f.cold,
+        frozen: dispatchStore.dispatch.isNormal
+          ? null
+          : this.frozen_temp
+          ? this.frozen_temp
+          : this.temperature.f.frozen,
       }
       Object.keys(data).forEach((key) => formData.append(key, data[key]))
       this.isLoading = true
@@ -357,10 +363,46 @@ const useRestaurant = defineStore('restaurant', {
         this.isLoading = false
       }
     },
-    async postExceptionAction(id, exceptionList, type) {
+    async postExceptionAction(itemId, exceptionList, type) {
       const modal = useAlertModal()
+
+      const formData = new FormData()
+      const encoder = exceptionList.reduce(
+        (prev, curr) => {
+          return {
+            abnormal_id: {
+              ...prev.abnormal_id,
+              [curr.id]: curr.selectReason,
+            },
+            qty: {
+              ...prev.qty,
+              [curr.id]: curr.unit ? curr.unit : null,
+            },
+            set_qty: {
+              ...prev.qty,
+              [curr.id]: curr.set_qty ? curr.set_qty : null,
+            },
+            pcs_qty: {
+              ...prev.qty,
+              [curr.id]: curr.pcs_qty ? curr.pcs_qty : null,
+            },
+            note: {
+              ...prev.qty,
+              [curr.id]: curr.note ? curr.note : null,
+            },
+          }
+        },
+        {
+          abnormal_id: {},
+          qty: {},
+          set_qty: {},
+          pcs_qty: {},
+          note: {},
+        },
+      )
+      Object.keys(encoder).forEach((key) => formData.append(key, encoder[key]))
       try {
-        const response = await ApiCaller.postException(id, exceptionList, type)
+        const response = await ApiCaller.postException(itemId, formData, 1)
         if (response.status === 'success') {
           this.status = response.status
           this.message = response.message

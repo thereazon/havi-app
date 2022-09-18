@@ -165,7 +165,11 @@ const postContainerSend = async (id) => {
 
 const postException = async (id, data, type) => {
   return await axios
-    .post(`/api/webDelivery/${id}?type=${type}`, data)
+    .post(`/api/webDelivery/${id}?type=${type}`, data, {
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+    })
     .then((res) => res.data)
     .catch((err) => Promise.reject(err.response.data))
 }

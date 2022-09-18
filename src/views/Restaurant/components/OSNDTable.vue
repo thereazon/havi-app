@@ -164,8 +164,18 @@ const handleToAbnormalOPage = (id) => () => {
         <template #title>
           <div class="flex gap-4 px-5">
             <div class="w-full">
-              <div class="text-primary font-bold">{{ item.name }}</div>
-              <div class="text-gray text-[12px]">{{ item.no }}</div>
+              <div class="flex items-center">
+                <div
+                  v-if="item.code"
+                  class="mr-2 w-[20px] h-[20px] bg-primary flex rounded-full text-white font-bold items-center justify-center"
+                >
+                  {{ item?.code }}
+                </div>
+                <div>
+                  <div class="text-primary font-bold">{{ item.name }}</div>
+                  <div class="text-gray text-[12px]">{{ item.no }}</div>
+                </div>
+              </div>
               <div class="flex justify-between text-[12px] px-5">
                 <div class="text-primary font-bold">{{ item.ctn_qty }}</div>
                 <div>{{ item.unit }}</div>

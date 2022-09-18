@@ -54,9 +54,8 @@ const deleteReason = (id) => () => (exRegistration.value = exRegistration.value.
 
 const confirm = () => {
   readyToPush.value = true
-  console.log(exRegistration.value.length)
   exRegistration.value.forEach((v) => console.log(v))
-  // restaurantStore.postExceptionAction('abc', exRegistration.value, 1)
+  restaurantStore.postExceptionAction(currentException.uid, exRegistration.value, 1)
 }
 
 const onClickLeft = () => {
@@ -67,7 +66,7 @@ const onClickRight = () => {}
 </script>
 
 <template>
-  <div>
+  <div class="h-full">
     <NavBar safe-area-inset-top fixed left-arrow @click-left="onClickLeft" @click-right="onClickRight" title="異常登記">
       ></NavBar
     >
