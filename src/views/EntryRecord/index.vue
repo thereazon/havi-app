@@ -55,7 +55,7 @@ const onClickLeft = () => {
 }
 </script>
 <template>
-  <div class="bg-[#F2F8FB] pb-10">
+  <div class="bg-[#F2F8FB] pb-10 min-h-screen">
     <NavBar safe-area-inset-top fixed left-arrow @click-left="onClickLeft" title="進場紀錄" />
     <div class="flex flex-col justify-center items-center">
       <div class="mt-24 border-solid border-success border-2 rounded-2xl h-[226px] w-[323px] bg-white">

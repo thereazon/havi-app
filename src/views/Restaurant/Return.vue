@@ -43,12 +43,12 @@ const onClickRight = () => {
 </script>
 
 <template>
-  <div class="h-screen">
+  <div class="bg-[#F2F8FB] min-h-screen">
     <RestaurantMenuPopup v-model:isShow="isShowMenu" />
     <NavBar safe-area-inset-top fixed left-arrow title="退貨單" @click-left="onClickLeft" @click-right="onClickRight"
       ><template #right> <van-icon name="wap-nav" size="14" color="black" /> </template>
     </NavBar>
-    <div class="px-[26px] bg-[#F2F8FB] pt-20">
+    <div class="px-[26px] pt-20">
       <RestaurantInfoCard
         v-if="dispatch"
         :temp_zone="dispatch.temp_zone"

@@ -66,11 +66,11 @@ const onClickRight = () => {}
 </script>
 
 <template>
-  <div class="h-full">
+  <div class="h-full min-h-screen bg-[#F2F8FB]">
     <NavBar safe-area-inset-top fixed left-arrow @click-left="onClickLeft" @click-right="onClickRight" title="異常登記">
       ></NavBar
     >
-    <div class="flex flex-col items-stretch px-[40px] pt-10 h-full bg-primary bg-opacity-[0.05]">
+    <div class="flex flex-col items-stretch px-[40px] pt-10">
       <div class="w-full rounded-xl shadow-md bg-white mt-8 mb-5">
         <div class="px-6 pt-3 pb-4">
           <div class="h-6 mb-2 flex justify-between items-center">

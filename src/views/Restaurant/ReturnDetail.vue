@@ -60,7 +60,7 @@ const handleUpdateDetail = () => {
 </script>
 
 <template>
-  <div class="bg-[#F2F8FB] pb-5">
+  <div class="bg-[#F2F8FB] min-h-screen pb-5">
     <RestaurantMenuPopup v-model:isShow="isShowMenu" />
     <NavBar
       safe-area-inset-top
