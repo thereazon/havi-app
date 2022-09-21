@@ -1,6 +1,6 @@
 <script setup>
 import { v4 as uuidv4 } from 'uuid'
-import { ref, onUnmounted, onMounted } from 'vue'
+import { ref, onUnmounted, onMounted, reactive } from 'vue'
 import { Icon, NavBar, Collapse, CollapseItem } from 'vant'
 import { useRouter, useRoute } from 'vue-router'
 import useRestaurant from '@/views/Restaurant/store'
@@ -13,6 +13,7 @@ const dispatchStore = useDispatch()
 const restaurantStore = useRestaurant()
 const { currentException } = restaurantStore
 const { currentRestaurant } = dispatchStore
+
 const exRegistration = ref([])
 const readyToPush = ref(false)
 const activeNames = ref(['1'])
@@ -27,6 +28,13 @@ const initReason = () => ({
   file: null,
 })
 
+const info = reactive({
+  name: '',
+  qty: 0,
+  total_qty: 0,
+  batch_no: '',
+})
+
 onMounted(() => {
   if (!currentRestaurant || !currentException.deliveryNo || !currentException.item) {
     router.push({
@@ -36,7 +44,12 @@ onMounted(() => {
       },
     })
   } else {
-    restaurantStore.getExceptionAction(currentException.uid, '1')
+    restaurantStore.getExceptionAction(currentException.uid, '1').then((res) => {
+      info.total_qty = res.total_qty
+      info.batch_no = res.batch_no
+      info.qty = res.qty
+      info.name = res.name
+    })
   }
 })
 
@@ -101,12 +114,11 @@ const onClickRight = () => {}
                   <span class="text-[#044d80] text-[0.875rem] font-bold truncate">
                     {{ currentException.item_desc }}
                   </span>
-                  <span class="text-gray text-[0.75rem] truncate"> {{ currentException.wrin }} </span>
+                  <span class="text-gray text-[0.75rem] truncate"> {{ info.name }} </span>
                 </div>
                 <div class="w-[40%] flex items-center text-[0.875rem] font-bold text-[#044d80]">
                   <div class="min-w-[40%] flex justify-between items-center">
-                    <span> {{ currentException.qty }} </span> &nbsp;
-                    <span> {{ currentException.uom }} </span>
+                    <span> {{ info.total_qty }} </span> &nbsp;
                   </div>
                 </div>
               </div>
@@ -118,21 +130,20 @@ const onClickRight = () => {}
               </div>
               <div class="w-[40%] flex justify-between items-center text-[0.875rem]">
                 <div class="min-w-[40%] flex justify-between items-center">
-                  <span> {{ currentException.item.qty }} </span> &nbsp;
-                  <span> {{ currentException.item.uom }} </span>
+                  <span> {{ info.qty }} </span> &nbsp; <span> {{ info.batch_no }} </span> &nbsp;
                 </div>
               </div>
             </li>
           </CollapseItem>
         </Collapse>
       </div>
-      <!-- <ExceptionReasonTable
+      <ExceptionReasonTable
         class="my-5"
         v-for="(reason, index) in exRegistration"
         :deleteReason="deleteReason(reason.id)"
         v-model:reason="exRegistration[index]"
         :key="reason.id"
-      ></ExceptionReasonTable> -->
+      ></ExceptionReasonTable>
       <div class="m-auto">
         <button class="bg-white border-0 rounded-full h-[33px] w-[33px] mb-5 shadow-lg" @click="addReason">
           <Icon name="plus"></Icon>

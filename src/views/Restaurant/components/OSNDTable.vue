@@ -7,7 +7,7 @@ import { useRouter, useRoute } from 'vue-router'
 
 const { dispatch, currentRestaurant } = useDispatchInfo()
 const restaurantStore = useRestaurant()
-const { isPreviewMode, setCurrentDelivery } = restaurantStore
+const { isPreviewMode, setCurrentDelivery, currentDelivery } = restaurantStore
 const router = useRouter()
 const route = useRoute()
 const props = defineProps({
@@ -79,9 +79,20 @@ const handleTab = (id) => {
   select.value = id
 }
 
-const handleToAbnormalPage = (item) => () => {
+const handleToAbnormalPage = (item, product) => () => {
   if (!isPreviewMode) {
-    // restaurantStore.setCurrentException(item, product, delivery)
+    console.log(item)
+    console.log(product)
+    restaurantStore.setCurrentException(
+      item,
+      {
+        ...product,
+        item_desc: product.name,
+        uid: product.id,
+        wrin: product.no,
+      },
+      { no: currentRestaurant?.trip_no, date: currentRestaurant?.departure_time },
+    )
     router.push({ path: '/restaurant/ExceptionRegistrationEdit', query: { ...route.query } })
   }
 }
@@ -189,7 +200,7 @@ const handleToAbnormalOPage = (item) => () => {
           v-for="subitem in item.data"
           :key="subitem.id"
           class="detail-list list-none mx-4 leading-snug h-11 flex items-center text-gray"
-          :onClick="handleToAbnormalPage(subitem)"
+          :onClick="handleToAbnormalPage(subitem, item)"
         >
           <div class="bg-[#f2f2f2] w-full" v-for="(subitem, index) in item.data" :key="subitem.id">
             <div class="flex">
@@ -209,11 +220,11 @@ const handleToAbnormalOPage = (item) => () => {
                   </div>
 
                   <div class="flex justify-between text-[12px] px-5 mr-5">
-                    <div class="text-primary font-bold">{{ subitem.qty }}</div>
+                    <div class="text-primary font-bold">{{ subitem.ctn_qty }}</div>
                     <div>{{ subitem.unit }}</div>
-                    <div class="text-primary font-bold">{{ subitem.set_qty }}</div>
+                    <div class="text-primary font-bold">{{ subitem.set_qty || 0 }}</div>
                     <div>{{ subitem.set_unit }}</div>
-                    <div class="text-primary font-bold">{{ subitem.pcs_qty }}</div>
+                    <div class="text-primary font-bold">{{ subitem.pcs_qty || 0 }}</div>
                     <div>{{ subitem.pcs_unit }}</div>
                   </div>
                 </div>

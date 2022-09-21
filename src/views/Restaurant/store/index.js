@@ -352,6 +352,7 @@ const useRestaurant = defineStore('restaurant', {
         if (response.status === 'success') {
           this.status = response.status
           this.message = response.message
+          return response.data
         }
       } catch (err) {
         modal.open({

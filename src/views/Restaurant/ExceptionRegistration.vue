@@ -54,7 +54,6 @@ const deleteReason = (id) => () => (exRegistration.value = exRegistration.value.
 
 const confirm = () => {
   readyToPush.value = true
-  exRegistration.value.forEach((v) => console.log(v))
   restaurantStore.postExceptionAction(currentException.uid, exRegistration.value, 1)
 }
 
