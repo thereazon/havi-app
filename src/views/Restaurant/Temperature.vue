@@ -319,8 +319,20 @@ const coldTemp = computed(() => {
           class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
         >
           <span class="w-[16%] text-primary">冷凍品溫</span>
-          <div class="w-[42%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">-</div>
           <div
+            v-if="
+              currentRestaurant?.lock_temp_type === LockTempType.GET_TEMP ||
+              currentRestaurant?.lock_temp_type === LockTempType.NORMAL_TEMP
+            "
+            :class="{ 'text-success': locksFrozenIsInRange, 'text-warning': !locksFrozenIsInRange }"
+            class="w-[42%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center"
+          >
+            <!-- 冷凍品溫 -->
+            {{ Number(showLockFrozen) ? Number(showLockFrozen) : '-' }}
+            °{{ currentRestaurant?.lock_degree_type.toUpperCase() }}
+          </div>
+          <div
+            v-if="currentRestaurant?.lock_temp_type === LockTempType.PICTURE_TEMP"
             :class="{ 'text-success': locksFrozenIsInRange, 'text-warning': !locksFrozenIsInRange }"
             class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center"
           >
@@ -328,6 +340,7 @@ const coldTemp = computed(() => {
             {{ Number(showLockFrozen) ? Number(showLockFrozen) : '-' }}
             °{{ currentRestaurant?.lock_degree_type.toUpperCase() }}
           </div>
+          <div v-else class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center">-</div>
         </div>
         <!--need to refactor this-->
         <div
@@ -365,8 +378,23 @@ const coldTemp = computed(() => {
           class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
         >
           <span class="w-[16%] text-primary">冷藏品溫</span>
-          <div class="w-[42%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">-</div>
           <div
+            v-if="
+              currentRestaurant?.lock_temp_type === LockTempType.GET_TEMP ||
+              currentRestaurant?.lock_temp_type === LockTempType.NORMAL_TEMP
+            "
+            class="w-[42%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center"
+            :class="{ 'text-success': lockColdIsOutInRange, 'text-warning': !lockColdIsOutInRange }"
+          >
+            <!-- 冷藏品溫 -->
+            {{ Number(showLockCold) ? Number(showLockCold) : '-' }}
+            °{{ currentRestaurant?.lock_degree_type.toUpperCase() }}
+          </div>
+          <div v-else class="w-[42%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center text-[#242424]">
+            -
+          </div>
+          <div
+            v-if="currentRestaurant?.lock_temp_type === LockTempType.PICTURE_TEMP"
             class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center"
             :class="{ 'text-success': lockColdIsOutInRange, 'text-warning': !lockColdIsOutInRange }"
           >
@@ -374,6 +402,7 @@ const coldTemp = computed(() => {
             {{ Number(showLockCold) ? Number(showLockCold) : '-' }}
             °{{ currentRestaurant?.lock_degree_type.toUpperCase() }}
           </div>
+          <div v-else class="w-[18%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center">-</div>
         </div>
         <div class="flex justify-around mt-10">
           <Button
