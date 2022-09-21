@@ -53,6 +53,7 @@ const addReason = () => {
 const deleteReason = (id) => () => (exRegistration.value = exRegistration.value.filter((v) => v.id !== id))
 
 const confirm = () => {
+  alert('hello')
   readyToPush.value = true
   restaurantStore.postExceptionAction(currentException.uid, exRegistration.value, 1)
 }

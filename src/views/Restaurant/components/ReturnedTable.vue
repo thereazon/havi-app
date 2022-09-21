@@ -199,11 +199,17 @@ const handleUpdateStatus = (type) => {
                   </div>
                   <div class="text-gray text-[12px]">{{ item.no }}</div>
                   <div class="flex justify-between text-[12px] pr-5">
-                    <div class="text-primary font-bold">{{ item.m_qty > 0 ? item.m_qty : item.qty }}</div>
+                    <div class="font-bold" :class="item.m_qty !== item.qty ? 'text-warning' : 'text-primary '">
+                      {{ item.m_qty > 0 ? item.m_qty : item.qty }}
+                    </div>
                     <div>{{ item.unit }}</div>
-                    <div class="text-primary font-bold">{{ item.m_set_qty > 0 ? item.m_set_qty : item.set_qty }}</div>
+                    <div class="font-bold" :class="item.m_set_qty !== item.set_qty ? 'text-warning' : 'text-primary'">
+                      {{ item.m_set_qty }}
+                    </div>
                     <div>{{ item.set_unit }}</div>
-                    <div class="text-primary font-bold">{{ item.m_pcs_qty > 0 ? item.m_pcs_qty : item.pcs_qty }}</div>
+                    <div class="font-bold" :class="item.m_pcs_qty !== item.pcs_qty ? 'text-warning' : 'text-primary '">
+                      {{ item.m_pcs_qty }}
+                    </div>
                     <div>{{ item.pcs_unit }}</div>
                   </div>
                 </div>

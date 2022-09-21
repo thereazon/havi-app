@@ -49,6 +49,11 @@ onMounted(() => {
       info.batch_no = res.batch_no
       info.qty = res.qty
       info.name = res.name
+      exRegistration.value = res.data.map((r) => ({
+        ...r,
+        selectReason: r.abnormal_id,
+        unit: r.qty,
+      }))
     })
   }
 })
@@ -130,7 +135,7 @@ const onClickRight = () => {}
               </div>
               <div class="w-[40%] flex justify-between items-center text-[0.875rem]">
                 <div class="min-w-[40%] flex justify-between items-center">
-                  <span> {{ info.qty }} </span> &nbsp; <span> {{ info.batch_no }} </span> &nbsp;
+                  <span> {{ info.qty }} </span>
                 </div>
               </div>
             </li>
