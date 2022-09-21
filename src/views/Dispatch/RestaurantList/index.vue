@@ -120,7 +120,7 @@ const handleOpenDialog2 = async () => {
   />
   <DelayModal
     title="攜回配銷中心"
-    v-model:isShow="dispatchStore.RestaurantDetailTable"
+    v-model:isShow="dispatchStore.showUnableDeliverMenu"
     subTitle="請填寫無法配送原因"
     optionFirst="請選擇無法配送原因"
     warning="!請確認不再進行配送此單!"
