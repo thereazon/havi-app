@@ -287,7 +287,7 @@ const coldTemp = computed(() => {
         <div class="w-full flex justify-evenly items-center text-[10px] font-bold mb-2">
           <span class="w-[16%] text-primary"></span>
           <div class="w-[42%] h-[50%] flex justify-center items-center text-gray">目前溫度</div>
-          <div class="w-[18%] h-[50%] flex justify-center items-center text-gray">櫃台溫度</div>
+          <div class="w-[18%] h-[50%] flex justify-center items-center text-gray">實測溫度</div>
         </div>
         <!--need to refactor this-->
         <div
