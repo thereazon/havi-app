@@ -10,7 +10,9 @@ import UnableDeliverTab from './UnableDeliverTab.vue'
 import PendingDeliveryTab from './PendingDeliveryTab.vue'
 import DelayModal from '@/components/DelayModal.vue'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
+import { useAlertModal } from '@/components/store/AlertModalStore'
 
+const modal = useAlertModal()
 const router = useRouter()
 const route = useRoute()
 const dispatchStore = useDispatchInfo()
@@ -25,12 +27,28 @@ const openConfirmDialog = (id) => {
 }
 
 const confirmDelay = async (data) => {
-  await dispatchStore.postDelayAction(data.id, data.message)
-  dispatchStore.closeUnableDeliverMenu()
+  if (data.message && data.message !== '') {
+    await dispatchStore.postDelayAction(data.id, data.message)
+    dispatchStore.closeUnableDeliverMenu()
+  } else {
+    modal.open({
+      type: 'hint',
+      title: '提醒',
+      content: '備註欄位為必填',
+    })
+  }
 }
 const confirmUndeliverable = async (data) => {
-  await dispatchStore.postBringAction(data.id, data.message)
-  dispatchStore.closeUnableDeliverMenu()
+  if (data.message && data.message !== '') {
+    await dispatchStore.postBringAction(data.id, data.message)
+    dispatchStore.closeUnableDeliverMenu()
+  } else {
+    modal.open({
+      type: 'hint',
+      title: '提醒',
+      content: '備註欄位為必填',
+    })
+  }
 }
 
 onMounted(() => {

@@ -10,11 +10,12 @@ const route = useRoute()
 const router = useRouter()
 
 const restaurantStore = useRestaurant()
-const { dispatch, restaurant, getRestaurantDetailAction } = useDispatchInfo()
+const dispatchStore = useDispatchInfo()
+const { dispatch, getRestaurantDetailAction } = useDispatchInfo()
 
 const restaurtants = computed(() => {
-  const delay = restaurant?.DELAY ? restaurant.DELAY : []
-  const pedingDelivery = restaurant?.PENDING_DELIVERY ? restaurant.PENDING_DELIVERY : []
+  const delay = dispatchStore.restaurant?.DELAY ? dispatchStore.restaurant.DELAY : []
+  const pedingDelivery = dispatchStore.restaurant?.PENDING_DELIVERY ? dispatchStore.restaurant.PENDING_DELIVERY : []
   const list = [...delay, ...pedingDelivery]
   return list
 })
