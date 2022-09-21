@@ -1,12 +1,13 @@
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, watch } from 'vue'
 import dayjs from 'dayjs'
 import { NavBar, Button, ActionSheet } from 'vant'
 import { VueScrollPicker } from 'vue-scroll-picker'
 import useAccountInfo from '@/views/Login/store'
 import { useRoute, useRouter } from 'vue-router'
+import { DispatchStatusType } from '@/views/Dispatch/helper'
 import useEntryRecord from './store'
-
+import useDispatchInfo from '@/views/Dispatch/store'
 //size
 //ransform: scale(1.8);
 //padding: 0 60px;
@@ -16,7 +17,6 @@ const route = useRoute()
 const { dispatch_id, car_id, container_id, dispatch_no } = route.query
 const entryRecordStore = useEntryRecord()
 const accountStore = useAccountInfo()
-
 const temperature = reactive({
   integer: 34,
   decimal: 0,
@@ -27,12 +27,47 @@ const integerOptions = [34, 35, 36, 37, 38, 39, 40, 41]
 const decimalOptions = Array.from({ length: 10 }, (_, index) => index)
 const computedTemperature = computed(() => temperature.integer + temperature.decimal / 10)
 const openActionSheet = ref(false)
+const dispatchStore = useDispatchInfo()
+
+const isCheckIn = computed(() => {
+  const currentDispatch =
+    dispatchStore.dispatchs && dispatchStore.dispatchs.length > 0 ? dispatchStore.dispatchs[0] : null
+  return currentDispatch?.status === DispatchStatusType.NO_CHECK_IN
+})
 
 onMounted(() => {
   if (!dispatch_id) {
     router.push({ path: '/cars' })
+  } else {
+    const currentDispatch =
+      dispatchStore.dispatchs && dispatchStore.dispatchs.length > 0 ? dispatchStore.dispatchs[0] : null
+    if (currentDispatch?.status !== DispatchStatusType.NO_CHECK_IN) {
+      router.push({
+        path: '/dispatch',
+        query: {
+          car_id,
+          container_id,
+        },
+      })
+    }
   }
 })
+
+watch(
+  () => isCheckIn.value,
+  (newVal, oldVal) => {
+    console.log(oldVal)
+    if (newVal) {
+      router.push({
+        path: '/dispatch',
+        query: {
+          car_id,
+          container_id,
+        },
+      })
+    }
+  },
+)
 
 const userCheckIn = async () => {
   await entryRecordStore.userCheckInAction(dispatch_id, computedTemperature.value, () =>
