@@ -123,14 +123,18 @@ const useDispatchInfo = defineStore('dispatch', {
     },
     async postUndeliveredAction(id) {
       this.isLoading = true
+      const modal = useAlertModal()
       try {
         const response = await DispatchApiCaller.postUndelivered(id)
         if (response.status === 'success') {
           await this.getDispatchDetailAction(this.dispatch.id)
         }
       } catch (err) {
-        this.status = err.status
-        this.message = err.message
+        modal.open({
+          type: 'error', //required
+          title: '錯誤',
+          content: err.message,
+        })
       } finally {
         this.isLoading = false
       }

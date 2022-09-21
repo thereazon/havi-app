@@ -41,7 +41,9 @@ const usePreCool = defineStore('precool', {
       const modal = useAlertModal()
       if (this.tempPhoto || isNormal) {
         formData.append('signature_photo', signPhotoBlob)
-        formData.append('temp_photo', this.tempPhoto)
+        if (this.tempPhoto) {
+          formData.append('temp_photo', this.tempPhoto)
+        }
         const data = {
           temp_type: 1,
           degree_type: 'f',
