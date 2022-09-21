@@ -24,11 +24,15 @@ defineProps({
       <div>
         {{ title }}
       </div>
-      <img
+      <Button
+        size="mini"
+        icon="/images/unable_delivery/bring_back.png"
         v-if="handleOpenUnableDeliverMenu"
         :onClick="() => handleOpenUnableDeliverMenu('UNABLE')"
-        src="/images/unable_delivery/bring_back.png"
-      />
+        class="bg-warning text-white rounded-full px-[43px] border-none"
+      >
+        攜回配銷中心
+      </Button>
     </div>
     <div class="my-[15px] px-[20px] pb-[20px]">
       <div class="flex items-center justify-between text-gray">
@@ -60,11 +64,14 @@ defineProps({
         </div>
       </div>
       <div class="flex justify-center mt-[10px] font-bold">
-        <img
+        <Button
+          icon="/images/unable_delivery/delay.png"
           v-if="handleOpenUnableDeliverMenu"
           :onClick="() => handleOpenUnableDeliverMenu('DELAY')"
-          src="/images/unable_delivery/delay.png"
-        />
+          class="bg-primary text-white rounded-full px-[43px]"
+        >
+          延後配送</Button
+        >
         <Button v-else :onClick="handleRouteToDetail" class="bg-primary text-white rounded-full px-[43px]">
           作業明細</Button
         >

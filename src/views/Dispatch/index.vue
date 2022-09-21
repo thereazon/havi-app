@@ -64,7 +64,7 @@ const handleToPreCool = async (dispatch) => {
     modal.open({
       type: 'hint',
       title: '提醒',
-      content: '已經完成遇冷溫度，請開始下一項作業',
+      content: '已經完成預冷溫度，請開始下一項作業',
     })
   } else {
     await dispatchStore.setCurrentDispatch(dispatch)
