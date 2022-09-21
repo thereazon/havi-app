@@ -75,6 +75,13 @@ const getReturned = async (id) => {
     .catch((err) => Promise.reject(err.response.data))
 }
 
+const getOnK = async (id) => {
+  return await axios
+    .get(`/api/webDelivery/${id}?type=2`)
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
+}
+
 const getReturnedDetail = async (id) => {
   return await axios
     .get(`/api/webReturned/${id}`)
@@ -217,6 +224,7 @@ const ApiCaller = {
   postReturnFinish,
   postReturnDetail,
   postStoreFinish,
+  getOnK,
 }
 
 export default ApiCaller

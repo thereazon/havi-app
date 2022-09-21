@@ -11,39 +11,18 @@ import { useAlertModal } from '@/components/store/AlertModalStore'
 const store = useCommonStore()
 const modal = useAlertModal()
 const { dispatch, currentRestaurant } = useDispatchInfo()
-const { currentDelivery, postOnKAction } = useRestaurant()
+const { currentDelivery, postOnKAction, getOnKAction, updateOnKAction } = useRestaurant()
 const router = useRouter()
 const route = useRoute()
 
-onMounted(() => {
-  if (!dispatch || !currentRestaurant || !currentDelivery) {
-    router.push({
-      path: '/dispatch',
-      query: {
-        ...route.query,
-      },
-    })
-  }
-})
-
+const formatDate = (date) => {
+  return dayjs(date).format('MM/DD/YYYY')
+}
 const isShowMenu = ref(false)
 const date = ref('')
 const today = ref(new Date())
 const show = ref(false)
 const noset = ref(false)
-
-const formatDate = (date) => {
-  return dayjs(date).format('MM/DD/YYYY')
-}
-const onConfirmDate = (value) => {
-  show.value = false
-  date.value = formatDate(value)
-}
-
-const onClickRight = () => {
-  isShowMenu.value = true
-}
-
 const exReason = reactive({
   code: currentDelivery?.code,
   exp: date,
@@ -53,6 +32,39 @@ const exReason = reactive({
   set_qty: null,
   note: '',
 })
+
+onMounted(() => {
+  if (!dispatch || !currentRestaurant || !currentDelivery) {
+    router.push({
+      path: '/dispatch',
+      query: {
+        ...route.query,
+      },
+    })
+  } else {
+    if (currentDelivery.item_id) {
+      getOnKAction(currentDelivery.item_id).then((res) => {
+        exReason.code = res.code
+        exReason.exp = res.exp
+        exReason.name = res.name
+        exReason.no = res.no
+        exReason.qty = res.qty
+        exReason.set_qty = res.set_qty
+        exReason.note = res.note
+      })
+    }
+  }
+})
+
+const onConfirmDate = (value) => {
+  show.value = false
+  date.value = formatDate(value)
+}
+
+const onClickRight = () => {
+  isShowMenu.value = true
+}
+
 watch(
   () => noset.value,
   () => {
@@ -67,12 +79,7 @@ const reason = computed(() => {
 })
 
 const onClickLeft = () => {
-  router.push({
-    path: '/restaurant/delivery',
-    query: {
-      ...route.query,
-    },
-  })
+  router.back()
 }
 
 const handlePostOnK = () => {
@@ -93,7 +100,11 @@ const handlePostOnK = () => {
       ...exReason,
       exp: formatDate(today.value),
     }
-    postOnKAction(currentDelivery.id, payload).then(() => onClickLeft())
+    if (currentDelivery.item_id) {
+      updateOnKAction(currentDelivery.item_id, payload, onClickLeft)
+    } else {
+      postOnKAction(currentDelivery.id, payload, onClickLeft)
+    }
   }
 }
 </script>
@@ -114,7 +125,7 @@ const handlePostOnK = () => {
     <div class="px-7 bg-[#F2F8FB] pt-20">
       <div class="rounded-[20px] shadow-lg">
         <section class="rounded-t-[20px] max-w-5xl overflow-hidden bg-white py-4 px-6">
-          <div class="text-primary text-[13px] mb-2"><span class="font-bold">單號 </span>{{ currentDelivery.no }}</div>
+          <div class="text-primary text-[13px] mb-2"><span class="font-bold">單號 </span>{{ currentDelivery?.no }}</div>
           <div class="flex">
             <div class="mr-2">
               <img src="/dispatching_calendar.png" class="h-4 align-sub pr-1" alt="calanderIcon" />

@@ -367,40 +367,22 @@ const useRestaurant = defineStore('restaurant', {
       const modal = useAlertModal()
 
       const formData = new FormData()
-      const encoder = exceptionList.reduce(
-        (prev, curr) => {
-          return {
-            abnormal_id: {
-              ...prev.abnormal_id,
-              [curr.id]: curr.selectReason,
-            },
-            qty: {
-              ...prev.qty,
-              [curr.id]: curr.unit ? curr.unit : null,
-            },
-            set_qty: {
-              ...prev.qty,
-              [curr.id]: curr.set_qty ? curr.set_qty : null,
-            },
-            pcs_qty: {
-              ...prev.qty,
-              [curr.id]: curr.pcs_qty ? curr.pcs_qty : null,
-            },
-            note: {
-              ...prev.qty,
-              [curr.id]: curr.note ? curr.note : null,
-            },
-          }
-        },
-        {
-          abnormal_id: {},
-          qty: {},
-          set_qty: {},
-          pcs_qty: {},
-          note: {},
-        },
-      )
-      Object.keys(encoder).forEach((key) => formData.append(key, encoder[key]))
+
+      const encoder = exceptionList.reduce((prev, curr) => {
+        return {
+          ...prev,
+          [`abnormal_id[${curr.id}]`]: curr.selectReason,
+          [`qty[${curr.id}]`]: curr.unit ? curr.unit : null,
+          [`set_qty[${curr.id}]`]: curr.set_qty ? curr.set_qty : null,
+          [`pcs_qty[${curr.id}]`]: curr.pcs_qty ? curr.pcs_qty : null,
+          [`note[${curr.id}]`]: curr.note ? curr.note : null,
+        }
+      }, {})
+
+      Object.keys(encoder)
+        .filter((v) => encoder[v])
+        .forEach((key) => formData.append(key, encoder[key]))
+
       try {
         const response = await ApiCaller.postException(itemId, formData, 1)
         if (response.status === 'success') {
@@ -417,7 +399,7 @@ const useRestaurant = defineStore('restaurant', {
         this.isLoading = false
       }
     },
-    async postOnKAction(id, data) {
+    async postOnKAction(id, data, cb) {
       const modal = useAlertModal()
       try {
         const response = await ApiCaller.postOnK(id, data)
@@ -428,6 +410,7 @@ const useRestaurant = defineStore('restaurant', {
             type: 'success',
             title: '成功',
             content: '資料儲存完成',
+            callback: cb,
           })
         }
       } catch (err) {
@@ -440,7 +423,26 @@ const useRestaurant = defineStore('restaurant', {
         this.isLoading = false
       }
     },
-    async updateOnKAction(id, data) {
+    async getOnKAction(id) {
+      const modal = useAlertModal()
+      try {
+        const response = await ApiCaller.getOnK(id)
+        if (response.status === 'success') {
+          this.status = response.status
+          this.message = response.message
+          return response.data
+        }
+      } catch (err) {
+        modal.open({
+          type: 'error',
+          title: '錯誤',
+          content: err.message,
+        })
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async updateOnKAction(id, data, cb) {
       const modal = useAlertModal()
       try {
         const response = await ApiCaller.updateOnK(id, data)
@@ -451,6 +453,7 @@ const useRestaurant = defineStore('restaurant', {
             type: 'success',
             title: '成功',
             content: '資料儲存完成',
+            callback: cb,
           })
         }
       } catch (err) {

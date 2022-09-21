@@ -1,7 +1,15 @@
 <script setup>
-import { ref, reactive, computed, watch, onMounted } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { Collapse, CollapseItem, Button, Icon } from 'vant'
+import useDispatchInfo from '@/views/Dispatch/store'
+import useRestaurant from '@/views/Restaurant/store'
+import { useRouter, useRoute } from 'vue-router'
 
+const { dispatch, currentRestaurant } = useDispatchInfo()
+const restaurantStore = useRestaurant()
+const { isPreviewMode, setCurrentDelivery } = restaurantStore
+const router = useRouter()
+const route = useRoute()
 const props = defineProps({
   // table標題
   title: String,
@@ -11,7 +19,6 @@ const props = defineProps({
   detailData: {
     type: Array,
     required: true,
-    default: [],
   },
 })
 // 自製折疊面板的高度css in js 變數
@@ -54,24 +61,6 @@ const filterData = computed({
   },
 })
 
-// watch(
-//   () => data.value,
-//   (newVal, oldVal) => {
-//     console.log(newVal)
-//     if (oldVal) {
-//       console.log(oldVal[0].items.map((v) => v.name))
-//       collapseActiveNames.value = oldVal[currentIndex].items.map((v) => v.name)
-//     }
-//   },
-// )
-
-// watch(
-//   () => collapseActiveNames.value,
-//   (newVal, oldVal) => {
-//     console.log(newVal)
-//   },
-// )
-
 const prevPage = () => {
   if (currentIndex.value === 0) {
     return
@@ -90,12 +79,21 @@ const handleTab = (id) => {
   select.value = id
 }
 
-const handleToAbnormalPage = (id) => () => {
-  alert('abnormal' + id)
+const handleToAbnormalPage = (item) => () => {
+  if (!isPreviewMode) {
+    // restaurantStore.setCurrentException(item, product, delivery)
+    router.push({ path: '/restaurant/ExceptionRegistrationEdit', query: { ...route.query } })
+  }
 }
 
-const handleToAbnormalOPage = (id) => () => {
-  alert('abnormal O')
+const handleToAbnormalOPage = (item) => () => {
+  if (item.code) {
+    setCurrentDelivery({
+      ...item,
+      item_id: item.id,
+    })
+    router.push({ path: '/restaurant/onkabnormal', query: { ...route.query } })
+  }
 }
 </script>
 
@@ -162,7 +160,7 @@ const handleToAbnormalOPage = (id) => () => {
     <Collapse v-model="collapseActiveNames">
       <CollapseItem :readonly="item.data ? false : true" v-for="item in filterData" :key="item.id" :name="item.name">
         <template #title>
-          <div class="flex gap-4 px-5">
+          <div :onClick="handleToAbnormalOPage(item)" class="flex gap-4 px-5">
             <div class="w-full">
               <div class="flex items-center">
                 <div
@@ -191,7 +189,7 @@ const handleToAbnormalOPage = (id) => () => {
           v-for="subitem in item.data"
           :key="subitem.id"
           class="detail-list list-none mx-4 leading-snug h-11 flex items-center text-gray"
-          :onClick="handleToAbnormalPage(subitem.id)"
+          :onClick="handleToAbnormalPage(subitem)"
         >
           <div class="bg-[#f2f2f2] w-full" v-for="(subitem, index) in item.data" :key="subitem.id">
             <div class="flex">
