@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive, watch, onMounted, computed } from 'vue'
-import { Icon, NavBar, DatetimePicker, Popup, Switch } from 'vant'
+import { Icon, NavBar, DatetimePicker, Popup, Switch, Field } from 'vant'
 import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
 import useDispatchInfo from '@/views/Dispatch/store'
 import useRestaurant from '@/views/Restaurant/store'
@@ -107,6 +107,7 @@ const handlePostOnK = () => {
     }
   }
 }
+const formatter = (value) => value.replace(/[^\w./]/gi, '')
 </script>
 
 <template>
@@ -148,8 +149,8 @@ const handlePostOnK = () => {
             class="input-wrap flex flex-col bg-zinc-100 px-2 py-3 text-neutral-500 rounded"
             @click="handleToDeliveryDetail"
           >
-            <input v-model="exReason.name" type="text" placeholder="輸入品號" class="py-2 col-span-4" />
-            <input v-model="exReason.no" type="text" placeholder="輸入產品名稱" class="py-2 col-span-4" />
+            <Field :formatter="formatter" v-model="exReason.name" type="text" placeholder="輸入品號" class="input" />
+            <Field v-model="exReason.no" type="text" placeholder="輸入產品名稱" class="input" />
           </div>
         </section>
       </div>
@@ -236,14 +237,11 @@ const handlePostOnK = () => {
 }
 
 .input-wrap {
-  input {
-    outline: 0;
+  .input {
+    border: 1px solid;
+    background-color: inherit;
     border-width: 0 0 2px;
     border-color: #000;
-    opacity: 0.7;
-  }
-  input:focus {
-    border-color: green;
   }
 }
 </style>
