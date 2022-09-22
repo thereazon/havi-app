@@ -11,6 +11,12 @@ import UploadImage from '@/components/uploadImage.vue'
 import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
 import useRestaurant from './store'
 
+// Business logic
+// need to refactor this
+// temp should be disply with temp_zone
+// lock vs unLocked sould be separate
+// if temp_zone include normal just display green color and show all temp
+
 const modal = useAlertModal()
 const { dispatch, currentRestaurant } = useDispatchInfo()
 const restaurantStore = useRestaurant()
@@ -18,6 +24,15 @@ const { isPreviewMode } = restaurantStore
 const router = useRouter()
 const route = useRoute()
 const between = (x, min, max) => x >= min && x <= max
+
+const isFreezing = computed(() => {
+  const tempArr = currentRestaurant?.temp_zone.split(',')
+  return tempArr?.find((v) => v === 'F' || v === 'D')
+})
+const isCold = computed(() => {
+  const tempArr = currentRestaurant?.temp_zone.split(',')
+  return tempArr?.find((v) => v === 'C' || v === 'D')
+})
 
 const isTempRange = (rangeArr) => {
   if (rangeArr.length === 2) {
@@ -152,17 +167,25 @@ const onClickRight = () => {
 }
 
 const submitTemperature = () => {
-  if (restaurantStore.cold_temp && restaurantStore.frozen_temp) {
-    isShowPopup.value = false
-    restaurantStore.degree_type = isCelsiusTemp.value ? 'c' : 'f'
-    restaurantStore.isGetCounterTemp = true
-  } else {
+  if (isCold.value && !restaurantStore.cold_temp) {
     modal.open({
       type: 'hint',
       title: '提醒',
       content: '請確實填寫冷凍或冷藏品溫數值',
     })
+    return
   }
+  if (isFreezing.value && !restaurantStore.frozen_temp) {
+    modal.open({
+      type: 'hint',
+      title: '提醒',
+      content: '請確實填寫冷凍或冷藏品溫數值',
+    })
+    return
+  }
+  isShowPopup.value = false
+  restaurantStore.degree_type = isCelsiusTemp.value ? 'c' : 'f'
+  restaurantStore.isGetCounterTemp = true
 }
 
 const handleFetchTemp = () => {
@@ -291,7 +314,7 @@ const coldTemp = computed(() => {
         </div>
         <!--need to refactor this-->
         <div
-          v-if="!isLocked"
+          v-if="!isLocked && isFreezing"
           class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
         >
           <span class="w-[16%] text-primary">冷凍品溫</span>
@@ -315,7 +338,7 @@ const coldTemp = computed(() => {
           </div>
         </div>
         <div
-          v-if="isLocked"
+          v-if="isLocked && isFreezing"
           class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
         >
           <span class="w-[16%] text-primary">冷凍品溫</span>
@@ -344,7 +367,7 @@ const coldTemp = computed(() => {
         </div>
         <!--need to refactor this-->
         <div
-          v-if="!isLocked"
+          v-if="!isLocked && isCold"
           class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
         >
           <span class="w-[16%] text-primary">冷藏品溫</span>
@@ -374,7 +397,7 @@ const coldTemp = computed(() => {
         </div>
         <!--need to refactor this-->
         <div
-          v-if="isLocked"
+          v-if="isLocked && isCold"
           class="w-full h-[42px] rounded-xl shadow-md bg-white flex justify-evenly items-center text-[0.75rem] font-bold mb-2.5 last:mb-0"
         >
           <span class="w-[16%] text-primary">冷藏品溫</span>
@@ -441,7 +464,7 @@ const coldTemp = computed(() => {
       >
     </div>
   </div>
-  <Popup v-model:show="isShowPopup" class="w-[325px] h-[366px] rounded-[20px]">
+  <Popup v-model:show="isShowPopup" class="w-[325px] rounded-[20px]">
     <div class="py-[26px] px-[28px]">
       <h1 class="text-center text-[#707070] text-[17px] mb-0">實測溫度</h1>
       <h2 class="text-center text-[#a4a4a4] text-[12px]">請填寫實際溫度</h2>
@@ -463,7 +486,7 @@ const coldTemp = computed(() => {
         </div>
       </div>
       <form class="flex flex-col mt-5">
-        <div class="flex justify-between">
+        <div v-if="isFreezing" class="flex justify-between">
           <span class="text-[12px] text-center text-[#086eb6] flex items-center">冷凍品溫</span>
           <div
             class="w-[205px] h-[37px] bg-[#f2f2f2] rounded-md flex justify-center items-center"
@@ -472,7 +495,7 @@ const coldTemp = computed(() => {
             {{ restaurantStore.frozen_temp }}
           </div>
         </div>
-        <div class="flex justify-between mt-4">
+        <div v-if="isCold" class="flex justify-between mt-4">
           <span class="text-[12px] text-center text-[#086eb6] flex items-center">冷藏品溫</span>
           <div
             class="w-[205px] h-[37px] bg-[#f2f2f2] rounded-md flex justify-center items-center"

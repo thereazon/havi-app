@@ -109,6 +109,13 @@ const handleOpenDialog2 = async () => {
     <div class="pt-4 px-[26px] text-[13px]">
       <Tabs :swipeable="true">
         <Tab v-for="item in RestaurantTab" :title="RestaurantStatusTypeToZh[item]" :key="item">
+          <template #title>
+            {{ RestaurantStatusTypeToZh[item] }}
+            <div
+              v-if="dispatchStore.restaurant?.UNABLE_DELIVERY?.length > 0 && item === 'UNABLE_DELIVERY'"
+              class="red-dot"
+            ></div>
+          </template>
           <DeliveringTab v-if="item === 'DELIVERING'" :openConfirmDialog="openConfirmDialog" />
           <CompletedTab v-if="item === 'DELIVERY_COMPLETED'" />
           <UnableDeliverTab v-if="item === 'UNABLE_DELIVERY'" />
@@ -157,5 +164,15 @@ const handleOpenDialog2 = async () => {
 }
 :deep(.van-tabs__nav) {
   background-color: rgba(255, 255, 255, 0);
+}
+
+.red-dot {
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  border-radius: 50%;
+  background-color: red;
+  top: 10px;
+  right: 0;
 }
 </style>
