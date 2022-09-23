@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, watch, ref, computed } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
-import { Switch, Icon } from 'vant'
+import { Switch, Icon, Uploader } from 'vant'
 import useCommonStore from '@/common/useCommonStore'
 
 const props = defineProps({
@@ -61,24 +61,13 @@ const exReason = reactive({
   file: null,
 })
 
-const dataURItoBlob = (dataURI) => {
-  return fetch(dataURI).then((res) => res.blob())
-}
-
-const handleFileUpload = () => {
-  fileStructure.fileName = file.value.files[0].name
-  let oFReader = new FileReader()
-
-  oFReader.onload = (e) => {
-    fileStructure.previewImage = e.target.result
+const fileList = ref([])
+const handleUploader = (value) => {
+  if (fileList.value.length === 0) {
+    fileList.value = value.filter((v, i) => i < 3)
+  } else {
+    fileList.value = value.filter((v, i) => i >= fileList.value.length && i <= fileList.value.length + 2)
   }
-
-  oFReader.onloadend = async function () {
-    await dataURItoBlob(oFReader.result).then((res) => {
-      fileStructure.base64 = res
-    })
-  }
-  oFReader.readAsDataURL(file.value.files[0])
 }
 </script>
 <template>
@@ -135,18 +124,29 @@ const handleFileUpload = () => {
         class="mx-auto"
       ></Switch>
     </div>
-    <button class="bg-[#fffcf6] border-dashed w-full py-4 mt-[23px]" @click="$refs.file.click()">
-      <div v-if="fileStructure.previewImage === null" class="flex justify-center gap-2">
-        <Icon class="bg-gray rounded-full p-1" color="white" name="plus"></Icon>
-        <div>選擇圖片</div>
+    <Uploader :deletable="false" multiple class="loader" :modelValue="fileList" @update:modelValue="handleUploader">
+      <div class="bg-[#fffcf6] border-dashed w-full py-2" :onClick="() => console.log('hello')">
+        <div class="flex justify-center gap-2">
+          <Icon class="bg-gray rounded-full p-1" color="white" name="plus"></Icon>
+          <div>選擇圖片</div>
+        </div>
       </div>
-      <div v-else class="h-28">
-        <!-- {{ fileStructure.fileName }} -->
-        <img class="h-full" :src="fileStructure.previewImage" alt="" />
-      </div>
-    </button>
-    <input type="file" accept="image/*" ref="file" class="hidden" @change="handleFileUpload" />
+    </Uploader>
     <div class="mt-[23px] mb-[13px]">備註原因</div>
     <textarea v-model="theReason.note" class="py-2 bg-[#fffcf6] border-dashed w-full"></textarea>
   </div>
 </template>
+
+<style>
+.loader {
+  width: 100%;
+}
+.van-uploader__wrapper {
+  padding-top: 80px;
+}
+.van-uploader__input-wrapper {
+  position: absolute;
+  top: 10px;
+  width: 100%;
+}
+</style>
