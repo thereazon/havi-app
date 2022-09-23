@@ -5,6 +5,11 @@ import { Pagination } from '@egjs/flicking-plugins'
 import '@egjs/vue3-flicking/dist/flicking.css'
 import '@egjs/flicking-plugins/dist/pagination.css'
 import PluginWorkItem from './PluginWorkItem.vue'
+import useDispatchInfo from '@/views/Dispatch/store'
+import { useAlertModal } from '@/components/store/AlertModalStore'
+
+const modal = useAlertModal()
+const dispatchStore = useDispatchInfo()
 
 const plugins = [new Pagination({ type: 'bullet' })]
 const works = reactive([
@@ -80,7 +85,7 @@ const works = reactive([
   <div class="w-full h-56 pt-3">
     <div class="text-center mb-3.5 text-[15px] text-success">插件工作</div>
     <Flicking :options="{ circular: true, align: 'center' }" :plugins="plugins" class="h-44">
-      <div v-for="item in works" :key="item.id">
+      <div v-for="item in dispatchStore.plugin" :key="item.id">
         <PluginWorkItem :no="item.no" :date="item.date" :time="item.time" :address="item.address" />
       </div>
       <template #viewport>

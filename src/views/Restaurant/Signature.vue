@@ -68,6 +68,7 @@ const handleFinish = () => {
             ...route.query,
           },
         })
+        store.$reset()
       })
     }
     store.postStoreFinish(currentRestaurant.id, sign, cb)
@@ -89,7 +90,6 @@ const handleFinish = () => {
         :restaurant="currentRestaurant"
       />
       <SignatureComponent title="司機簽名" />
-
       <Button
         :disabled="store.isPreviewMode"
         :onClick="handleFinish"

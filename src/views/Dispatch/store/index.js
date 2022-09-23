@@ -21,6 +21,7 @@ const useDispatchInfo = defineStore('dispatch', {
     showUnableDeliverMenu: false,
     showDelayMenu: false,
     unableDeliverID: null,
+    plugin: null,
   }),
   actions: {
     updateCurrentRestaurantStatus(restaurant) {
@@ -92,6 +93,27 @@ const useDispatchInfo = defineStore('dispatch', {
           title: '錯誤',
           content: err.message,
         })
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async getPluginAction(car_id, container_id) {
+      const accountStore = useAccountInfo()
+      this.isLoading = true
+      try {
+        const response = await DispatchApiCaller.getPlugin(
+          accountStore.account.id,
+          accountStore.account.fleet_id,
+          car_id,
+          container_id,
+        )
+        if (response.status === 'success') {
+          this.plugin = response.data
+          this.status = response.status
+        }
+      } catch (err) {
+        this.status = err.status
+        this.message = err.message
       } finally {
         this.isLoading = false
       }

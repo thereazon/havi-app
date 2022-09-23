@@ -6,6 +6,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { showPreCoolChecked, DispatchStatusType } from '@/views/Dispatch/helper'
 import { useAlertModal } from '@/components/store/AlertModalStore'
 import ContainerOnloadCard from '@/components/ContainerOnloadRecord/ContainerOnloadCard.vue'
+import PluginCarousel from '@/components/PluginCarousel.vue'
 
 const modal = useAlertModal()
 const dispatchStore = useDispatchInfo()
@@ -21,6 +22,7 @@ onMounted(() => {
     router.push({ path: '/cars' })
   }
   dispatchStore.getDispatchAction(car_id, container_id)
+  dispatchStore.getPluginAction(car_id, container_id)
 })
 
 const currentDispatch = computed(() =>
@@ -112,9 +114,9 @@ const handleToRestaurantList = async (dispatch) => {
       </template>
     </NavBar>
     <!-- 插件工作塊 -->
-    <!-- <div class="py-2 w-full h-40"> -->
-    <!-- <p class="text-center text-success m-0">插件工作</p> -->
-    <!-- </div> -->
+    <div class="py-2 w-full">
+      <PluginCarousel v-if="dispatchStore.plugin" />
+    </div>
 
     <!-- 本日工作塊 -->
     <div class="px-[26px]">
@@ -127,31 +129,31 @@ const handleToRestaurantList = async (dispatch) => {
       >
         <div class="flex justify-around w-100 bg-white p-4">
           <Button
-            size="mini"
+            size="small"
             round
             plain
             type="primary"
             :icon="showPreCoolChecked(dispatch.status) ? 'checked' : ''"
             icon-position="right"
             @click="handleToPreCool(dispatch)"
-            class="border-2 border-solid border-primary text-primary px-3 py-1"
+            class="text-[16px] border-2 border-solid border-primary text-primary px-3 py-1"
           >
             預冷溫度
           </Button>
           <Button
-            size="mini"
+            size="small"
             round
             :disabled="!showPreCoolChecked(dispatch.status)"
             @click="handleToPallet(dispatch)"
-            class="border-2 border-solid border-emerald-500 bg-emerald-500 text-white px-3 py-1"
+            class="text-[16px] border-2 border-solid border-emerald-500 bg-emerald-500 text-white px-3 py-1"
           >
             容器裝車紀錄
           </Button>
           <Button
-            size="mini"
+            size="small"
             round
             :disabled="!showPreCoolChecked(dispatch.status) && !dispatch.is_loading"
-            class="border-2 border-solid border-primary bg-primary text-white px-3 py-1"
+            class="border-2 text-[16px] border-solid border-primary bg-primary text-white px-3 py-1"
             @click="handleToRestaurantList(dispatch)"
           >
             餐廳明細

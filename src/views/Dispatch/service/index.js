@@ -13,6 +13,19 @@ const getDispatch = async (id, fleet_id, car_id, container_id) => {
     .then((res) => res.data)
     .catch((err) => Promise.reject(err.response.data))
 }
+const getPlugin = async (id, fleet_id, car_id, container_id) => {
+  return await axios
+    .get(`/api/plugin`, {
+      params: {
+        id, // 司機id
+        fleet_id, //車隊ID
+        car_id, //車號ID
+        container_id, //櫃號ID
+      },
+    })
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
+}
 
 const getRestaurantDetail = async (id) => {
   return await axios
@@ -77,6 +90,7 @@ const ApiCaller = {
   postDelayed,
   postBring,
   postArrival,
+  getPlugin,
 }
 
 export default ApiCaller

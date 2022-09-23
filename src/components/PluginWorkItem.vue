@@ -9,10 +9,11 @@ defineProps({
 </script>
 
 <template>
-  <div class="border-solid border-success border-2 rounded-2xl h-[139px] w-[308px] mx-1">
+  <div class="border-solid border-success border-2 rounded-2xl w-[308px] mx-1">
     <div class="bottom-dashed flex py-2 px-4 justify-between">
-      <div class="flex justify-center items-center space-x-2 text-success text-[13px]">
+      <div class="text-success text-[13px] text-center">
         <label>單號</label>
+        <br />
         <span>{{ no }}</span>
       </div>
       <Button class="px-[20px] text-[15px]" color="#6dbe5b" size="small">開始配送</Button>
@@ -26,7 +27,7 @@ defineProps({
         <img class="w-[18px]" src="/dispatching_clock.png" alt="" />
         <div class="w-[43px] text-[12px] text-center text-gray bg-[#f2f2f2] p-1">{{ time }}</div>
       </div>
-      <a class="text-[13px] text-success" href="">
+      <a class="text-[13px] text-success">
         詳細資訊
         <Icon name="play" />
       </a>
@@ -35,7 +36,7 @@ defineProps({
       <img class="w-[28px]" src="/dispatching_map_2.png" alt="" />
       <div class="w-[233px] text-[12px] text-success font-bold bg-[#f2f2f2] py-1 px-2">
         {{ address }}
-        <a class="float-right text-success font-bold" href="">...</a>
+        <a class="float-right text-success font-bold">...</a>
       </div>
     </div>
   </div>
