@@ -574,6 +574,7 @@ const useRestaurant = defineStore('restaurant', {
             type: 'success',
             title: '成功',
             content: response.message,
+            callback: cb,
           })
         } else {
           modal.open({

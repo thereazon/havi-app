@@ -11,14 +11,21 @@ import SignatureComponent from '@/components/SignatureComponent.vue'
 import { useAlertModal } from '@/components/store/AlertModalStore'
 const modal = useAlertModal()
 const store = useRestaurant()
-const { dispatch, currentRestaurant } = useDispatchInfo()
+const { dispatch, currentRestaurant, setCurrentRestaurant } = useDispatchInfo()
 const router = useRouter()
 const route = useRoute()
 
 onMounted(() => {
-  if (!dispatch || !currentRestaurant) {
+  if (!dispatch) {
     router.push({
       path: '/dispatch',
+      query: {
+        ...route.query,
+      },
+    })
+  } else if (!currentRestaurant) {
+    router.push({
+      path: '/restaurantlist',
       query: {
         ...route.query,
       },
@@ -52,7 +59,16 @@ const handleFinish = () => {
       content: '司機簽名不可為空',
     })
   } else {
-    store.postStoreFinish(currentRestaurant.id, sign)
+    const cb = () => {
+      setCurrentRestaurant(null)
+      router.push({
+        path: '/restaurantlist',
+        query: {
+          ...route.query,
+        },
+      })
+    }
+    store.postStoreFinish(currentRestaurant.id, sign, cb)
   }
 }
 </script>
@@ -65,7 +81,7 @@ const handleFinish = () => {
     </NavBar>
     <div class="px-[26px] bg-[#F2F8FB] pt-20">
       <RestaurantSignInCard
-        v-if="dispatch"
+        v-if="dispatch && currentRestaurant"
         :departure_time="dispatch.departure_time"
         :no="dispatch.no"
         :restaurant="currentRestaurant"
