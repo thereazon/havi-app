@@ -141,18 +141,18 @@ export const RestaurantStatusType = {
 export const RestaurantStatusNumberToType = {
   0: RestaurantStatusType.PENDING_DELIVERY,
   1: RestaurantStatusType.DELIVERING, ///配送中(1)
-  2: RestaurantStatusType.ARRIVAL, //已抵達(2)
-  3: RestaurantStatusType.TEMP_CONFIRMATION, //  攜回配銷中心(3)
-  4: RestaurantStatusType.DELIVERY_COMPLETED, //配送完成(4)
-  11: RestaurantStatusType.DELAY, //延後配送(11)
-  10: RestaurantStatusType.UNABLE_DELIVERY, //無法配送(12)
+  2: RestaurantStatusType.ARRIVAL, //配送中(1)
+  3: RestaurantStatusType.TEMP_CONFIRMATION, //  攜回配銷中心(12)
+  4: RestaurantStatusType.DELIVERY_COMPLETED, // 配送完成(4)
+  11: RestaurantStatusType.DELAY, //延後配送(10)
+  10: RestaurantStatusType.UNABLE_DELIVERY, //無法配送(10)
 }
 
 export const RestaurantTab = {
   DELIVERING: RestaurantStatusType.DELIVERING, // //配送中(1) 已抵達(2)
-  PENDING_DELIVERY: RestaurantStatusType.PENDING_DELIVERY, ////待配送(0) 延後配送(11)
-  DELIVERY_COMPLETED: RestaurantStatusType.DELIVERY_COMPLETED, ////配送完成(4) 攜回配銷中心(3)
-  UNABLE_DELIVERY: RestaurantStatusType.UNABLE_DELIVERY, //無法配送(12)
+  PENDING_DELIVERY: RestaurantStatusType.PENDING_DELIVERY, //待配送(0) 延後配送(11)
+  DELIVERY_COMPLETED: RestaurantStatusType.DELIVERY_COMPLETED, ////配送完成(4)
+  UNABLE_DELIVERY: RestaurantStatusType.UNABLE_DELIVERY, //無法配送(12) 攜回配銷中心(3)
 }
 
 export const RestaurantStatusBackgroundColor = {

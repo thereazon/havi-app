@@ -16,7 +16,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col items-stretch bg-primary bg-opacity-[0.05] px-[40px]">
+  <div class="flex flex-col items-stretch bg-primary bg-opacity-[0.05] px-[40px] min-h-screen">
     <div class="flex items-center mb-[60px] mt-[50px]">
       <div class="mr-[35px]">
         <img src="/login_car.png" alt="icon" />

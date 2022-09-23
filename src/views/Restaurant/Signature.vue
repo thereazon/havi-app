@@ -6,9 +6,10 @@ import useDispatchInfo from '@/views/Dispatch/store'
 import useRestaurant from '@/views/Restaurant/store'
 import RestaurantSignInCard from '@/components/RestaurantSignInCard.vue'
 import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
-import { getCanvasToImage } from '@/utils/canvas'
+import { getCanvasToImage, isCanvasEmpty } from '@/utils/canvas'
 import SignatureComponent from '@/components/SignatureComponent.vue'
-
+import { useAlertModal } from '@/components/store/AlertModalStore'
+const modal = useAlertModal()
 const store = useRestaurant()
 const { dispatch, currentRestaurant } = useDispatchInfo()
 const router = useRouter()
@@ -43,7 +44,16 @@ const onClickRight = () => {
 const handleFinish = () => {
   const canvas = document.getElementById('canvas')
   const sign = getCanvasToImage(canvas)
-  store.postStoreFinish(currentRestaurant.id, sign)
+
+  if (isCanvasEmpty(canvas)) {
+    modal.open({
+      type: 'error',
+      title: '錯誤',
+      content: '司機簽名不可為空',
+    })
+  } else {
+    store.postStoreFinish(currentRestaurant.id, sign)
+  }
 }
 </script>
 
