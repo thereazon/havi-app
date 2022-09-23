@@ -19,6 +19,10 @@ html {
     z-index: 999;
 }
 
+.van-dialog__header {
+    color: #086eb6 !important;
+}
+
 
 .havi-input:disabled {
     background-color:#f2f2f2 !important;

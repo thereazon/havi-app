@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { Collapse, CollapseItem, Button, NavBar, Switch, Field } from 'vant'
+import { Collapse, CollapseItem, Button, NavBar, Switch, Field, Dialog } from 'vant'
 import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
 import useRestaurant from '@/views/Restaurant/store'
 import { useRouter, useRoute } from 'vue-router'
@@ -57,6 +57,10 @@ const handleUpdateDetail = () => {
     restaurantStore.postReturnDetailAction(currentReturned.items.id, data, onClickLeft)
   }
 }
+
+const showDialog = () => {
+  Dialog({ message: currentReturned.mrms, showConfirmButton: false, closeOnClickOverlay: true, title: 'MRMS' })
+}
 </script>
 
 <template>
@@ -100,8 +104,17 @@ const handleUpdateDetail = () => {
                     </div>
                   </div>
                   <div class="flex-1">
-                    <div class="text-primary font-bold">
-                      {{ currentReturned.name }}
+                    <div class="flex justify-between w-full">
+                      <div class="text-primary font-bold">
+                        {{ currentReturned.name }}
+                      </div>
+                      <Button
+                        v-if="currentReturned.mrms"
+                        :onClick="showDialog"
+                        type="primary"
+                        class="rounded-full w-[65px] h-[25px]"
+                        >MRMS</Button
+                      >
                     </div>
                     <div class="text-gray text-[12px]">{{ currentReturned.return_no }}</div>
                     <div class="flex justify-between text-[12px] pr-5">
