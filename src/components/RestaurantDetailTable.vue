@@ -8,6 +8,7 @@ defineProps({
   time: String,
   kg: String,
   backgroundColor: String,
+  isDC: Boolean,
   dispatch: Object,
   restaurant: Object,
   handleRouteToDetail: Function,
@@ -27,7 +28,7 @@ defineProps({
       <Button
         size="mini"
         icon="./images/unable_delivery/bring_back.png"
-        v-if="handleOpenUnableDeliverMenu"
+        v-if="handleOpenUnableDeliverMenu && !isDC"
         :onClick="() => handleOpenUnableDeliverMenu('UNABLE')"
         class="bg-warning text-white rounded-full px-[43px] border-none"
       >
@@ -66,13 +67,17 @@ defineProps({
       <div class="flex justify-center mt-[10px] font-bold">
         <Button
           icon="./images/unable_delivery/delay.png"
-          v-if="handleOpenUnableDeliverMenu"
+          v-if="handleOpenUnableDeliverMenu && !isDC"
           :onClick="() => handleOpenUnableDeliverMenu('DELAY')"
           class="bg-primary text-white rounded-full px-[43px]"
         >
           延後配送</Button
         >
-        <Button v-else :onClick="handleRouteToDetail" class="bg-primary text-white rounded-full px-[43px]">
+        <Button
+          v-if="!isDC && !handleOpenUnableDeliverMenu"
+          :onClick="handleRouteToDetail"
+          class="bg-primary text-white rounded-full px-[43px]"
+        >
           作業明細</Button
         >
       </div>

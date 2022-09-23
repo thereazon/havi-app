@@ -7,8 +7,11 @@ import RestaurantDetailTable from '@/components/RestaurantDetailTable.vue'
 const dispatchStore = useDispatchInfo()
 const { dispatch, openUnableDeliverMenu } = dispatchStore
 const restaurtants = computed(() => {
+  const TEMP_CONFIRMATION = dispatchStore.restaurant?.TEMP_CONFIRMATION
+    ? dispatchStore.restaurant.TEMP_CONFIRMATION
+    : []
   const unableDelivery = dispatchStore.restaurant?.UNABLE_DELIVERY ? dispatchStore.restaurant.UNABLE_DELIVERY : []
-  return unableDelivery
+  return [...TEMP_CONFIRMATION, ...unableDelivery]
 })
 
 const handleOpenUnableDeliverMenu = (id) => (type) => openUnableDeliverMenu(id, type)
@@ -23,6 +26,7 @@ const handleOpenUnableDeliverMenu = (id) => (type) => openUnableDeliverMenu(id, 
       :dispatch="dispatch"
       :restaurant="item"
       :handleOpenUnableDeliverMenu="handleOpenUnableDeliverMenu(item.id)"
+      :isDC="item.status === 12"
       :backgroundColor="RestaurantStatusBackgroundColor.UNABLE_DELIVERY"
     />
   </div>

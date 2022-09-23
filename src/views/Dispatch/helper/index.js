@@ -142,7 +142,7 @@ export const RestaurantStatusNumberToType = {
   0: RestaurantStatusType.PENDING_DELIVERY,
   1: RestaurantStatusType.DELIVERING, ///配送中(1)
   2: RestaurantStatusType.ARRIVAL, //配送中(1)
-  3: RestaurantStatusType.TEMP_CONFIRMATION, //  攜回配銷中心(12)
+  12: RestaurantStatusType.TEMP_CONFIRMATION, //  攜回配銷中心(12)
   4: RestaurantStatusType.DELIVERY_COMPLETED, // 配送完成(4)
   11: RestaurantStatusType.DELAY, //延後配送(10)
   10: RestaurantStatusType.UNABLE_DELIVERY, //無法配送(10)
@@ -167,7 +167,7 @@ export const RestaurantStatusTypeToZh = {
   ARRIVAL: '已抵達',
   PENDING_DELIVERY: '待配送',
   DELIVERY_COMPLETED: '配送完成',
-  TEMP_CONFIRMATION: '攜回配銷中心',
+  TEMP_CONFIRMATION: '攜回DC',
   DELAY: '延後配送',
   UNABLE_DELIVERY: '無法配送',
 }
