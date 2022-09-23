@@ -21,6 +21,7 @@ const modal = useAlertModal()
 const { dispatch, currentRestaurant } = useDispatchInfo()
 const restaurantStore = useRestaurant()
 const { isPreviewMode } = restaurantStore
+const loading = ref(false)
 const router = useRouter()
 const route = useRoute()
 const between = (x, min, max) => x >= min && x <= max
@@ -205,9 +206,11 @@ const cleanTempImage = () => {
 const isTempInvalid = ref(false)
 
 const postTemperatureData = async () => {
+  loading.value = true
+  toggleShowLockTempConfirm()
   const cb = () => (isLockedTempAndFinishedPhoto.value = true)
   await restaurantStore.postLockTemperature(currentRestaurant.id, cb).then(() => {
-    toggleShowLockTempConfirm()
+    loading.value = false
   })
 }
 
@@ -432,6 +435,8 @@ const coldTemp = computed(() => {
           <Button
             class="rounded-full h-[36px] w-[134px]"
             type="danger"
+            :loading="loading"
+            loading-text="傳送中"
             @click="handleLockTemp"
             :disabled="isLockedTempAndFinishedPhoto || isLocked || isPreviewMode"
             >鎖定溫度</Button

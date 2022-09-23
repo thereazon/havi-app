@@ -54,7 +54,6 @@ const deleteReason = (id) => () => (exRegistration.value = exRegistration.value.
 
 const confirm = () => {
   readyToPush.value = true
-
   const cb = () =>
     router.push({
       path: '/restaurant/delivery',

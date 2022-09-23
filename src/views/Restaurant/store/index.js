@@ -364,7 +364,7 @@ const useRestaurant = defineStore('restaurant', {
         this.isLoading = false
       }
     },
-    async postExceptionAction(itemId, exceptionList, type) {
+    async postExceptionAction(itemId, exceptionList, type, cb) {
       const modal = useAlertModal()
 
       const formData = new FormData()
@@ -387,8 +387,12 @@ const useRestaurant = defineStore('restaurant', {
       try {
         const response = await ApiCaller.postException(itemId, formData, 1)
         if (response.status === 'success') {
-          this.status = response.status
-          this.message = response.message
+          modal.open({
+            type: 'success',
+            title: '成功',
+            content: '儲存成功',
+            callback: cb,
+          })
         }
       } catch (err) {
         modal.open({
