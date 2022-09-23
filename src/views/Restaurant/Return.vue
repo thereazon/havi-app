@@ -51,7 +51,7 @@ const onClickRight = () => {
     <div class="px-[26px] pt-20">
       <RestaurantInfoCard
         v-if="dispatch"
-        :temp_zone="dispatch.temp_zone"
+        :temp_zone="currentRestaurant.temp_zone"
         :no="dispatch.no"
         :restaurant="currentRestaurant"
       />
