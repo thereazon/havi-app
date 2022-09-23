@@ -84,7 +84,7 @@ const useDispatchInfo = defineStore('dispatch', {
             lock_temp_type: LockTempNumberToType[response.data.lock_temp_type],
           }
           this.status = response.status
-          cb()
+          cb(response.data)
         }
       } catch (err) {
         modal.open({

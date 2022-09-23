@@ -51,14 +51,22 @@ watch(
 
 const handleRouteToDetail = (currentRestaurant) => {
   restaurantStore.setPreviewMode(false)
-  getRestaurantDetailAction(currentRestaurant.id, () =>
-    router.push({
-      path: '/restaurant/temperature',
-      query: {
-        ...route.query,
-      },
-    }),
-  )
+  getRestaurantDetailAction(currentRestaurant.id, (res) => {
+    if (res.status === 0) {
+      modal.open({
+        type: 'error',
+        title: '錯誤',
+        content: '抵達餐廳後才能進行作業',
+      })
+    } else {
+      return router.push({
+        path: '/restaurant/temperature',
+        query: {
+          ...route.query,
+        },
+      })
+    }
+  })
 }
 
 const handlePreview = (currentRestaurant) => {
