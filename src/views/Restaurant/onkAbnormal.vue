@@ -197,16 +197,11 @@ const formatter = (value) => value.replace(/[^\w./]/gi, '')
           <div class="mt-6 mb-3 font-bold text-[13px]">異常數量</div>
           <div class="grid grid-cols-6 w-full mb-2 items-center">
             <div class="text-[15px] col-span-1">單位</div>
-            <input v-model="exReason.qty" type="text" class="border py-2 bg-[#fffcf6] border-dashed col-span-4" />
+            <Field v-model="exReason.qty" type="digit" class="havi-input col-span-4" />
           </div>
           <div class="grid grid-cols-6 w-full items-center mb-2">
             <div class="text-[15px] col-span-1" :class="{ 'text-[#bbb]': !noset }">內包</div>
-            <input
-              v-model="exReason.set_qty"
-              :disabled="!noset"
-              type="text"
-              class="border py-2 bg-[#fffcf6] border-dashed col-span-4"
-            />
+            <Field v-model="exReason.set_qty" :disabled="!noset" type="digit" class="havi-input col-span-4" />
             <Switch v-model="noset" size="16px" active-color="#6dbe5b" class="mx-auto"></Switch>
           </div>
 

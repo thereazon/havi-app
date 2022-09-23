@@ -21,7 +21,7 @@ const activeNames = ref(['1'])
 
 const initReason = () => ({
   id: uuidv4(),
-  selectReason: null,
+  selectReason: 'AL6003f27223c0b',
   unit: null,
   set_qty: null,
   pcs_qty: null,
@@ -53,9 +53,16 @@ const addReason = () => {
 const deleteReason = (id) => () => (exRegistration.value = exRegistration.value.filter((v) => v.id !== id))
 
 const confirm = () => {
-  alert('hello')
   readyToPush.value = true
-  restaurantStore.postExceptionAction(currentException.uid, exRegistration.value, 1)
+
+  const cb = () =>
+    router.push({
+      path: '/restaurant/delivery',
+      query: {
+        ...route.query,
+      },
+    })
+  restaurantStore.postExceptionAction(currentException.uid, exRegistration.value, 1, cb)
 }
 
 const onClickLeft = () => {

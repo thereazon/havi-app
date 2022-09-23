@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, watch, ref, computed } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
-import { Switch, Icon, Uploader } from 'vant'
+import { Switch, Icon, Uploader, Field } from 'vant'
 import useCommonStore from '@/common/useCommonStore'
 
 const props = defineProps({
@@ -90,16 +90,11 @@ const handleUploader = (value) => {
     <div class="mt-[23px] mb-[13px]">異常數量</div>
     <div class="grid grid-cols-6 w-full mb-[9px] items-center">
       <div class="text-[15px] col-span-1">箱</div>
-      <input v-model="theReason.unit" type="text" class="py-2 bg-[#fffcf6] border-dashed col-span-4" />
+      <Field v-model="theReason.unit" type="digit" class="havi-input col-span-4" />
     </div>
     <div class="grid grid-cols-6 w-full items-center mb-[9px]">
       <div class="text-[15px] col-span-1" :class="{ 'text-[#bbb]': !toggleSet }">內包</div>
-      <input
-        v-model="theReason.set_qty"
-        :disabled="!toggleSet"
-        type="text"
-        class="py-2 bg-[#fffcf6] border-dashed col-span-4"
-      />
+      <Field v-model="theReason.set_qty" :disabled="!toggleSet" type="digit" class="havi-input col-span-4" />
       <Switch
         @update:model-value="handleToggleSet"
         :model-value="toggleSet"
@@ -110,12 +105,7 @@ const handleUploader = (value) => {
     </div>
     <div class="grid grid-cols-6 w-full items-center mb-[9px]">
       <div class="text-[15px] col-span-1" :class="{ 'text-[#bbb]': !togglePcs }">零散</div>
-      <input
-        v-model="theReason.pcs_qty"
-        :disabled="!togglePcs"
-        type="text"
-        class="py-2 bg-[#fffcf6] border-dashed col-span-4"
-      />
+      <Field v-model="theReason.pcs_qty" :disabled="!togglePcs" type="digit" class="havi-input col-span-4" />
       <Switch
         @update:model-value="handleTogglePcs"
         :model-value="togglePcs"
@@ -124,6 +114,7 @@ const handleUploader = (value) => {
         class="mx-auto"
       ></Switch>
     </div>
+    <p class="text-warning">圖片最多僅能上傳3張</p>
     <Uploader :deletable="false" multiple class="loader" :modelValue="fileList" @update:modelValue="handleUploader">
       <div class="bg-[#fffcf6] border-dashed w-full py-2" :onClick="() => console.log('hello')">
         <div class="flex justify-center gap-2">
