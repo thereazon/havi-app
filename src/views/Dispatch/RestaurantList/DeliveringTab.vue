@@ -52,18 +52,18 @@ watch(
 const handleRouteToDetail = (currentRestaurant) => {
   restaurantStore.setPreviewMode(false)
   getRestaurantDetailAction(currentRestaurant.id, (res) => {
-    if (res.status === 0) {
-      modal.open({
-        type: 'error',
-        title: '錯誤',
-        content: '抵達餐廳後才能進行作業',
-      })
-    } else {
+    if (res.status === 2) {
       return router.push({
         path: '/restaurant/temperature',
         query: {
           ...route.query,
         },
+      })
+    } else {
+      modal.open({
+        type: 'error',
+        title: '錯誤',
+        content: '抵達餐廳後才能進行作業',
       })
     }
   })
