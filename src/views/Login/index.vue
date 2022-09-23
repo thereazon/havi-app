@@ -1,5 +1,5 @@
 <script setup>
-import { Button, Form, Field, Checkbox, PasswordInput, NumberKeyboard } from 'vant'
+import { Button, Form, Field, PasswordInput, NumberKeyboard } from 'vant'
 import { ref } from 'vue'
 import { StatusType } from '@/views/Login/helper'
 import useAccountInfo from '@/views/Login/store'

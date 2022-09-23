@@ -354,6 +354,7 @@ const coldTemp = computed(() => {
             {{ Number(showLockFrozen) ? Number(showLockFrozen) : '-' }}
             °{{ currentRestaurant?.lock_degree_type.toUpperCase() }}
           </div>
+          <div v-else class="w-[42%] h-[50%] bg-[#f2f2f2] rounded-md flex justify-center items-center">-</div>
           <div
             v-if="currentRestaurant?.lock_temp_type === LockTempType.PICTURE_TEMP"
             :class="{ 'text-success': locksFrozenIsInRange, 'text-warning': !locksFrozenIsInRange }"
