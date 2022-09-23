@@ -11,7 +11,7 @@ import SignatureComponent from '@/components/SignatureComponent.vue'
 import { useAlertModal } from '@/components/store/AlertModalStore'
 const modal = useAlertModal()
 const store = useRestaurant()
-const { dispatch, currentRestaurant, setCurrentRestaurant } = useDispatchInfo()
+const { dispatch, currentRestaurant, setCurrentRestaurant, getDispatchDetailAction } = useDispatchInfo()
 const router = useRouter()
 const route = useRoute()
 
@@ -59,13 +59,15 @@ const handleFinish = () => {
       content: '司機簽名不可為空',
     })
   } else {
-    const cb = () => {
-      setCurrentRestaurant(null)
-      router.push({
-        path: '/restaurantlist',
-        query: {
-          ...route.query,
-        },
+    const cb = async () => {
+      await getDispatchDetailAction(dispatch.id).then(() => {
+        setCurrentRestaurant(null)
+        router.push({
+          path: '/restaurantlist',
+          query: {
+            ...route.query,
+          },
+        })
       })
     }
     store.postStoreFinish(currentRestaurant.id, sign, cb)
