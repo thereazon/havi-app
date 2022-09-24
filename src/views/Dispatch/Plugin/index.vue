@@ -3,7 +3,6 @@ import { onMounted, ref } from 'vue'
 import { Button, NavBar, Popup } from 'vant'
 import useDispatchInfo from '@/views/Dispatch/store'
 import SignBox from '@/components/SignBox.vue'
-import SignatureComponent2 from '@/components/SignatureComponent2.vue'
 import { useRoute, useRouter } from 'vue-router'
 const dispatchStore = useDispatchInfo()
 const { currentPlugin } = dispatchStore
@@ -44,8 +43,7 @@ const onClickLeft = () => {
 </script>
 
 <template>
-  <SignatureComponent2 v-if="clientShow" title="司機簽名" />
-  <div v-else class="bg-[#F2F8FB] min-h-screen h-full pt-[46px] pb-[78px]">
+  <div class="bg-[#F2F8FB] min-h-screen h-full pt-[46px] pb-[78px]">
     <NavBar safe-area-inset-top fixed left-arrow @click-left="onClickLeft" title="插件工作" />
     <div class="py-2 px-7 flex justify-center flex-col" v-if="currentPlugin">
       <div class="border-solid border-success border-2 rounded-2xl mx-1">

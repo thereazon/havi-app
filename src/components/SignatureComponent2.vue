@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { Button, Divider } from 'vant'
+import vueEsign from 'vue-esign'
 let esign = ref(null)
 const handleReset = () => {
   esign.value.reset()
@@ -19,7 +20,7 @@ const handleGenerate = () => {
 
 <template>
   <div class="min-h-screen w-full overflow-hidden" v-if="$vssWidth > $vssHeight">
-    <vue-esign :height="$vssHeight - 90" ref="esign" isCrop="false" :lineWidth="3" :lineColor="lineColor" />
+    <vueEsign :height="$vssHeight - 90" ref="esign" isCrop="false" :lineWidth="3" :lineColor="lineColor" />
     <div class="bottom">
       <Divider :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }"> 請手寫簽名 </Divider>
       <div class="flex justify-between">
