@@ -24,8 +24,12 @@ const useDispatchInfo = defineStore('dispatch', {
     showDelayMenu: false,
     unableDeliverID: null,
     plugin: null,
+    currentPlugin: null,
   }),
   actions: {
+    setCurrentPlugin(plugin) {
+      this.currentPlugin = plugin
+    },
     updateCurrentRestaurantStatus(restaurant) {
       this.currentRestaurant = restaurant
     },

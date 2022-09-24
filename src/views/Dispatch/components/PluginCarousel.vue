@@ -7,8 +7,10 @@ import '@egjs/flicking-plugins/dist/pagination.css'
 import PluginWorkItem from './PluginWorkItem.vue'
 import useDispatchInfo from '@/views/Dispatch/store'
 import { PluginStatusType } from '@/views/Dispatch/helper'
+import { useRoute, useRouter } from 'vue-router'
 const dispatchStore = useDispatchInfo()
-const { postPluginFinishAction, postPluginArriveAction, postPluginStartAction } = dispatchStore
+const route = useRoute()
+const router = useRouter()
 
 const plugins = [new Pagination({ type: 'bullet' })]
 const works = reactive([
@@ -84,6 +86,16 @@ const handleupdateStatus = (id, status) => () => {
   else if (status === PluginStatusType.DELIVERING) dispatchStore.postPluginArriveAction(id)
   else return
 }
+
+const handleRouterToDetail = (plugin) => () => {
+  dispatchStore.setCurrentPlugin(plugin)
+  router.push({
+    path: '/plugin',
+    query: {
+      ...route.query,
+    },
+  })
+}
 </script>
 
 <template>
@@ -93,11 +105,8 @@ const handleupdateStatus = (id, status) => () => {
       <div v-for="item in dispatchStore.plugin" :key="item.id">
         <PluginWorkItem
           :handleupdateStatus="handleupdateStatus(item.id, item.status)"
-          :no="item.no"
-          :date="item.date"
-          :time="item.time"
-          :address="item.address"
-          :status="item.status"
+          :handleRouterToDetail="handleRouterToDetail(item)"
+          :plugin="item"
         />
       </div>
       <template #viewport>

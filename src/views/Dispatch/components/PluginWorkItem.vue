@@ -2,18 +2,14 @@
 import { computed } from 'vue'
 import { Button, Icon } from 'vant'
 import { PluginStatusToButtonName, PluginStatusType } from '@/views/Dispatch/helper'
-
 const props = defineProps({
   handleupdateStatus: Function,
-  no: String,
-  date: String,
-  time: String,
-  address: String,
-  status: String,
+  handleRouterToDetail: Function,
+  plugin: Object,
 })
 
 const isSuccessColor = computed(() => {
-  return props.status === PluginStatusType.PENDING_DELIVERY
+  return props.plugin.status === PluginStatusType.PENDING_DELIVERY
 })
 </script>
 
@@ -23,7 +19,7 @@ const isSuccessColor = computed(() => {
       <div class="text-success text-[13px] text-center">
         <label>單號</label>
         <br />
-        <span>{{ no }}</span>
+        <span>{{ plugin.no }}</span>
       </div>
       <Button
         :onClick="handleupdateStatus"
@@ -31,28 +27,27 @@ const isSuccessColor = computed(() => {
         :type="isSuccessColor ? 'success' : 'danger'"
         size="small"
       >
-        {{ PluginStatusToButtonName[status] }}
+        {{ PluginStatusToButtonName[plugin.status] }}
       </Button>
     </div>
     <div class="px-4 flex justify-between mt-3">
       <div class="flex items-center space-x-1">
-        <img class="w-[18px]" src="/dispatching_calendar.png" alt="" />
-        <div class="w-[80px] text-[12px] text-center text-gray bg-[#f2f2f2] p-1">{{ date }}</div>
+        <img class="w-[18px]" src="/dispatching_calendar.png" alt="calendar" />
+        <div class="w-[80px] text-[12px] text-center text-gray bg-[#f2f2f2] p-1">{{ plugin.date }}</div>
       </div>
       <div class="flex items-center space-x-1">
-        <img class="w-[18px]" src="/dispatching_clock.png" alt="" />
-        <div class="w-[43px] text-[12px] text-center text-gray bg-[#f2f2f2] p-1">{{ time }}</div>
+        <img class="w-[18px]" src="/dispatching_clock.png" alt="clock" />
+        <div class="w-[43px] text-[12px] text-center text-gray bg-[#f2f2f2] p-1">{{ plugin.time }}</div>
       </div>
-      <a class="text-[13px] text-success">
+      <a class="text-[13px] text-success" :onClick="handleRouterToDetail">
         詳細資訊
         <Icon name="play" />
       </a>
     </div>
     <div class="flex items-center justify-between space-x-1 px-4 mt-3">
-      <img class="w-[28px]" src="/dispatching_map_2.png" alt="" />
+      <img class="w-[28px]" src="/dispatching_map_2.png" alt="map" />
       <div class="w-[233px] text-[12px] text-success font-bold bg-[#f2f2f2] py-1 px-2">
-        {{ address }}
-        <a class="float-right text-success font-bold">...</a>
+        {{ plugin.address }}
       </div>
     </div>
   </div>

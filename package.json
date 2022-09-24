@@ -20,7 +20,9 @@
     "uuid": "^8.3.2",
     "vant": "^3.4.8",
     "vue": "^3.2.31",
+    "vue-esign": "^1.1.4",
     "vue-router": "^4.0.14",
+    "vue-screen-size": "^2.0.4",
     "vue-scroll-picker": "^1.1.1"
   },
   "devDependencies": {

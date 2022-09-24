@@ -11,6 +11,7 @@ import Pallet from '@/views/Pallet/index.vue'
 import PreCool from '@/views/PreCool/index.vue'
 import Sign from '@/views/PreCool/sign.vue'
 import Setting from '@/views/Setting/index.vue'
+import Plugin from '@/views/Dispatch/Plugin/index.vue'
 import RestaurantTemperature from '@/views/Restaurant/Temperature.vue'
 import RestaurantContainer from '@/views/Restaurant/Container.vue'
 import RestaurantSignature from '@/views/Restaurant/Signature.vue'
@@ -66,6 +67,10 @@ const router = createRouter({
     {
       path: '/pallet',
       component: Pallet,
+    },
+    {
+      path: '/plugin',
+      component: Plugin,
     },
     {
       path: '/restaurantlist',

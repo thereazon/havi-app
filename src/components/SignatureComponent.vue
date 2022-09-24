@@ -16,7 +16,7 @@ onMounted(() => {
   ctx.value.strokeStyle = '#000'
 })
 const touchStart = (e) => {
-  let elem = document.querySelector('canvas')
+  let elem = document.getElementById('canvas')
   let rect = elem.getBoundingClientRect()
   let x = e.touches[0].clientX - rect.left
   let y = e.touches[0].clientY - rect.top
@@ -29,7 +29,7 @@ const touchStart = (e) => {
 }
 const touchMove = (e) => {
   if (moving.value) {
-    let elem = document.querySelector('canvas')
+    let elem = document.getElementById('canvas')
     let rect = elem.getBoundingClientRect()
     let x = e.touches[0].clientX - rect.left
     let y = e.touches[0].clientY - rect.top
