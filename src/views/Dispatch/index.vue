@@ -6,7 +6,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { showPreCoolChecked, DispatchStatusType } from '@/views/Dispatch/helper'
 import { useAlertModal } from '@/components/store/AlertModalStore'
 import ContainerOnloadCard from '@/components/ContainerOnloadRecord/ContainerOnloadCard.vue'
-import PluginCarousel from '@/components/PluginCarousel.vue'
+import PluginCarousel from './components/PluginCarousel.vue'
 
 const modal = useAlertModal()
 const dispatchStore = useDispatchInfo()
@@ -114,8 +114,8 @@ const handleToRestaurantList = async (dispatch) => {
       </template>
     </NavBar>
     <!-- 插件工作塊 -->
-    <div class="py-2 w-full">
-      <PluginCarousel v-if="dispatchStore.plugin" />
+    <div class="py-2 w-full" v-if="dispatchStore.plugin && dispatchStore.plugin.length > 0">
+      <PluginCarousel />
     </div>
 
     <!-- 本日工作塊 -->
@@ -136,7 +136,7 @@ const handleToRestaurantList = async (dispatch) => {
             :icon="showPreCoolChecked(dispatch.status) ? 'checked' : ''"
             icon-position="right"
             @click="handleToPreCool(dispatch)"
-            class="text-[16px] border-2 border-solid border-primary text-primary px-3 py-1"
+            class="text-sm border-2 border-solid border-primary text-primary px-3 py-1"
           >
             預冷溫度
           </Button>
@@ -145,7 +145,7 @@ const handleToRestaurantList = async (dispatch) => {
             round
             :disabled="!showPreCoolChecked(dispatch.status)"
             @click="handleToPallet(dispatch)"
-            class="text-[16px] border-2 border-solid border-emerald-500 bg-emerald-500 text-white px-3 py-1"
+            class="text-sm border-2 border-solid border-emerald-500 bg-emerald-500 text-white px-3 py-1"
           >
             容器裝車紀錄
           </Button>
@@ -153,7 +153,7 @@ const handleToRestaurantList = async (dispatch) => {
             size="small"
             round
             :disabled="!showPreCoolChecked(dispatch.status) && !dispatch.is_loading"
-            class="border-2 text-[16px] border-solid border-primary bg-primary text-white px-3 py-1"
+            class="border-2 text-sm border-solid border-primary bg-primary text-white px-3 py-1"
             @click="handleToRestaurantList(dispatch)"
           >
             餐廳明細

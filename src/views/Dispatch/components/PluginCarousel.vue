@@ -6,10 +6,9 @@ import '@egjs/vue3-flicking/dist/flicking.css'
 import '@egjs/flicking-plugins/dist/pagination.css'
 import PluginWorkItem from './PluginWorkItem.vue'
 import useDispatchInfo from '@/views/Dispatch/store'
-import { useAlertModal } from '@/components/store/AlertModalStore'
-
-const modal = useAlertModal()
+import { PluginStatusType } from '@/views/Dispatch/helper'
 const dispatchStore = useDispatchInfo()
+const { postPluginFinishAction, postPluginArriveAction, postPluginStartAction } = dispatchStore
 
 const plugins = [new Pagination({ type: 'bullet' })]
 const works = reactive([
@@ -79,6 +78,12 @@ const works = reactive([
     status: 0,
   },
 ])
+
+const handleupdateStatus = (id, status) => () => {
+  if (status === PluginStatusType.PENDING_DELIVERY) dispatchStore.postPluginStartAction(id)
+  else if (status === PluginStatusType.DELIVERING) dispatchStore.postPluginArriveAction(id)
+  else return
+}
 </script>
 
 <template>
@@ -86,7 +91,14 @@ const works = reactive([
     <div class="text-center mb-3.5 text-[15px] text-success">插件工作</div>
     <Flicking :options="{ circular: true, align: 'center' }" :plugins="plugins" class="h-44">
       <div v-for="item in dispatchStore.plugin" :key="item.id">
-        <PluginWorkItem :no="item.no" :date="item.date" :time="item.time" :address="item.address" />
+        <PluginWorkItem
+          :handleupdateStatus="handleupdateStatus(item.id, item.status)"
+          :no="item.no"
+          :date="item.date"
+          :time="item.time"
+          :address="item.address"
+          :status="item.status"
+        />
       </div>
       <template #viewport>
         <div class="flicking-pagination"></div>

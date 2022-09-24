@@ -237,3 +237,21 @@ export const LockTempNumberToType = {
   3: LockTempType.MISS_TEMP,
   4: LockTempType.NORMAL_TEMP,
 }
+
+export const PluginStatusType = {
+  PENDING_DELIVERY: 'PENDING_DELIVERY',
+  DELIVERING: 'DELIVERING',
+  ARRIVAL: 'ARRIVAL',
+}
+
+export const PluginNumberToType = {
+  0: PluginStatusType.PENDING_DELIVERY,
+  1: PluginStatusType.DELIVERING,
+  2: PluginStatusType.ARRIVAL,
+}
+
+export const PluginStatusToButtonName = {
+  PENDING_DELIVERY: '開始配送',
+  DELIVERING: '抵達位置',
+  ARRIVAL: '抵達位置',
+}

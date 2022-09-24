@@ -5,6 +5,8 @@ import {
   restaurantByStatus,
   LockTempNumberToType,
   DispatchStatusType,
+  PluginNumberToType,
+  PluginStatusType,
 } from '@/views/Dispatch/helper'
 import { useAlertModal } from '@/components/store/AlertModalStore'
 import useAccountInfo from '@/views/Login/store'
@@ -108,8 +110,10 @@ const useDispatchInfo = defineStore('dispatch', {
           container_id,
         )
         if (response.status === 'success') {
-          this.plugin = response.data
-          this.status = response.status
+          this.plugin = response.data.map((v) => ({
+            ...v,
+            status: PluginNumberToType[v.status],
+          }))
         }
       } catch (err) {
         this.status = err.status
@@ -225,6 +229,83 @@ const useDispatchInfo = defineStore('dispatch', {
         const response = await DispatchApiCaller.postDelayed(this.unableDeliverID, id, text)
         if (response.status === 'success') {
           await this.getDispatchDetailAction(this.dispatch.id, () => null)
+        }
+      } catch (err) {
+        modal.open({
+          type: 'error', //required
+          title: '錯誤',
+          content: err.message,
+        })
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async postPluginStartAction(id) {
+      const modal = useAlertModal()
+      try {
+        const response = await DispatchApiCaller.postPluginStart(id)
+        if (response.status === 'success') {
+          modal.open({
+            type: 'success', //required
+            title: '開始配送成功',
+          })
+          this.plugin = this.plugin.map((v) => {
+            if (v.id === id) {
+              return {
+                ...v,
+                status: PluginStatusType.DELIVERING,
+              }
+            } else return v
+          })
+        }
+      } catch (err) {
+        modal.open({
+          type: 'error', //required
+          title: '錯誤',
+          content: err.message,
+        })
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async postPluginArriveAction(id) {
+      const modal = useAlertModal()
+      try {
+        const response = await DispatchApiCaller.postPluginArrive(id)
+        if (response.status === 'success') {
+          modal.open({
+            type: 'success', //required
+            title: '已抵達',
+          })
+          this.plugin = this.plugin.map((v) => {
+            if (v.id === id) {
+              return {
+                ...v,
+                status: PluginStatusType.ARRIVAL,
+              }
+            } else return v
+          })
+        }
+      } catch (err) {
+        modal.open({
+          type: 'error', //required
+          title: '錯誤',
+          content: err.message,
+        })
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async postPluginFinishAction(id) {
+      const modal = useAlertModal()
+      try {
+        const response = await DispatchApiCaller.postPluginFinish(id)
+        if (response.status === 'success') {
+          modal.open({
+            type: 'success', //required
+            title: '開始配送完成',
+          })
+          this.plugin = this.plugin.filter((v) => v.id !== id)
         }
       } catch (err) {
         modal.open({

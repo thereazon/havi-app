@@ -1,10 +1,19 @@
 <script setup>
+import { computed } from 'vue'
 import { Button, Icon } from 'vant'
-defineProps({
+import { PluginStatusToButtonName, PluginStatusType } from '@/views/Dispatch/helper'
+
+const props = defineProps({
+  handleupdateStatus: Function,
   no: String,
   date: String,
   time: String,
   address: String,
+  status: String,
+})
+
+const isSuccessColor = computed(() => {
+  return props.status === PluginStatusType.PENDING_DELIVERY
 })
 </script>
 
@@ -16,7 +25,14 @@ defineProps({
         <br />
         <span>{{ no }}</span>
       </div>
-      <Button class="px-[20px] text-[15px]" color="#6dbe5b" size="small">開始配送</Button>
+      <Button
+        :onClick="handleupdateStatus"
+        class="px-[20px] text-[15px]"
+        :type="isSuccessColor ? 'success' : 'danger'"
+        size="small"
+      >
+        {{ PluginStatusToButtonName[status] }}
+      </Button>
     </div>
     <div class="px-4 flex justify-between mt-3">
       <div class="flex items-center space-x-1">

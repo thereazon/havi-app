@@ -26,6 +26,25 @@ const getPlugin = async (id, fleet_id, car_id, container_id) => {
     .then((res) => res.data)
     .catch((err) => Promise.reject(err.response.data))
 }
+const postPluginFinish = async (id) => {
+  return await axios
+    .post(`/api/plugin/${id}/finish`)
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
+}
+
+const postPluginArrive = async (id) => {
+  return await axios
+    .post(`/api/plugin/${id}/arrive`)
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
+}
+const postPluginStart = async (id) => {
+  return await axios
+    .post(`/api/plugin/${id}/start`)
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
+}
 
 const getRestaurantDetail = async (id) => {
   return await axios
@@ -91,6 +110,9 @@ const ApiCaller = {
   postBring,
   postArrival,
   getPlugin,
+  postPluginStart,
+  postPluginFinish,
+  postPluginArrive,
 }
 
 export default ApiCaller
