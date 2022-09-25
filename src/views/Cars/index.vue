@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { Button, Cell } from 'vant'
+import { Button, Cell, NavBar } from 'vant'
 import { useRouter } from 'vue-router'
 import useAccountInfo from '@/views/Login/store'
 import useCarsInfo from '@/views/Cars/store'
@@ -58,10 +58,15 @@ const getContainers = () => {
 onMounted(() => {
   carsStore.getCarsAction()
 })
+
+const onClickLeft = () => {
+  accountStore.handleLogout(() => router.push('/'))
+}
 </script>
 
 <template>
   <div class="bg-primary bg-opacity-[0.05] h-[100vh]">
+    <NavBar safe-area-inset-top fixed left-arrow @click-left="onClickLeft" title="請確認出車資訊" />
     <div class="flex flex-col items-stretch px-[50px]">
       <div class="mt-[75px] m-auto"><img src="/login_car.png" alt="icon" /></div>
       <div class="mt-[20px]">
