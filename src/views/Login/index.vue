@@ -3,6 +3,10 @@ import { Button, Form, Field, PasswordInput, NumberKeyboard } from 'vant'
 import { ref } from 'vue'
 import { StatusType } from '@/views/Login/helper'
 import useAccountInfo from '@/views/Login/store'
+import { useRoute, useRouter } from 'vue-router'
+
+const route = useRoute()
+const router = useRouter()
 
 const store = useAccountInfo()
 const securityCode = ref('')
@@ -11,10 +15,11 @@ const username = ref('')
 const password = ref('')
 
 const onSubmit = (values) => {
+  const cb = () => router.push('/cars')
   if (store.status === StatusType.INIT || store.status === StatusType.LOGIN_FAIL) {
-    store.handleLogin(values.Username, values.Password)
+    store.handleLogin(values.Username, values.Password, cb)
   } else if (store.status === StatusType.LOGIN_SUCCESS || store.status === StatusType.CODE_FAIL) {
-    store.handlePostSecurityCode(securityCode)
+    store.handlePostSecurityCode(securityCode.value)
   }
 }
 </script>

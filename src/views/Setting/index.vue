@@ -1,8 +1,11 @@
 <script setup>
 import { Button, NavBar } from 'vant'
 import useAccountInfo from '@/views/Login/store'
+import { useRoute, useRouter } from 'vue-router'
+const route = useRoute()
+const router = useRouter()
 
-const { account } = useAccountInfo()
+const { account, handleLogout } = useAccountInfo()
 </script>
 
 <template>
@@ -57,7 +60,16 @@ const { account } = useAccountInfo()
       </div>
 
       <div class="w-[192px] my-28">
-        <Button class="bg-[#f2f2f2]" color="#707070" loading-type="spinner" block plain round>登出</Button>
+        <Button
+          :onClick="() => handleLogout(router.push('/'))"
+          class="bg-[#f2f2f2]"
+          color="#707070"
+          loading-type="spinner"
+          block
+          plain
+          round
+          >登出</Button
+        >
       </div>
     </div>
   </div>

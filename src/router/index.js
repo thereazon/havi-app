@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import useAccountInfo from '@/views/Login/store'
 import Login from '@/views/Login/index.vue'
 import Cars from '@/views/Cars/index.vue'
 import Temperature from '@/views/Temperature/index.vue'
@@ -28,6 +29,7 @@ const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      name: 'Login',
       path: '/',
       component: Login,
     },
@@ -45,6 +47,7 @@ const router = createRouter({
           alias: '/temperature',
         },
         {
+          name: 'Dispatch',
           path: 'dispatch',
           component: Dispatch,
           alias: '/dispatch',
@@ -129,6 +132,21 @@ const router = createRouter({
       component: RestaurantOnkAbnormal,
     },
   ],
+})
+
+router.beforeEach(async (to, from) => {
+  const accountStore = useAccountInfo()
+  const isAccountStored = !!accountStore.account
+
+  if (!isAccountStored) {
+    if (to.name === 'Login') return true
+
+    return { name: 'Login' }
+  }
+
+  if (to.name === 'Login') {
+    return { name: 'Dispatch' }
+  }
 })
 
 export default router

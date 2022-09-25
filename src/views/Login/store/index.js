@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
-import { StatusType } from '@/views/Login/helper'
+import { StatusType, StorageKeys } from '@/views/Login/helper'
 import { login, postSecurityCode } from '@/views/Login/service'
-
+import { getItem, setItem, removeItem } from '@/utils/storage.js'
 const mockAccount = {
   id: 'DM605b050589e38',
   fleet: '夏暉車隊',
@@ -19,7 +19,7 @@ const mockAccount = {
 
 const useAccountInfo = defineStore('account', {
   state: () => ({
-    account: mockAccount,
+    account: getItem(StorageKeys.ACCOUNT),
     status: StatusType.INIT,
     isLoading: false,
     error: {
@@ -29,18 +29,15 @@ const useAccountInfo = defineStore('account', {
     },
   }),
   actions: {
-    async handleLogin(account, password) {
+    async handleLogin(account, password, cb) {
       this.isLoading = true
       try {
         const response = await login(account, password)
         if (response.status === 'success') {
           this.account = response.data
-          this.status = StatusType.LOGIN_SUCCESS
-          this.error = {
-            times: 0,
-            message: '',
-            seconds: 0,
-          }
+          // this.status = StatusType.LOGIN_SUCCESS
+          setItem(StorageKeys.ACCOUNT, this.account)
+          cb()
         }
       } catch (err) {
         this.status = StatusType.LOGIN_FAIL
@@ -76,6 +73,10 @@ const useAccountInfo = defineStore('account', {
       } finally {
         this.isLoading = false
       }
+    },
+    handleLogout(cb) {
+      this.account = null
+      removeItem(StorageKeys.ACCOUNT)
     },
   },
 })
