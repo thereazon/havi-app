@@ -7,6 +7,7 @@ import useDispatchInfo from '@/views/Dispatch/store'
 import useRestaurant from '@/views/Restaurant/store'
 import { RestaurantStatusTypeToZh, RestaurantStatusBackgroundColor } from '@/views/Dispatch/helper'
 import RestaurantDetailTable from '@/components/RestaurantDetailTable.vue'
+import useAccountInfo from '@/views/Login/store'
 
 defineProps({
   openConfirmDialog: Function,
@@ -19,6 +20,9 @@ const dispatchStore = useDispatchInfo()
 const restaurantStore = useRestaurant()
 const { dispatch, getRestaurantDetailAction, postArrivalAction } = dispatchStore
 
+const { handleLogout } = useAccountInfo()
+const { car_id, container_id } = route.query
+
 const currentRestaurant = computed(() => {
   const arrival = dispatchStore.restaurant?.ARRIVAL ? dispatchStore.restaurant.ARRIVAL : []
   const delivering = dispatchStore.restaurant?.DELIVERING ? dispatchStore.restaurant.DELIVERING : []
@@ -26,14 +30,22 @@ const currentRestaurant = computed(() => {
   return list[0]
 })
 
-onMounted(() => {
-  if (!currentRestaurant.value) {
-    modal.open({
-      type: 'hint', //required
-      title: '提示',
-      content: '沒有訂單需配送',
-    })
-  }
+onMounted(async () => {
+  Promise.all([
+    dispatchStore.getDispatchAction(car_id, container_id),
+    dispatchStore.getPluginAction(car_id, container_id),
+  ]).then((res) => {
+    const [dispatchs, plugins] = res
+    if (dispatchs.length === 0 && plugins.length === 0) {
+      return handleLogout(() => router.push('/'))
+    } else if (!currentRestaurant.value) {
+      modal.open({
+        type: 'hint', //required
+        title: '提示',
+        content: '沒有訂單需配送',
+      })
+    }
+  })
 })
 
 watch(

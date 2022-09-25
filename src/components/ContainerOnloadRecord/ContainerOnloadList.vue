@@ -27,3 +27,9 @@ const props = defineProps({
     </CellGroup>
   </div>
 </template>
+
+<style>
+.van-field__label {
+  width: 145px;
+}
+</style>

@@ -31,7 +31,7 @@ onMounted(() => {
       modal.open({
         type: 'hint',
         title: '提醒',
-        content: '本日工作已全部結束',
+        content: '已完成全部派工單將行强制登出',
         callback: cb,
       })
     }

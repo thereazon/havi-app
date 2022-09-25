@@ -11,7 +11,7 @@ import PendingDeliveryTab from './PendingDeliveryTab.vue'
 import DelayModal from '@/components/DelayModal.vue'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
 import { useAlertModal } from '@/components/store/AlertModalStore'
-
+import useAccountInfo from '@/views/Login/store'
 const modal = useAlertModal()
 const router = useRouter()
 const route = useRoute()
@@ -20,11 +20,13 @@ const dispatchStore = useDispatchInfo()
 const unableDeliveryId = ref(null)
 const isConfirmDialog = ref(false)
 const isConfirmDialog2 = ref(false)
-
 const openConfirmDialog = (id) => {
   isConfirmDialog.value = true
   unableDeliveryId.value = id
 }
+
+const { handleLogout } = useAccountInfo()
+const { car_id, container_id } = route.query
 
 const confirmDelay = async (data) => {
   if (data.message && data.message !== '') {
@@ -40,7 +42,23 @@ const confirmDelay = async (data) => {
 }
 const confirmUndeliverable = async (data) => {
   if (data.message && data.message !== '') {
-    await dispatchStore.postBringAction(data.id, data.message)
+    await dispatchStore.postBringAction(data.id, data.message).then(() => {
+      Promise.all([
+        dispatchStore.getDispatchAction(car_id, container_id),
+        dispatchStore.getPluginAction(car_id, container_id),
+      ]).then((res) => {
+        const [dispatchs, plugins] = res
+        if (dispatchs.length === 0 && plugins.length === 0) {
+          const cb = () => handleLogout(() => router.push('/'))
+          modal.open({
+            type: 'hint',
+            title: '提醒',
+            content: '已完成全部派工單將行强制登出',
+            callback: cb,
+          })
+        }
+      })
+    })
     dispatchStore.closeUnableDeliverMenu()
   } else {
     modal.open({

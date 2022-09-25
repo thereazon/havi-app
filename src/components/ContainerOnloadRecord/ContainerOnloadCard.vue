@@ -114,6 +114,9 @@ const restaurantInfoBtn = (info) => {
 </template>
 
 <style lang="scss" scoped>
+:deep(.van-step--vertical) {
+  padding: 2px 10px 10px 0;
+}
 :deep(.van-step__circle-container) {
   @apply text-sm;
   .van-icon-checked:before,
