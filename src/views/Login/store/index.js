@@ -77,6 +77,7 @@ const useAccountInfo = defineStore('account', {
     handleLogout(cb) {
       this.account = null
       removeItem(StorageKeys.ACCOUNT)
+      cb()
     },
   },
 })

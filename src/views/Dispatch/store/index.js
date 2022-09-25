@@ -118,6 +118,7 @@ const useDispatchInfo = defineStore('dispatch', {
             ...v,
             status: PluginNumberToType[v.status],
           }))
+          return response.data
         }
       } catch (err) {
         this.status = err.status
@@ -143,6 +144,7 @@ const useDispatchInfo = defineStore('dispatch', {
             status: DispatchStatusNumberToType[v.status],
           }))
           this.status = response.status
+          return response.data
         }
       } catch (err) {
         this.status = err.status

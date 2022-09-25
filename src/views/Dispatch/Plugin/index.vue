@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue'
 import { Button, NavBar, Popup } from 'vant'
 import useDispatchInfo from '@/views/Dispatch/store'
 import SignBox from '@/components/SignBox.vue'
+import SignatureComponent2 from '@/components/SignatureComponent2.vue'
 import { useRoute, useRouter } from 'vue-router'
 const dispatchStore = useDispatchInfo()
 const { currentPlugin } = dispatchStore
@@ -10,7 +11,7 @@ const { currentPlugin } = dispatchStore
 const route = useRoute()
 const router = useRouter()
 
-const clientShow = ref(false)
+const clientShow = ref(true)
 const driverShow = ref(false)
 
 const handleShowClientSign = () => {
@@ -44,6 +45,9 @@ const onClickLeft = () => {
 
 <template>
   <div class="bg-[#F2F8FB] min-h-screen h-full pt-[46px] pb-[78px]">
+    <!-- <Popup class="w-full" v-model:show="clientShow" teleport="body">
+      <SignatureComponent2 />
+    </Popup> -->
     <NavBar safe-area-inset-top fixed left-arrow @click-left="onClickLeft" title="插件工作" />
     <div class="py-2 px-7 flex justify-center flex-col" v-if="currentPlugin">
       <div class="border-solid border-success border-2 rounded-2xl mx-1">

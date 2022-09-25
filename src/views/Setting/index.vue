@@ -61,7 +61,7 @@ const { account, handleLogout } = useAccountInfo()
 
       <div class="w-[192px] my-28">
         <Button
-          :onClick="() => handleLogout(router.push('/'))"
+          :onClick="() => handleLogout(() => router.push('/'))"
           class="bg-[#f2f2f2]"
           color="#707070"
           loading-type="spinner"

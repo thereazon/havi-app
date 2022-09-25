@@ -19,10 +19,11 @@ const selectContainerId = ref()
 const errorMessage = ref()
 
 const comfirmDispatch = () => {
+  dispatchStore.getPluginAction(selectCarId.value, selectContainerId.value)
   dispatchStore.getDispatchAction(selectCarId.value, selectContainerId.value).then(() => {
     const car = carsStore.cars.find((v) => v.id === selectCarId.value)
     const container = carsStore.containers.find((v) => v.id === selectContainerId.value)
-    if (dispatchStore.dispatchs.length > 0) {
+    if (dispatchStore.dispatchs.length > 0 || dispatchStore.plugin.length > 0) {
       router.push({
         path: `/dispatch`,
         query: {

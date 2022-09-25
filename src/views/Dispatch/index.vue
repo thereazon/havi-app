@@ -7,22 +7,35 @@ import { showPreCoolChecked, DispatchStatusType } from '@/views/Dispatch/helper'
 import { useAlertModal } from '@/components/store/AlertModalStore'
 import ContainerOnloadCard from '@/components/ContainerOnloadRecord/ContainerOnloadCard.vue'
 import PluginCarousel from './components/PluginCarousel.vue'
-
+import useAccountInfo from '@/views/Login/store'
 const modal = useAlertModal()
 const dispatchStore = useDispatchInfo()
 const route = useRoute()
 const router = useRouter()
 
 const { car_id, container_id, container_number, car_number } = route.query
-
+const { handleLogout } = useAccountInfo()
 const isCarIdExist = () => !!car_id
 
 onMounted(() => {
   if (!isCarIdExist()) {
     router.push({ path: '/cars' })
   }
-  dispatchStore.getDispatchAction(car_id, container_id)
-  dispatchStore.getPluginAction(car_id, container_id)
+  Promise.all([
+    dispatchStore.getDispatchAction(car_id, container_id),
+    dispatchStore.getPluginAction(car_id, container_id),
+  ]).then((res) => {
+    const [dispatchs, plugins] = res
+    if (dispatchs.length === 0 && plugins.length === 0) {
+      const cb = () => handleLogout(() => router.push('/'))
+      modal.open({
+        type: 'hint',
+        title: '提醒',
+        content: '本日工作已全部結束',
+        callback: cb,
+      })
+    }
+  })
 })
 
 const currentDispatch = computed(() =>

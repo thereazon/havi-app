@@ -158,8 +158,8 @@ const onClickLeft = () => {
       </form>
     </div>
     <ActionSheet v-model:show="openActionSheet" title="體溫">
-      <div class="h-[251px] py-3 px-4">
-        <div class="flex">
+      <div class="h-[40%] pb-3 px-4">
+        <div class="sheet-wrap flex">
           <VueScrollPicker :options="integerOptions" v-model="temperature.integer" />
           <VueScrollPicker :options="decimalOptions" v-model="temperature.decimal" />
         </div>
@@ -185,5 +185,9 @@ const onClickLeft = () => {
 }
 .temperature {
   cursor: pointer;
+}
+
+.sheet-wrap {
+  font-size: 28px;
 }
 </style>
