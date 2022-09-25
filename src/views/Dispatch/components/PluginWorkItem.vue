@@ -14,7 +14,7 @@ const isSuccessColor = computed(() => {
 </script>
 
 <template>
-  <div class="border-solid border-success border-2 rounded-2xl w-[308px] mx-1">
+  <div class="border-solid border-success border-2 rounded-2xl w-[308px] mx-1 bg-white">
     <div class="bottom-dashed flex py-2 px-4 justify-between">
       <div class="text-success text-[13px] text-center">
         <label>單號</label>

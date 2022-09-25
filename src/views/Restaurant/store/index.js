@@ -377,6 +377,7 @@ const useRestaurant = defineStore('restaurant', {
           [`set_qty[${curr.id}]`]: curr.set_qty ? curr.set_qty : null,
           [`pcs_qty[${curr.id}]`]: curr.pcs_qty ? curr.pcs_qty : null,
           [`note[${curr.id}]`]: curr.note ? curr.note : null,
+          [`file[${curr.id}]`]: curr.file ? [curr.file.map((v) => v.file)] : null,
         }
       }, {})
 

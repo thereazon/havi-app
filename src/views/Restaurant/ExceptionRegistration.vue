@@ -26,7 +26,7 @@ const initReason = () => ({
   set_qty: null,
   pcs_qty: null,
   note: '',
-  file: null,
+  file: [],
 })
 
 onMounted(() => {
@@ -61,6 +61,7 @@ const confirm = () => {
         ...route.query,
       },
     })
+  console.log(exRegistration.value)
   restaurantStore.postExceptionAction(currentException.uid, exRegistration.value, 1, cb)
 }
 

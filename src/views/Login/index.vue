@@ -27,8 +27,8 @@ const onSubmit = (values) => {
 <template>
   <div class="h-[100vh] px-[16px] flex flex-col items-center justify-center bg-main">
     <div>
-      <!-- <img src="" alt="logo" /> -->
-      <h1 class="text-white">logo</h1>
+      <img width="300" class="mb-20" src="/havi_logo.png" alt="logo" />
+      <!-- <h1 class="text-white">logo</h1> -->
     </div>
     <Form @submit="onSubmit" class="w-full">
       <div>

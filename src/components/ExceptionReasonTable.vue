@@ -16,12 +16,6 @@ const emit = defineEmits(['update:reason'])
 
 const toggleSet = ref(false)
 const togglePcs = ref(false)
-const file = ref()
-const fileStructure = reactive({
-  fileName: '',
-  base64: '',
-  previewImage: null,
-})
 
 const theReason = computed({
   get: () => props.reason,
@@ -64,9 +58,9 @@ const exReason = reactive({
 const fileList = ref([])
 const handleUploader = (value) => {
   if (fileList.value.length === 0) {
-    fileList.value = value.filter((v, i) => i < 3)
+    theReason.value.file = value.filter((v, i) => i < 3)
   } else {
-    fileList.value = value.filter((v, i) => i >= fileList.value.length && i <= fileList.value.length + 2)
+    theReason.value.file = value.filter((v, i) => i >= fileList.value.length && i <= fileList.value.length + 2)
   }
 }
 </script>
@@ -115,8 +109,14 @@ const handleUploader = (value) => {
       ></Switch>
     </div>
     <p class="text-warning">圖片最多僅能上傳3張</p>
-    <Uploader :deletable="false" multiple class="loader" :modelValue="fileList" @update:modelValue="handleUploader">
-      <div class="bg-[#fffcf6] border-dashed w-full py-2" :onClick="() => console.log('hello')">
+    <Uploader
+      :deletable="false"
+      multiple
+      class="loader"
+      :modelValue="theReason.file"
+      @update:modelValue="handleUploader"
+    >
+      <div class="bg-[#fffcf6] border-dashed w-full py-2">
         <div class="flex justify-center gap-2">
           <Icon class="bg-gray rounded-full p-1" color="white" name="plus"></Icon>
           <div>選擇圖片</div>

@@ -50,7 +50,7 @@ const onClickLeft = () => {
     </Popup> -->
     <NavBar safe-area-inset-top fixed left-arrow @click-left="onClickLeft" title="插件工作" />
     <div class="py-2 px-7 flex justify-center flex-col" v-if="currentPlugin">
-      <div class="border-solid border-success border-2 rounded-2xl mx-1">
+      <div class="py-5 border-solid border-success border-2 rounded-2xl mx-1 bg-white">
         <div class="bottom-dashed py-2 px-4">
           <div class="text-success text-[13px]">
             <label class="mr-2">單號</label>
@@ -80,7 +80,7 @@ const onClickLeft = () => {
           </div>
         </div>
       </div>
-      <div class="border-solid p-2 mt-3 border-success border-2 rounded-2xl mx-1">
+      <div class="bg-white border-solid p-2 mt-3 border-success border-2 rounded-2xl mx-1">
         <div class="text-success text-center">工作說明</div>
         {{ currentPlugin.note }}
       </div>

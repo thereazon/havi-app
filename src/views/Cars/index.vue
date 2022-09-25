@@ -14,8 +14,8 @@ const carsStore = useCarsInfo()
 const dispatchStore = useDispatchInfo()
 const containersStore = useContainersInfo()
 
-const selectCarId = ref()
-const selectContainerId = ref()
+const selectCarId = ref(accountStore.account.car_id)
+const selectContainerId = ref(accountStore.account.container_id)
 const errorMessage = ref()
 
 const comfirmDispatch = () => {
