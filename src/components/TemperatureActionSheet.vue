@@ -25,8 +25,8 @@ const isShow = computed({
 </script>
 <template>
   <ActionSheet v-model:show="isShow" :title="props.title">
-    <div class="h-[251px] py-3 px-4">
-      <div class="flex">
+    <div class="h-[40%] py-3 px-4">
+      <div class="scroll-wrap flex">
         <VueScrollPicker :options="signOptions" v-model="temperature.sign" />
         <VueScrollPicker :options="integerOptions" v-model="temperature.integer" />
         <VueScrollPicker :options="decimalOptions" v-model="temperature.decimal" />
@@ -35,8 +35,9 @@ const isShow = computed({
     </div>
   </ActionSheet>
 </template>
-<style src="vue-scroll-picker/lib/style.css">
-.flex {
-  transform: scale(1.2);
+
+<style scoped lang="scss">
+.scroll-wrap {
+  font-size: 26px;
 }
 </style>
