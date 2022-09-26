@@ -60,6 +60,13 @@ const tabList = [
   { value: 'F', title: '冷凍', bg: '#044d80', color: '#fff' },
 ]
 
+const ctnHash = {
+  all: 'ctn',
+  F: 'f_ctn',
+  C: 'c_ctn',
+  D: 'd_ctn',
+}
+
 const rejectTypeList = [
   { code: 'F1', reason: '溫度品質拒收' },
   { code: 'F2', reason: '餐廳空間不足付費拒收' },
@@ -145,7 +152,7 @@ watch(
 
 watch(
   () => filterDeliveryItems.value,
-  (newVal, oldVal) => {
+  (newVal, _) => {
     if (newVal.length === 0) {
       modal.open({
         type: 'hint', //required
@@ -246,7 +253,7 @@ const handleRestore = () => {
           </div>
           <div class="flex items-center">
             <img src="/dispatching_box.png" class="w-4 h-4 mr-2" alt="" />
-            <div class="bg-[#f2f2f2] w-20 h-5 pl-2 flex items-center">{{ currentDelivery.ctn }}</div>
+            <div class="bg-[#f2f2f2] w-20 h-5 pl-2 flex items-center">{{ currentDelivery[ctnHash[tabActive]] }}</div>
           </div>
         </div>
       </div>
