@@ -1,10 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { Button, NavBar, Popup } from 'vant'
+import { Button, NavBar } from 'vant'
 import useDispatchInfo from '@/views/Dispatch/store'
-import SignBox from '@/components/SignBox.vue'
-import SignatureComponent from '@/components/SignatureComponent.vue'
-import SignatureComponent3 from '@/components/SignatureComponent3.vue'
 import { useRoute, useRouter } from 'vue-router'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
 import { useAlertModal } from '@/components/store/AlertModalStore'
@@ -16,15 +13,15 @@ const modal = useAlertModal()
 const route = useRoute()
 const router = useRouter()
 const isConfirmDialog = ref(false)
-const clientShow = ref(true)
-const driverShow = ref(false)
 
-const handleShowClientSign = () => {
-  clientShow.value = true
+let driverEsign = ref(null)
+let clientEsign = ref(null)
+
+const handleResetDriverSign = () => {
+  driverEsign.value.reset()
 }
-
-const handleShowDriverSign = () => {
-  driverShow.value = true
+const handleResetClientSign = () => {
+  clientEsign.value.reset()
 }
 
 onMounted(() => {
@@ -38,10 +35,10 @@ onMounted(() => {
   }
 })
 
-const confirmUpdate = () => {
-  const clientCanvas = document.getElementById('canvas')
-  const driverCanvas = document.getElementById('canvas2')
-  if (isCanvasEmpty(driverCanvas)) {
+const confirmUpdate = async () => {
+  const clientSign = await clientEsign.value.generate()
+  const driverSign = await driverEsign.value.generate()
+  if (!driverSign) {
     modal.open({
       type: 'hint',
       title: '提醒',
@@ -49,8 +46,8 @@ const confirmUpdate = () => {
     })
   } else {
     const data = {
-      customer_photo: getCanvasToImage(clientCanvas),
-      driver_photo: getCanvasToImage(driverCanvas),
+      customer_photo: clientSign,
+      driver_photo: driverSign,
     }
     dispatchStore.postPluginFinishAction(currentPlugin.id, data, () =>
       router.push({
@@ -79,9 +76,6 @@ const openDialog = () => {
 
 <template>
   <div class="bg-[#F2F8FB] min-h-screen h-full pt-[46px] pb-[78px]">
-    <!-- <Popup class="w-full" v-model:show="clientShow" teleport="body">
-      <SignatureComponent2 />
-    </Popup> -->
     <ConfirmDialog v-model:isShowDialog="isConfirmDialog" :isCloseOnClickOverlay="true">
       <template v-slot:title>
         <div>請確認是否完成？</div>
@@ -130,10 +124,37 @@ const openDialog = () => {
         {{ currentPlugin.note }}
       </div>
 
-      <!-- <SignBox title="客戶簽名" :handleShowModal="handleShowClientSign" />
-      <SignBox title="司機簽名" :handleShowModal="handleShowDriverSign" /> -->
-      <SignatureComponent title="客戶簽名" />
-      <SignatureComponent3 title="司機簽名" />
+      <div class="w-full">
+        <div class="mt-8 mb-[5px] text-[#959595] flex items-center justify-between relative">
+          <div class="text-center text-[0.8125rem] font-bold invisible">司機簽名</div>
+          <div class="text-center text-[0.8125rem] font-bold">客戶簽名</div>
+          <div
+            class="w-[16%] text-center text-[#eb5e55] text-[0.75rem] border border-solid border-[#eb5e55] rounded-full"
+            :onClick="handleResetClientSign"
+          >
+            清除
+          </div>
+        </div>
+        <div class="divide w-full h-[280px] border-1 border-solid border-transparent">
+          <vueEsign ref="esign" height="600" :lineWidth="3" :lineColor="lineColor" />
+        </div>
+      </div>
+      <div class="w-full">
+        <div class="mt-8 mb-[5px] text-[#959595] flex items-center justify-between relative">
+          <div class="text-center text-[0.8125rem] font-bold invisible">司機簽名</div>
+          <div class="text-center text-[0.8125rem] font-bold">司機簽名</div>
+          <div
+            class="w-[16%] text-center text-[#eb5e55] text-[0.75rem] border border-solid border-[#eb5e55] rounded-full"
+            :onClick="handleResetDriverSign"
+          >
+            清除
+          </div>
+        </div>
+
+        <div class="divide w-full h-[280px] border-1 border-solid border-transparent">
+          <vueEsign ref="driverSign" height="600" :lineWidth="3" :lineColor="lineColor" />
+        </div>
+      </div>
       <Button
         v-if="currentPlugin.status === 'ARRIVAL'"
         :onClick="openDialog"

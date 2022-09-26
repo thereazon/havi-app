@@ -6,8 +6,6 @@ import useDispatchInfo from '@/views/Dispatch/store'
 import useRestaurant from '@/views/Restaurant/store'
 import RestaurantSignInCard from '@/components/RestaurantSignInCard.vue'
 import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
-import { getCanvasToImage, isCanvasEmpty } from '@/utils/canvas'
-import SignatureComponent from '@/components/SignatureComponent.vue'
 import { useAlertModal } from '@/components/store/AlertModalStore'
 import vueEsign from 'vue-esign'
 const modal = useAlertModal()
