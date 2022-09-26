@@ -34,3 +34,9 @@ button:disabled {
     border: 1px solid #707070 !important; 
     color: #fff !important;
   }
+
+
+  .divide2 {
+    background: linear-gradient(#fffcf6, #fffcf6) padding-box,
+      repeating-linear-gradient(-45deg, #707070 0, #707070 0.6rem, #fffcf6 0, #fffcf6 1rem);
+  }  

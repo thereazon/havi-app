@@ -9,6 +9,7 @@ import RestaurantMenuPopup from './components/RestaurantMenuPopup.vue'
 import { getCanvasToImage, isCanvasEmpty } from '@/utils/canvas'
 import SignatureComponent from '@/components/SignatureComponent.vue'
 import { useAlertModal } from '@/components/store/AlertModalStore'
+import vueEsign from 'vue-esign'
 const modal = useAlertModal()
 const store = useRestaurant()
 const { dispatch, currentRestaurant, setCurrentRestaurant, getDispatchDetailAction } = useDispatchInfo()
@@ -49,30 +50,36 @@ const onClickRight = () => {
 }
 
 const handleFinish = () => {
-  const canvas = document.getElementById('canvas')
-  const sign = getCanvasToImage(canvas)
-
-  if (isCanvasEmpty(canvas)) {
-    modal.open({
-      type: 'error',
-      title: '錯誤',
-      content: '司機簽名不可為空',
-    })
-  } else {
-    const cb = async () => {
-      await getDispatchDetailAction(dispatch.id).then(() => {
-        setCurrentRestaurant(null)
-        router.push({
-          path: '/restaurantlist',
-          query: {
-            ...route.query,
-          },
+  esign.value
+    .generate()
+    .then((sign) => {
+      const cb = async () => {
+        await getDispatchDetailAction(dispatch.id).then(() => {
+          setCurrentRestaurant(null)
+          router.push({
+            path: '/restaurantlist',
+            query: {
+              ...route.query,
+            },
+          })
+          store.$reset()
         })
-        store.$reset()
+      }
+      store.postStoreFinish(currentRestaurant.id, sign, cb)
+    })
+    .catch(() => {
+      modal.open({
+        type: 'error',
+        title: '錯誤',
+        content: '司機簽名不可為空',
       })
-    }
-    store.postStoreFinish(currentRestaurant.id, sign, cb)
-  }
+    })
+}
+
+let esign = ref(null)
+
+const handleReset = () => {
+  esign.value.reset()
 }
 </script>
 
@@ -89,7 +96,22 @@ const handleFinish = () => {
         :no="dispatch.no"
         :restaurant="currentRestaurant"
       />
-      <SignatureComponent title="司機簽名" />
+      <div class="w-full">
+        <div class="mt-8 mb-[5px] text-[#959595] flex items-center justify-between relative">
+          <div class="text-center text-[0.8125rem] font-bold invisible">司機簽名</div>
+          <div class="text-center text-[0.8125rem] font-bold">司機簽名</div>
+          <div
+            class="w-[16%] text-center text-[#eb5e55] text-[0.75rem] border border-solid border-[#eb5e55] rounded-full"
+            :onClick="handleReset"
+          >
+            清除
+          </div>
+        </div>
+
+        <div class="divide w-full h-[280px] border-1 border-solid border-transparent">
+          <vueEsign ref="esign" height="600" :lineWidth="3" :lineColor="lineColor" />
+        </div>
+      </div>
       <Button
         :disabled="store.isPreviewMode"
         :onClick="handleFinish"
@@ -101,4 +123,9 @@ const handleFinish = () => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.divide {
+  background: linear-gradient(#fffcf6, #fffcf6) padding-box,
+    repeating-linear-gradient(-45deg, #707070 0, #707070 0.6rem, #fffcf6 0, #fffcf6 1rem);
+}
+</style>
