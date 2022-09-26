@@ -1,6 +1,5 @@
 <script setup>
 import { onMounted, reactive, ref, defineProps } from 'vue'
-import vueEsign from 'vue-esign'
 
 const moving = ref(false)
 const ctx = ref(null)
@@ -13,11 +12,11 @@ const props = defineProps({
   title: String,
 })
 onMounted(() => {
-  ctx.value = document.getElementById('canvas').getContext('2d')
+  ctx.value = document.getElementById('canvas2').getContext('2d')
   ctx.value.strokeStyle = '#000'
 })
 const touchStart = (e) => {
-  let elem = document.getElementById('canvas')
+  let elem = document.getElementById('canvas2')
   let rect = elem.getBoundingClientRect()
   let x = e.touches[0].clientX - rect.left
   let y = e.touches[0].clientY - rect.top
@@ -30,7 +29,7 @@ const touchStart = (e) => {
 }
 const touchMove = (e) => {
   if (moving.value) {
-    let elem = document.getElementById('canvas')
+    let elem = document.getElementById('canvas2')
     let rect = elem.getBoundingClientRect()
     let x = e.touches[0].clientX - rect.left
     let y = e.touches[0].clientY - rect.top
@@ -48,7 +47,7 @@ const touchEnd = () => {
   }
 }
 const clearcanvas = () => {
-  let canvas = document.getElementById('canvas')
+  let canvas = document.getElementById('canvas2')
   ctx.value.setTransform(1, 0, 0, 1, 0, 0)
   ctx.value.clearRect(0, 0, canvas.width, canvas.height)
 }
@@ -66,15 +65,14 @@ const clearcanvas = () => {
       </div>
     </div>
 
-    <div class="divide w-full h-[280px] border-1 border-solid border-transparent" @touchmove.prevent>
-      <vueEsign height="600" />
-      <!-- <canvas
-        id="canvas"
+    <div class="divide w-full h-28 border-1 border-solid border-transparent" @touchmove.prevent>
+      <canvas
+        id="canvas2"
         class="w-full h-full"
         @touchstart="touchStart"
         @touchmove="touchMove"
         @touchend="touchEnd"
-      ></canvas> -->
+      ></canvas>
     </div>
   </div>
 </template>

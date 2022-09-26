@@ -26,9 +26,13 @@ const getPlugin = async (id, fleet_id, car_id, container_id) => {
     .then((res) => res.data)
     .catch((err) => Promise.reject(err.response.data))
 }
-const postPluginFinish = async (id) => {
+const postPluginFinish = async (id, data) => {
   return await axios
-    .post(`/api/plugin/${id}/finish`)
+    .post(`/api/plugin/${id}/finish`, data, {
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+    })
     .then((res) => res.data)
     .catch((err) => Promise.reject(err.response.data))
 }

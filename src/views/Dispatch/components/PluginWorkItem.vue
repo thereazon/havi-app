@@ -9,7 +9,13 @@ const props = defineProps({
 })
 
 const isSuccessColor = computed(() => {
-  return props.plugin.status === PluginStatusType.PENDING_DELIVERY
+  if (props.plugin.status === PluginStatusType.PENDING_DELIVERY) {
+    return 'success'
+  } else if (props.plugin.status === PluginStatusType.DELIVERING) {
+    return 'danger'
+  } else {
+    return 'default'
+  }
 })
 </script>
 
@@ -21,12 +27,7 @@ const isSuccessColor = computed(() => {
         <br />
         <span>{{ plugin.no }}</span>
       </div>
-      <Button
-        :onClick="handleupdateStatus"
-        class="px-[20px] text-[15px]"
-        :type="isSuccessColor ? 'success' : 'danger'"
-        size="small"
-      >
+      <Button :onClick="handleupdateStatus" class="px-[20px] text-[15px]" :type="isSuccessColor" size="small">
         {{ PluginStatusToButtonName[plugin.status] }}
       </Button>
     </div>

@@ -253,5 +253,5 @@ export const PluginNumberToType = {
 export const PluginStatusToButtonName = {
   PENDING_DELIVERY: '開始配送',
   DELIVERING: '抵達位置',
-  ARRIVAL: '抵達位置',
+  ARRIVAL: '已抵達餐廳',
 }

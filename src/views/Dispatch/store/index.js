@@ -302,16 +302,23 @@ const useDispatchInfo = defineStore('dispatch', {
         this.isLoading = false
       }
     },
-    async postPluginFinishAction(id) {
+    async postPluginFinishAction(id, data, cb) {
       const modal = useAlertModal()
+      const formData = new FormData()
+      const driver_photo = await fetch(data.driver_photo).then((r) => r.blob())
+      const customer_photo = await fetch(data.customer_photo).then((r) => r.blob())
+      formData.append('driver_photo', driver_photo)
+      if (data.customer_photo) {
+        formData.append('customer_photo', customer_photo)
+      }
       try {
-        const response = await DispatchApiCaller.postPluginFinish(id)
+        const response = await DispatchApiCaller.postPluginFinish(id, formData)
         if (response.status === 'success') {
           modal.open({
             type: 'success', //required
-            title: '開始配送完成',
+            title: '配送已完成',
+            callback: cb,
           })
-          this.plugin = this.plugin.filter((v) => v.id !== id)
         }
       } catch (err) {
         modal.open({
