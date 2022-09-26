@@ -34,9 +34,7 @@ const modal = useAlertModal()
 const checked = ref([])
 const isCelsiusTemp = ref(false)
 const currentTemp = ref(null)
-
 const isSecurityCodeDialog = ref(false)
-
 const preCoolStore = usePreCoolInfo()
 const dispatchStore = useDispatchInfo()
 
@@ -46,6 +44,11 @@ const showFreezingActionSheet = () => {
   isShowFreezing.value = true
 }
 
+let esign = ref(null)
+
+const handleReset = () => {
+  esign.value.reset()
+}
 const confirmFreezingTemperature = (data) => {
   currentTemp.value = computeTemp(data)
   isShowFreezing.value = false
@@ -88,33 +91,37 @@ const isValidTemp = computed(() => {
 })
 
 const handleSubmitCode = (code) => {
-  const canvas = document.getElementById('canvas')
-  const callBack = () => {
-    isSecurityCodeDialog.value = false
-    const data = {
-      degree_type: isCelsiusTemp.value ? 'C' : 'F',
-      checked: checked.value,
-      currentTemp: currentTemp.value,
-      signImage: getCanvasToImage(canvas),
-      isValidTemp: isValidTemp.value,
-    }
-    preCoolStore.setSignData(data)
-    router.back()
-  }
-  return preCoolStore.postSecurityCodeAction(code, callBack)
+  esign.value
+    .generate()
+    .then((sign) => {
+      const callBack = () => {
+        isSecurityCodeDialog.value = false
+        const data = {
+          degree_type: isCelsiusTemp.value ? 'C' : 'F',
+          checked: checked.value,
+          currentTemp: currentTemp.value,
+          signImage: sign,
+          isValidTemp: isValidTemp.value,
+        }
+        preCoolStore.setSignData(data)
+        router.back()
+      }
+      return preCoolStore.postSecurityCodeAction(code, callBack)
+    })
+    .catch(() => console.log('櫃檯簽名生成有誤'))
 }
 
 const handleFinished = () => {
-  const canvas = document.getElementById('canvas')
-  if (isCanvasEmpty(canvas)) {
-    modal.open({
-      type: 'error',
-      title: '錯誤',
-      content: '櫃檯簽名為必填',
+  esign.value
+    .generate()
+    .then(() => (isSecurityCodeDialog.value = true))
+    .catch(() => {
+      modal.open({
+        type: 'error',
+        title: '錯誤',
+        content: '櫃檯簽名為必填',
+      })
     })
-  } else {
-    isSecurityCodeDialog.value = true
-  }
 }
 </script>
 
@@ -191,6 +198,22 @@ const handleFinished = () => {
         </CheckboxGroup>
       </div>
       <SignatureComponent title="櫃檯簽名" />
+      <div class="w-full">
+        <div class="mt-8 mb-[5px] text-[#959595] flex items-center justify-between relative">
+          <div class="text-center text-[0.8125rem] font-bold invisible">司機簽名</div>
+          <div class="text-center text-[0.8125rem] font-bold">櫃檯簽名</div>
+          <div
+            class="w-[16%] text-center text-[#eb5e55] text-[0.75rem] border border-solid border-[#eb5e55] rounded-full"
+            :onClick="handleReset"
+          >
+            清除
+          </div>
+        </div>
+
+        <div class="divide w-full h-[280px] border-1 border-solid border-transparent">
+          <vueEsign ref="esign" height="600" :lineWidth="3" :lineColor="lineColor" />
+        </div>
+      </div>
       <Button
         class="w-full mt-7 text-white font-bold text-[1.0625rem] bg-success rounded-full"
         :disabled="isDisabled"
