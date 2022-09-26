@@ -2,20 +2,12 @@
 import { ref } from 'vue'
 import { Button, Divider } from 'vant'
 import vueEsign from 'vue-esign'
-let esign = ref(null)
-const handleReset = () => {
-  esign.value.reset()
-}
-const handleGenerate = () => {
-  esign.value
-    .generate()
-    .then((res) => {
-      console.log(res)
-    })
-    .catch((err) => {
-      alert(err)
-    })
-}
+
+const props = defineProps({
+  title: String,
+  esign: String,
+  handleReset: Function,
+})
 </script>
 
 <template>
@@ -24,9 +16,6 @@ const handleGenerate = () => {
     <div class="bottom">
       <Divider :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }"> 請手寫簽名 </Divider>
       <div class="flex justify-between">
-        <Button :onClick="handleReset" loading-type="spinner" class="h-[25px] bg-success text-white" round block
-          >清除</Button
-        >
         <Button :onClick="handleGenerate" loading-type="spinner" class="h-[25px] bg-success text-white" round block
           >儲存</Button
         >
