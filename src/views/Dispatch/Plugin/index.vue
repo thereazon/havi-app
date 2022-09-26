@@ -5,7 +5,8 @@ import useDispatchInfo from '@/views/Dispatch/store'
 import { useRoute, useRouter } from 'vue-router'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
 import { useAlertModal } from '@/components/store/AlertModalStore'
-import { isCanvasEmpty, getCanvasToImage } from '@/utils/canvas'
+import vueEsign from 'vue-esign'
+
 const dispatchStore = useDispatchInfo()
 const { currentPlugin } = dispatchStore
 
@@ -13,16 +14,6 @@ const modal = useAlertModal()
 const route = useRoute()
 const router = useRouter()
 const isConfirmDialog = ref(false)
-
-let driverEsign = ref(null)
-let clientEsign = ref(null)
-
-const handleResetDriverSign = () => {
-  driverEsign.value.reset()
-}
-const handleResetClientSign = () => {
-  clientEsign.value.reset()
-}
 
 onMounted(() => {
   if (!dispatchStore.currentPlugin) {
@@ -36,8 +27,8 @@ onMounted(() => {
 })
 
 const confirmUpdate = async () => {
-  const clientSign = await clientEsign.value.generate()
-  const driverSign = await driverEsign.value.generate()
+  const clientSign = await clientsign.value.generate().catch(() => null)
+  const driverSign = await driversign.value.generate().catch(() => null)
   if (!driverSign) {
     modal.open({
       type: 'hint',
@@ -71,6 +62,16 @@ const onClickLeft = () => {
 
 const openDialog = () => {
   isConfirmDialog.value = true
+}
+
+let driversign = ref(null)
+let clientsign = ref(null)
+
+const handleResetDriverSign = () => {
+  driversign.value.reset()
+}
+const handleResetClientSign = () => {
+  clientsign.value.reset()
 }
 </script>
 
@@ -136,7 +137,7 @@ const openDialog = () => {
           </div>
         </div>
         <div class="divide w-full h-[280px] border-1 border-solid border-transparent">
-          <vueEsign ref="esign" height="600" :lineWidth="3" :lineColor="lineColor" />
+          <vueEsign ref="clientsign" height="600" :lineWidth="3" :lineColor="lineColor" />
         </div>
       </div>
       <div class="w-full">
@@ -152,7 +153,7 @@ const openDialog = () => {
         </div>
 
         <div class="divide w-full h-[280px] border-1 border-solid border-transparent">
-          <vueEsign ref="driverSign" height="600" :lineWidth="3" :lineColor="lineColor" />
+          <vueEsign ref="driversign" height="600" :lineWidth="3" :lineColor="lineColor" />
         </div>
       </div>
       <Button
@@ -172,5 +173,9 @@ const openDialog = () => {
 <style lang="scss" scoped>
 .bottom-dashed {
   border-bottom: 2px dashed #6dbe5b;
+}
+.divide {
+  background: linear-gradient(#fffcf6, #fffcf6) padding-box,
+    repeating-linear-gradient(-45deg, #707070 0, #707070 0.6rem, #fffcf6 0, #fffcf6 1rem);
 }
 </style>

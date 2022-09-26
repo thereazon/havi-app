@@ -9,8 +9,8 @@ import usePreCoolInfo from '@/views/PreCool/store'
 import SignatureComponent from '@/components/SignatureComponent.vue'
 import SecurityCodeDialog from '@/components/SecurityCodeDialog.vue'
 import { useAlertModal } from '@/components/store/AlertModalStore'
-import { isCanvasEmpty, getCanvasToImage } from '@/utils/canvas'
 import TemperatureActionSheet from '@/components/TemperatureActionSheet.vue'
+import vueEsign from 'vue-esign'
 
 const computeTemp = (data) => {
   let temp = null
