@@ -10,6 +10,7 @@ const props = defineProps({
   optionFirst: String,
   warning: String,
   isShow: Boolean,
+  isDelay: Boolean,
 })
 
 const store = useCommonStore()
@@ -58,9 +59,29 @@ const handleFinish = () => {
       <h1 class="text-center text-[#707070] text-[17px] mb-0">{{ props.title }}</h1>
       <h2 class="text-center text-[#a4a4a4] text-[12px]">{{ props.subTitle }}</h2>
       <form class="mt-3">
-        <select :onChange="handleOnClick" name="menu" id="dispatch-no" class="havi-select" v-model="form.reason_id">
+        <select
+          v-if="isDelay"
+          :onChange="handleOnClick"
+          name="menu"
+          id="dispatch-no"
+          class="havi-select"
+          v-model="form.reason_id"
+        >
           <option disabled value="">{{ props.optionFirst }}</option>
-          <option v-for="reason in store.undeliverableReasons" :value="reason.id" :key="reason.id">
+          <option v-for="reason in store.delayReasons" :value="reason.id" :key="reason.id">
+            {{ reason.content }}
+          </option>
+        </select>
+        <select
+          v-else
+          :onChange="handleOnClick"
+          name="menu"
+          id="dispatch-no"
+          class="havi-select"
+          v-model="form.reason_id"
+        >
+          <option disabled value="">{{ props.optionFirst }}</option>
+          <option v-for="reason in store.unableReasons" :value="reason.id" :key="reason.id">
             {{ reason.content }}
           </option>
         </select>

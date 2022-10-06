@@ -20,6 +20,8 @@ const useCommonStore = defineStore('common', {
     abnormalReasons: [],
     onkAbnormalReasons: [],
     undeliverableReasons: [],
+    delayReasons: [],
+    unableReasons: [],
     status: 'init',
     isLoading: false,
     message: '',
@@ -34,6 +36,8 @@ const useCommonStore = defineStore('common', {
         this.abnormalReasons = abnormalReasons.data
         this.onkAbnormalReasons = abnormalReasons.data.filter((e) => e.code == 'O' || e.code == 'K')
         this.undeliverableReasons = undeliverableReasons.data
+        this.delayReasons = undeliverableReasons.data.filter((v) => v.type === 1)
+        this.unableReasons = undeliverableReasons.data.filter((v) => v.type === 2)
       } catch (err) {
         this.status = err.status
         this.message = err.message

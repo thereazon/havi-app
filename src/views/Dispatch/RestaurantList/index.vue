@@ -156,6 +156,7 @@ const handleOpenDialog2 = async () => {
   <DelayModal
     v-model:isShow="dispatchStore.showDelayMenu"
     title="延後配送"
+    :isDelay="true"
     subTitle="請填寫延後配送原因"
     optionFirst="請選擇延後配送原因"
     warning="!確認後將此單延至最後一筆進行配送!"
@@ -164,6 +165,7 @@ const handleOpenDialog2 = async () => {
   <DelayModal
     title="攜回配銷中心"
     v-model:isShow="dispatchStore.showUnableDeliverMenu"
+    :isDelay="false"
     subTitle="請填寫無法配送原因"
     optionFirst="請選擇無法配送原因"
     warning="!請確認不再進行配送此單!"
