@@ -63,7 +63,7 @@ onMounted(() => {
           {
             url: r.file3,
           },
-        ].filter((v) => v.url && v.url === ''),
+        ].filter((v) => v.url && v.url !== ''),
       }))
     })
   }
