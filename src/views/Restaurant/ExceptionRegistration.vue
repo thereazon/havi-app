@@ -1,7 +1,7 @@
 <script setup>
 import { v4 as uuidv4 } from 'uuid'
-import { ref, onUnmounted, onMounted, reactive } from 'vue'
-import { Icon, NavBar, Collapse, CollapseItem } from 'vant'
+import { ref, onUnmounted, onMounted } from 'vue'
+import { Icon, NavBar, Collapse, CollapseItem, Button } from 'vant'
 import { useRouter, useRoute } from 'vue-router'
 import useRestaurant from '@/views/Restaurant/store'
 import useDispatch from '@/views/Dispatch/store'
@@ -148,7 +148,13 @@ const onClickRight = () => {}
         </div>
       </div>
       <div class="m-auto mb-5">
-        <button class="bg-success border-0 text-white rounded-full px-[128px] py-[10px]" @click="confirm">完成</button>
+        <Button
+          :loading="restaurantStore.isLoading"
+          loading-text="傳送中"
+          class="bg-success border-0 text-white rounded-full px-[128px] py-[10px]"
+          @click="confirm"
+          >完成</Button
+        >
       </div>
     </div>
   </div>

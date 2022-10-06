@@ -365,10 +365,9 @@ const useRestaurant = defineStore('restaurant', {
       }
     },
     async postExceptionAction(itemId, exceptionList, type, cb) {
+      this.isLoading = true
       const modal = useAlertModal()
-
       const formData = new FormData()
-
       const encoder = exceptionList.reduce((prev, curr) => {
         return {
           ...prev,
