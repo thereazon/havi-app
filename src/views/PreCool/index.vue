@@ -31,7 +31,10 @@ const onClickLeft = () => {
 
 const handleFetchTemp = () => {
   if (route.query.car_id) {
-    preCoolStore.getTemperatureAction(route.query.car_id)
+    preCoolStore.getTemperatureAction(route.query.car_id).then(() => {
+      const v = preCoolStore.temperature ? validTempC(preCoolStore.temperature.c.frozen) : false
+      preCoolStore.setIsValidTemp(v)
+    })
   }
 }
 

@@ -18,8 +18,12 @@ const usePreCool = defineStore('precool', {
     degree_type: 'C',
     isValidCurrentTemp: null,
     tempPhoto: null,
+    validTemp: null,
   }),
   actions: {
+    setIsValidTemp(validTemp) {
+      this.validTemp = validTemp
+    },
     setTempPhoto(photo) {
       this.tempPhoto = photo
     },
@@ -39,7 +43,7 @@ const usePreCool = defineStore('precool', {
       const formData = new FormData()
       const signPhotoBlob = await fetch(this.signImage).then((r) => r.blob())
       const modal = useAlertModal()
-      if (this.tempPhoto || isNormal) {
+      if (this.tempPhoto || isNormal || this.isValid) {
         formData.append('signature_photo', signPhotoBlob)
         if (this.tempPhoto) {
           formData.append('temp_photo', this.tempPhoto)
