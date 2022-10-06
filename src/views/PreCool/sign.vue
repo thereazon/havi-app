@@ -112,16 +112,24 @@ const handleSubmitCode = (code) => {
 }
 
 const handleFinished = () => {
-  esign.value
-    .generate()
-    .then(() => (isSecurityCodeDialog.value = true))
-    .catch(() => {
-      modal.open({
-        type: 'error',
-        title: '錯誤',
-        content: '櫃檯簽名為必填',
-      })
+  if (!preCoolStore.validTemp && !currentTemp.value) {
+    modal.open({
+      type: 'error',
+      title: '錯誤',
+      content: '溫度欄位為必填',
     })
+  } else {
+    esign.value
+      .generate()
+      .then(() => (isSecurityCodeDialog.value = true))
+      .catch(() => {
+        modal.open({
+          type: 'error',
+          title: '錯誤',
+          content: '櫃檯簽名為必填',
+        })
+      })
+  }
 }
 </script>
 
