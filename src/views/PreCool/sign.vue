@@ -197,7 +197,6 @@ const handleFinished = () => {
           <Checkbox name="clean">車廂清潔確認</Checkbox>
         </CheckboxGroup>
       </div>
-      <SignatureComponent title="櫃檯簽名" />
       <div class="w-full">
         <div class="mt-8 mb-[5px] text-[#959595] flex items-center justify-between relative">
           <div class="text-center text-[0.8125rem] font-bold invisible">司機簽名</div>
@@ -249,5 +248,10 @@ const handleFinished = () => {
 :deep(.van-checkbox__icon--checked .van-icon) {
   color: #fff;
   background: #6dbe5b;
+}
+
+.divide {
+  background: linear-gradient(#fffcf6, #fffcf6) padding-box,
+    repeating-linear-gradient(-45deg, #707070 0, #707070 0.6rem, #fffcf6 0, #fffcf6 1rem);
 }
 </style>

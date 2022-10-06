@@ -55,12 +55,11 @@ const exReason = reactive({
   file: null,
 })
 
-const fileList = ref([])
 const handleUploader = (value) => {
-  if (fileList.value.length === 0) {
+  if (props.reason.file.length === 0) {
     theReason.value.file = value.filter((v, i) => i < 3)
   } else {
-    theReason.value.file = value.filter((v, i) => i >= fileList.value.length && i <= fileList.value.length + 2)
+    theReason.value.file = value.filter((v, i) => i >= props.reason.file.length && i <= props.reason.file.length + 2)
   }
 }
 </script>

@@ -220,7 +220,7 @@ const handleUpdateStatus = (type) => {
         <li
           v-for="subitem in item.data"
           :key="subitem.id"
-          class="detail-list list-none mx-4 leading-snug h-11 flex items-center text-gray"
+          class="detail-list list-none mx-4 leading-snug h-15 flex items-center text-gray"
           :onClick="handleToDetailPage(item, subitem)"
         >
           <div class="bg-[#f2f2f2] w-full" v-for="(subitem, index) in item.data" :key="subitem.id">
@@ -238,6 +238,7 @@ const handleUpdateStatus = (type) => {
                       <div>{{ subitem.exp }}</div>
                       <div v-if="subitem.batch_no">#{{ subitem.batch_no }}</div>
                     </div>
+                    <div class="mb-4">{{ subitem.note }}</div>
                     <div class="flex justify-between text-[12px] mr-5">
                       <div class="text-primary font-bold">{{ subitem.m_qty > 0 ? subitem.m_qty : subitem.qty }}</div>
                       <div>{{ subitem.unit }}</div>

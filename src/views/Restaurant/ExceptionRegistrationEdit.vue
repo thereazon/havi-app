@@ -25,7 +25,7 @@ const initReason = () => ({
   set_qty: null,
   pcs_qty: null,
   note: '',
-  file: null,
+  file: [],
 })
 
 const info = reactive({
@@ -53,6 +53,17 @@ onMounted(() => {
         ...r,
         selectReason: r.abnormal_id,
         unit: r.qty,
+        file: [
+          {
+            url: r.file1,
+          },
+          {
+            url: r.file2,
+          },
+          {
+            url: r.file3,
+          },
+        ],
       }))
     })
   }

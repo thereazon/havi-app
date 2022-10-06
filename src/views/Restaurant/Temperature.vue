@@ -450,7 +450,7 @@ const coldTemp = computed(() => {
         </div>
       </div>
       <UploadImage
-        :disabled="isLocked"
+        :disabled="isLockedTempAndFinishedPhoto || isLocked || isPreviewMode"
         :defaultImage="currentRestaurant?.lock_temp_photo"
         title="實測溫度"
         :uploadToStore="setTempImage"

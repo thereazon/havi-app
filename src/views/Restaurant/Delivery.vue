@@ -47,7 +47,7 @@ const deliveryItemAbnormalHandle = (item, product, delivery) => {
   // console.log('product', product) // 整單的物品
   if (!isPreviewMode) {
     restaurantStore.setCurrentException(item, product, delivery)
-    router.push({ path: '/restaurant/ExceptionRegistration', query: { ...route.query } })
+    router.push({ path: '/restaurant/ExceptionRegistrationEdit', query: { ...route.query } })
   }
 }
 </script>

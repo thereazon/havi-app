@@ -14,8 +14,6 @@ const restaurantStore = useRestaurant()
 const { currentException } = restaurantStore
 const { currentRestaurant } = dispatchStore
 const exRegistration = ref([])
-const imageArr = ref([])
-const exRegistrationLength = ref(0)
 const readyToPush = ref(false)
 const activeNames = ref(['1'])
 
@@ -61,7 +59,6 @@ const confirm = () => {
         ...route.query,
       },
     })
-  console.log(exRegistration.value)
   restaurantStore.postExceptionAction(currentException.uid, exRegistration.value, 1, cb)
 }
 

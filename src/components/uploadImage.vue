@@ -63,7 +63,15 @@ const deletePreviewImage = () => {
         清除
       </div>
     </div>
-    <input hidden type="file" accept="image/*" capture="camera" ref="camera" @change="uploadImage" />
+    <input
+      :disabled="props.disabled"
+      hidden
+      type="file"
+      accept="image/*"
+      capture="camera"
+      ref="camera"
+      @change="uploadImage"
+    />
     <div class="divide flex justify-center w-full h-28 border-1 border-solid border-transparent" @click="clickUpload()">
       <van-icon color="#959595" v-if="previewImage === ''" class="absolute" size="7rem" name="plus" />
       <div class="w-full h-full" v-if="previewImage === ''"></div>
