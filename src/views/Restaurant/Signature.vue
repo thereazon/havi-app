@@ -113,6 +113,8 @@ const handleReset = () => {
       <Button
         :disabled="store.isPreviewMode"
         :onClick="handleFinish"
+        :loading="store.isLoading"
+        loading-text="傳送中"
         class="w-full mt-7 text-white font-bold text-[1.0625rem] bg-success rounded-full"
       >
         完成

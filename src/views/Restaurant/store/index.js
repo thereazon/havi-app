@@ -565,9 +565,9 @@ const useRestaurant = defineStore('restaurant', {
       }
     },
     async postStoreFinish(restaurantId, data, cb) {
+      this.isLoading = true
       const modal = useAlertModal()
       const formData = new FormData()
-
       const signImageBlob = await fetch(data).then((r) => r.blob())
       formData.append('driver_photo', signImageBlob)
       try {
