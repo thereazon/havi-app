@@ -368,6 +368,18 @@ const useRestaurant = defineStore('restaurant', {
       this.isLoading = true
       const modal = useAlertModal()
       const formData = new FormData()
+      const isNotesEmpty = exceptionList.find((v) => v.note === null || v.note === '')
+      console.log(isNotesEmpty)
+
+      if (isNotesEmpty) {
+        modal.open({
+          type: 'error',
+          title: '錯誤',
+          content: '備註為必填欄位',
+          callback: cb,
+        })
+        return
+      }
       const encoder = exceptionList.reduce((prev, curr) => {
         return {
           ...prev,
@@ -381,11 +393,9 @@ const useRestaurant = defineStore('restaurant', {
           [`file[${curr.id}][2]`]: curr.file && curr.file[2] ? curr.file[2].file : null,
         }
       }, {})
-
       Object.keys(encoder)
         .filter((v) => encoder[v])
         .forEach((key) => formData.append(key, encoder[key]))
-
       try {
         const response = await ApiCaller.postException(itemId, formData, 1)
         if (response.status === 'success') {

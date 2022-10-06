@@ -74,6 +74,11 @@ const usePreCool = defineStore('precool', {
           if (response.status === 'success') {
             this.status = response.status
             this.message = response.message
+            this.currentTemp = null
+            this.signImage = null
+            this.checked = null
+            this.degree_type = 'C'
+            this.isValidCurrentTemp = null
             cb()
           }
         } catch (err) {
