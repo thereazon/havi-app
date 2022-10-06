@@ -20,7 +20,7 @@ const activeNames = ref(['1'])
 
 const initReason = () => ({
   id: uuidv4(),
-  selectReason: null,
+  selectReason: 'AL6003f27223c0b',
   unit: null,
   set_qty: null,
   pcs_qty: null,
