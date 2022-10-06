@@ -40,7 +40,8 @@ export const login = async (account, password) => {
       account: account,
       password: password,
       type: 0,
-      token: 'test-token2',
+      token: 'havi-token',
+      method: 'web',
     })
     .then((res) => res.data)
     .catch((err) => Promise.reject(err.response.data))
