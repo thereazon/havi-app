@@ -161,9 +161,12 @@ const onClickRight = () => {}
         :key="reason.id"
       ></ExceptionReasonTable>
       <div class="m-auto">
-        <button class="bg-white border-0 rounded-full h-[33px] w-[33px] mb-5 shadow-lg" @click="addReason">
-          <Icon name="plus"></Icon>
-        </button>
+        <div
+          class="h-[33px] w-[33px] flex justify-center items-center bg-white border-0 rounded-full mb-5 shadow-lg"
+          @click="addReason"
+        >
+          <Icon name="plus" />
+        </div>
       </div>
       <div class="m-auto mb-5">
         <Button

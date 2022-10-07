@@ -1,6 +1,6 @@
 <script setup>
 import { computed, reactive, ref } from 'vue'
-import { Collapse, CollapseItem, Dialog, Button, Icon, Loading } from 'vant'
+import { Collapse, CollapseItem, Dialog, Button, Icon, Loading, Field } from 'vant'
 import { storeToRefs } from 'pinia'
 import useRestaurant from '@/views/Restaurant/store'
 import { useAlertModal } from '@/components/store/AlertModalStore'
@@ -77,6 +77,7 @@ const confirm = (containerOrder) => {
   isConfirmDialog2.value = false
   postContainerFinishAction(containerOrder)
 }
+const formatter = (value) => (value === '' ? parseInt(0) : parseInt(value))
 </script>
 
 <template>
@@ -211,9 +212,10 @@ const confirm = (containerOrder) => {
           <div class="h-7 font-bold text-primary flex items-center justify-center mb-1">
             <span class="text-[1rem] mr-5">墊底</span>
             <div class="w-1/2 h-full bg-white text-[0.75rem] rounded-md flex justify-center items-center">
-              <input
-                class="w-full h-full py-0 px-1 border border-solid border-gray"
-                type="number"
+              <Field
+                class="w-full text-primary h-full py-0 px-1 border border-solid border-gray"
+                type="digit"
+                :formatter="formatter"
                 v-model="containerForm.backing_qty"
               />
             </div>
@@ -221,10 +223,11 @@ const confirm = (containerOrder) => {
           <div class="h-7 font-bold text-warning flex items-center justify-center mb-3">
             <span class="text-[1rem] mr-5">短收</span>
             <div class="w-1/2 h-full bg-white text-[0.75rem] rounded-md flex justify-center items-center">
-              <input
+              <Field
                 class="w-full h-full py-0 px-1 border border-solid border-gray"
                 v-model="containerForm.short_qty"
-                type="number"
+                type="digit"
+                :formatter="formatter"
               />
             </div>
           </div>
@@ -233,20 +236,22 @@ const confirm = (containerOrder) => {
           <div class="h-7 font-bold text-success flex items-center justify-center mb-1">
             <span class="text-[1rem] mr-5">回收</span>
             <div class="w-1/2 h-full bg-white text-[0.75rem] rounded-md flex justify-center items-center">
-              <input
+              <Field
                 class="w-full h-full py-0 px-1 border border-solid border-gray"
                 v-model="containerForm.resource_qty"
-                type="number"
+                type="digit"
+                :formatter="formatter"
               />
             </div>
           </div>
           <div class="h-7 font-bold text-warning flex items-center justify-center">
             <span class="text-[1rem] mr-5">退貨</span>
             <div class="w-1/2 h-full bg-white text-[0.75rem] rounded-md flex justify-center items-center">
-              <input
+              <Field
                 class="w-full h-full py-0 px-1 border border-solid border-gray"
                 v-model="containerForm.return_qty"
-                type="number"
+                :formatter="formatter"
+                type="digit"
               />
             </div>
           </div>

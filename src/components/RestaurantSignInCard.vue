@@ -33,9 +33,7 @@ const departureDt = computed(() =>
         <span class="bg-zinc-100 text-[13px] px-1 py-px text-neutral-500">{{ departureDt.date }}</span>
       </div>
     </div>
-
     <AppDivide />
-
     <div class="px-7 pt-2 pb-3 flex items-center text-primary font-bold gap-2">
       <div class="bg-[#f2f2f2] px-3 py-[7px] rounded basis-1/5 text-center rounded-l-[10px]">
         {{ props.restaurant.bu }}

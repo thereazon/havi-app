@@ -112,7 +112,7 @@ const handleSubmitCode = (code) => {
 }
 
 const handleFinished = () => {
-  if (!preCoolStore.validTemp && !currentTemp.value) {
+  if (!preCoolStore.validTemp && !currentTemp.value && !isNormal.value) {
     modal.open({
       type: 'error',
       title: '錯誤',

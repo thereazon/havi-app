@@ -7,6 +7,8 @@ const props = defineProps({
     required: true,
   },
 })
+
+const formatter = (value) => (value === '' ? parseInt(0) : parseInt(value))
 </script>
 
 <template>
@@ -22,6 +24,7 @@ const props = defineProps({
         :key="ingredient.id"
         v-model="ingredient.qty"
         type="digit"
+        :formatter="formatter"
         :label="ingredient.name"
       />
     </CellGroup>
