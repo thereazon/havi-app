@@ -16,7 +16,11 @@ const { dispatch, getRestaurantDetailAction } = useDispatchInfo()
 const restaurtants = computed(() => {
   const delay = dispatchStore.restaurant?.DELAY ? dispatchStore.restaurant.DELAY : []
   const pedingDelivery = dispatchStore.restaurant?.PENDING_DELIVERY ? dispatchStore.restaurant.PENDING_DELIVERY : []
-  const list = [...delay, ...pedingDelivery]
+  const list = [...delay, ...pedingDelivery].sort((a, b) => {
+    const d1 = new Date(a.arrival_time)
+    const d2 = new Date(b.arrival_time)
+    return d1 - d2
+  })
   return list
 })
 

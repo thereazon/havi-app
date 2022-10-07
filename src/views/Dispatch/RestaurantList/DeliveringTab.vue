@@ -26,7 +26,11 @@ const { car_id, container_id } = route.query
 const currentRestaurant = computed(() => {
   const arrival = dispatchStore.restaurant?.ARRIVAL ? dispatchStore.restaurant.ARRIVAL : []
   const delivering = dispatchStore.restaurant?.DELIVERING ? dispatchStore.restaurant.DELIVERING : []
-  const list = [...arrival, ...delivering]
+  const list = [...arrival, ...delivering].sort((a, b) => {
+    const d1 = new Date(a.arrival_time)
+    const d2 = new Date(b.arrival_time)
+    return d1 - d2
+  })
   return list[0]
 })
 

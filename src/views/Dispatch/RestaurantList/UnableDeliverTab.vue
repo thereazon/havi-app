@@ -11,7 +11,11 @@ const restaurtants = computed(() => {
     ? dispatchStore.restaurant.TEMP_CONFIRMATION
     : []
   const unableDelivery = dispatchStore.restaurant?.UNABLE_DELIVERY ? dispatchStore.restaurant.UNABLE_DELIVERY : []
-  return [...TEMP_CONFIRMATION, ...unableDelivery]
+  return [...TEMP_CONFIRMATION, ...unableDelivery].sort((a, b) => {
+    const d1 = new Date(a.arrival_time)
+    const d2 = new Date(b.arrival_time)
+    return d1 - d2
+  })
 })
 
 const handleOpenUnableDeliverMenu = (id) => (type) => openUnableDeliverMenu(id, type)

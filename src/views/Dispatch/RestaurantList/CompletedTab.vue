@@ -15,7 +15,11 @@ const { dispatch, restaurant, getRestaurantDetailAction } = useDispatchInfo()
 const restaurtants = computed(() => {
   const tempConfirmation = restaurant?.TEMP_CONFIRMATION ? restaurant.TEMP_CONFIRMATION : []
   const deliveryCompleted = restaurant?.DELIVERY_COMPLETED ? restaurant.DELIVERY_COMPLETED : []
-  const list = [...deliveryCompleted]
+  const list = [...deliveryCompleted].sort((a, b) => {
+    const d1 = new Date(a.arrival_time)
+    const d2 = new Date(b.arrival_time)
+    return d1 - d2
+  })
   return list
 })
 
