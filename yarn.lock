@@ -126,6 +126,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@popperjs/core@^2.9.0":
+  version "2.11.6"
+  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.6.tgz#cee20bd55e68a1720bdab363ecf0c821ded4cd45"
+  integrity sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==
+
 "@popperjs/core@^2.9.2":
   version "2.11.5"
   resolved "https://registry.npmjs.org/@popperjs/core/-/core-2.11.5.tgz"
@@ -663,6 +668,11 @@ dayjs@^1.11.3:
   version "1.11.3"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.3.tgz#4754eb694a624057b9ad2224b67b15d552589258"
   integrity sha512-xxwlswWOlGhzgQ4TKzASQkUhqERI3egRNqgV4ScR8wlANA/A9tZ7miXa44vTTKEq5l7vWoL5G57bG3zA+Kow0A==
+
+debounce@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/debounce/-/debounce-1.2.1.tgz#38881d8f4166a5c5848020c11827b834bcb3e0a5"
+  integrity sha512-XRRe6Glud4rd/ZGQfiV1ruXSfbvfJedlV9Y6zOlP+2K04vBYiJEte6stfFkCP03aMnY5tsipamumUjL14fofug==
 
 debug@4, debug@^4.1.1, debug@^4.3.2, debug@^4.3.3:
   version "4.3.4"
@@ -1962,6 +1972,13 @@ tinyspy@^0.3.0:
   resolved "https://registry.npmjs.org/tinyspy/-/tinyspy-0.3.2.tgz"
   integrity sha512-2+40EP4D3sFYy42UkgkFFB+kiX2Tg3URG/lVvAZFfLxgGpnWl5qQJuBw1gaLttq8UOS+2p3C0WrhJnQigLTT2Q==
 
+tippy.js@^6.3.7:
+  version "6.3.7"
+  resolved "https://registry.yarnpkg.com/tippy.js/-/tippy.js-6.3.7.tgz#8ccfb651d642010ed9a32ff29b0e9e19c5b8c61c"
+  integrity sha512-E1d3oP2emgJ9dRQZdf3Kkn0qJgI6ZLpyS5z6ZkY1DF3kaQaBsGZsndEpHwx+eC+tYM41HaSNvNtLx8tU57FzTQ==
+  dependencies:
+    "@popperjs/core" "^2.9.0"
+
 to-regex-range@^5.0.1:
   version "5.0.1"
   resolved "https://registry.npmjs.org/to-regex-range/-/to-regex-range-5.0.1.tgz"
@@ -2152,6 +2169,21 @@ vue-scroll-picker@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/vue-scroll-picker/-/vue-scroll-picker-1.1.1.tgz#468978b9ce85fbcfe7b86a0db067be652c68c205"
   integrity sha512-Y96526psimH4R8Js7hb75VqWbzweB36l9G9YzuQJyGKsHX18ii4X6rPFfwMjUQ/4stgGGVtmdJfjxRveVAsW6Q==
+
+vue-tippy@^6.0.0-alpha.65:
+  version "6.0.0-alpha.65"
+  resolved "https://registry.yarnpkg.com/vue-tippy/-/vue-tippy-6.0.0-alpha.65.tgz#8a55ae4db9ab26e67c3f728fa0df12ab4461f163"
+  integrity sha512-AmPNcyrOillysYFDbpgBkdv0UDziAg4mubD1LiyiNgcmLux0Gb2dXvkDDiLoPpbu9CxFzAMAQZOdOTEaOJDb0Q==
+  dependencies:
+    tippy.js "^6.3.7"
+
+vue3-popper@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/vue3-popper/-/vue3-popper-1.5.0.tgz#eeac767e1011942fe1737e8299a832b530c0a997"
+  integrity sha512-xaEnx90YBnlSg5G2yWqm2DHWHg+DB99UVRp4VsyTF0QLXyHrqSuE1Xo5+sG0AQq/lBcrGMlk5NU5xE2MDLKViw==
+  dependencies:
+    "@popperjs/core" "^2.9.2"
+    debounce "^1.2.1"
 
 vue@^2.5.11:
   version "2.7.10"

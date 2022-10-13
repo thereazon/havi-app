@@ -5,7 +5,7 @@ import { useRouter, useRoute } from 'vue-router'
 import useRestaurant from '@/views/Restaurant/store'
 import ConfirmDialog from './ConfirmDialog.vue'
 import { useAlertModal } from '@/components/store/AlertModalStore'
-
+import Popper from 'vue3-popper'
 const { postDeliveryAction, deleteDeliveryAction, setCurrentDelivery, isPreviewMode } = useRestaurant()
 const router = useRouter()
 const route = useRoute()
@@ -188,6 +188,15 @@ const handleRestore = () => {
   deleteDeliveryAction(currentDelivery.value.id)
   isConfirmDialog2.value = false
 }
+
+const showTootip = ref(null)
+
+const handleShow = (v) => {
+  showTootip.value = v
+  setTimeout(() => {
+    showTootip.value = null
+  }, 2000)
+}
 </script>
 
 <template>
@@ -281,15 +290,24 @@ const handleRestore = () => {
       <Collapse v-model="collapseActiveNames">
         <CollapseItem v-for="product in filterDeliveryItems" :key="product.wrin" :name="product.wrin">
           <template #title>
-            <div class="flex items-center">
+            <div class="flex items-center relative">
               <div class="w-[10%]">
                 <Checkbox v-model="product.checked" @click.stop></Checkbox>
               </div>
-              <div class="w-[50%] flex flex-col leading-snug">
-                <span class="text-[#044d80] text-[0.875rem] font-bold truncate">{{ product.item_desc }}</span>
-                <span class="text-gray text-[0.75rem] truncate">{{ product.wrin }}</span>
+              <div class="w-[30%] flex flex-col leading-snug">
+                <Popper :show="showTootip === product.wrin" arrow placement="right" :content="product.item_desc">
+                  <div
+                    :onClick="() => handleShow(product.wrin)"
+                    class="ellipsis text-[#044d80] text-[0.875rem] font-bold truncate"
+                  >
+                    {{ product.item_desc }}
+                  </div>
+                </Popper>
+                <div>
+                  <span class="text-gray text-[0.75rem] truncate">{{ product.wrin }}</span>
+                </div>
               </div>
-              <div class="w-[40%] flex items-center text-[0.875rem] font-bold text-[#044d80]">
+              <div class="w-[60%] flex items-center text-[0.875rem] font-bold text-[#044d80] justify-end">
                 <div class="min-w-[40%] flex justify-between items-center">
                   <span>{{ product.qty }}</span>
                   <span>{{ product.uom }}</span>
@@ -297,7 +315,6 @@ const handleRestore = () => {
               </div>
             </div>
           </template>
-
           <li
             v-for="item in product.data"
             :key="item.uid"
@@ -372,7 +389,7 @@ const handleRestore = () => {
   </div>
 </template>
 
-<style scoped>
+<style>
 .tab-active {
   border: 2px solid #eb5e55;
 }
@@ -402,5 +419,21 @@ const handleRestore = () => {
 }
 .reject-checked {
   border: 2px solid #eb5e55;
+}
+.ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+:root {
+  --popper-theme-background-color: #333333;
+  --popper-theme-background-color-hover: #333333;
+  --popper-theme-text-color: #ffffff;
+  --popper-theme-border-width: 0px;
+  --popper-theme-border-style: solid;
+  --popper-theme-border-radius: 6px;
+  --popper-theme-padding: 15px;
+  --popper-theme-box-shadow: 0 6px 30px -6px rgba(0, 0, 0, 0.25);
 }
 </style>

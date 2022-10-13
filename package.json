@@ -17,13 +17,16 @@
     "dayjs": "^1.11.3",
     "floating-vue": "^2.0.0-beta.20",
     "pinia": "^2.0.13",
+    "tippy.js": "^6.3.7",
     "uuid": "^8.3.2",
     "vant": "^3.4.8",
     "vue": "^3.2.31",
     "vue-esign": "^1.1.4",
     "vue-router": "^4.0.14",
     "vue-screen-size": "^2.0.4",
-    "vue-scroll-picker": "^1.1.1"
+    "vue-scroll-picker": "^1.1.1",
+    "vue-tippy": "^6.0.0-alpha.65",
+    "vue3-popper": "^1.5.0"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.0",
