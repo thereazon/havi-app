@@ -168,11 +168,11 @@ const onClickRight = () => {}
           <Icon name="plus" />
         </div>
       </div>
-      <div class="m-auto mb-5">
+      <div class="m-auto mb-5 w-full">
         <Button
-          :loading="restaurantStore.isLoading"
+          :loading="true"
           loading-text="傳送中"
-          class="bg-success border-0 text-white rounded-full px-[128px] py-[10px]"
+          class="w-full bg-success border-0 text-white rounded-full"
           @click="confirm"
           >完成</Button
         >

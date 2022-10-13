@@ -365,12 +365,6 @@ const useRestaurant = defineStore('restaurant', {
       }
     },
     async postExceptionAction(itemId, exceptionList, type, cb) {
-      this.isLoading = true
-      const modal = useAlertModal()
-      const formData = new FormData()
-      const isNotesEmpty = exceptionList.find((v) => v.note === null || v.note === '')
-      console.log(isNotesEmpty)
-
       if (isNotesEmpty) {
         modal.open({
           type: 'error',
@@ -380,6 +374,10 @@ const useRestaurant = defineStore('restaurant', {
         })
         return
       }
+      this.isLoading = true
+      const modal = useAlertModal()
+      const formData = new FormData()
+      const isNotesEmpty = exceptionList.find((v) => v.note === null || v.note === '')
       const encoder = exceptionList.reduce((prev, curr) => {
         return {
           ...prev,
