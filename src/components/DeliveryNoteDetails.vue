@@ -192,10 +192,10 @@ const handleRestore = () => {
 const showTootip = ref(null)
 
 const handleShow = (v) => {
-  clearTimeout(ref2)
-  const ref2 = setTimeout(() => (showTootip.value = null), 3000)
   showTootip.value = v
-  ref2()
+  setTimeout(() => {
+    showTootip.value = null
+  }, 2000)
 }
 </script>
 
