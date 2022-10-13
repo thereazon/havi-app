@@ -1,5 +1,6 @@
 <script setup>
 import { Field, CellGroup } from 'vant'
+import { ref } from 'vue'
 
 const props = defineProps({
   ingredientsList: {
@@ -9,6 +10,11 @@ const props = defineProps({
 })
 
 const formatter = (value) => (value === '' ? parseInt(0) : parseInt(value))
+const fieldRef = ref(null)
+const handleFoucs = (index) => {
+  const input = fieldRef.value[index].$el.querySelector('input')
+  input.select()
+}
 </script>
 
 <template>
@@ -16,11 +22,13 @@ const formatter = (value) => (value === '' ? parseInt(0) : parseInt(value))
     <p class="text-xs text-center py-1.5 my-0 text-primary font-bold">請於下方填寫容器裝車記錄數值</p>
     <CellGroup>
       <Field
-        v-for="ingredient in props.ingredientsList"
+        v-for="(ingredient, index) in props.ingredientsList"
         class="border-0 border-t border-solid border-neutral-300"
         title-class="text-primary text-sm font-bold pb-3"
         value-class="text-teal-400 text-sm font-bold"
         input-align="right"
+        ref="fieldRef"
+        :onclick="() => handleFoucs(index)"
         :key="ingredient.id"
         v-model="ingredient.qty"
         type="digit"

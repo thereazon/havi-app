@@ -78,6 +78,28 @@ const confirm = (containerOrder) => {
   postContainerFinishAction(containerOrder)
 }
 const formatter = (value) => (value === '' ? parseInt(0) : parseInt(value))
+
+const fieldRef = ref(null)
+const fieldRef2 = ref(null)
+const fieldRef3 = ref(null)
+const fieldRef4 = ref(null)
+
+const handleClick = () => {
+  const input = fieldRef.value.$el.querySelector('input')
+  input.select()
+}
+const handleClick2 = () => {
+  const input = fieldRef2.value.$el.querySelector('input')
+  input.select()
+}
+const handleClick3 = () => {
+  const input = fieldRef3.value.$el.querySelector('input')
+  input.select()
+}
+const handleClick4 = () => {
+  const input = fieldRef4.value.$el.querySelector('input')
+  input.select()
+}
 </script>
 
 <template>
@@ -146,35 +168,33 @@ const formatter = (value) => (value === '' ? parseInt(0) : parseInt(value))
                 </div>
               </div>
             </template>
-
-            <div
-              class="h-9 flex items-center mx-4 border-0 border-b border-solid border-gray"
-              @click="openInputDialog(container)"
-            >
-              <div class="h-5 pl-2 mr-5 font-bold text-primary flex items-center">
-                <span class="text-[0.8125rem] mr-1">墊底</span>
-                <div class="w-12 h-full bg-white text-[0.75rem] rounded-md flex justify-center items-center">
-                  {{ container.backing_qty }}
+            <div @click="openInputDialog(container)">
+              <div class="h-9 flex items-center mx-4 border-0 border-b border-solid border-gray">
+                <div class="h-5 pl-2 mr-5 font-bold text-primary flex items-center">
+                  <span class="text-[0.8125rem] mr-1">墊底</span>
+                  <div class="w-12 h-full bg-white text-[0.75rem] rounded-md flex justify-center items-center">
+                    {{ container.backing_qty }}
+                  </div>
+                </div>
+                <div class="h-5 font-bold text-warning flex items-center">
+                  <span class="text-[0.8125rem] mr-1">短收</span>
+                  <div class="w-12 h-full bg-white text-[0.75rem] rounded-md flex justify-center items-center">
+                    {{ container.short_qty }}
+                  </div>
                 </div>
               </div>
-              <div class="h-5 font-bold text-warning flex items-center">
-                <span class="text-[0.8125rem] mr-1">短收</span>
-                <div class="w-12 h-full bg-white text-[0.75rem] rounded-md flex justify-center items-center">
-                  {{ container.short_qty }}
+              <div class="h-9 flex items-center mx-4">
+                <div class="h-5 pl-2 mr-5 font-bold text-success flex items-center">
+                  <span class="text-[0.8125rem] mr-1">回收</span>
+                  <div class="w-12 h-full bg-white text-[0.75rem] rounded-md flex justify-center items-center">
+                    {{ container.resource_qty }}
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div class="h-9 flex items-center mx-4">
-              <div class="h-5 pl-2 mr-5 font-bold text-success flex items-center">
-                <span class="text-[0.8125rem] mr-1">回收</span>
-                <div class="w-12 h-full bg-white text-[0.75rem] rounded-md flex justify-center items-center">
-                  {{ container.resource_qty }}
-                </div>
-              </div>
-              <div class="h-5 font-bold text-warning flex items-center">
-                <span class="text-[0.8125rem] mr-1">退貨</span>
-                <div class="w-12 h-full bg-white text-[0.75rem] rounded-md flex justify-center items-center">
-                  {{ container.return_qty }}
+                <div class="h-5 font-bold text-warning flex items-center">
+                  <span class="text-[0.8125rem] mr-1">退貨</span>
+                  <div class="w-12 h-full bg-white text-[0.75rem] rounded-md flex justify-center items-center">
+                    {{ container.return_qty }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -216,6 +236,8 @@ const formatter = (value) => (value === '' ? parseInt(0) : parseInt(value))
                 class="w-full text-primary h-full py-0 px-1 border border-solid border-gray"
                 type="digit"
                 :formatter="formatter"
+                :onclick="handleClick"
+                ref="fieldRef"
                 v-model="containerForm.backing_qty"
               />
             </div>
@@ -227,6 +249,8 @@ const formatter = (value) => (value === '' ? parseInt(0) : parseInt(value))
                 class="w-full h-full py-0 px-1 border border-solid border-gray"
                 v-model="containerForm.short_qty"
                 type="digit"
+                ref="fieldRef2"
+                :onclick="handleClick2"
                 :formatter="formatter"
               />
             </div>
@@ -240,6 +264,8 @@ const formatter = (value) => (value === '' ? parseInt(0) : parseInt(value))
                 class="w-full h-full py-0 px-1 border border-solid border-gray"
                 v-model="containerForm.resource_qty"
                 type="digit"
+                ref="fieldRef3"
+                :onclick="handleClick3"
                 :formatter="formatter"
               />
             </div>
@@ -249,6 +275,8 @@ const formatter = (value) => (value === '' ? parseInt(0) : parseInt(value))
             <div class="w-1/2 h-full bg-white text-[0.75rem] rounded-md flex justify-center items-center">
               <Field
                 class="w-full h-full py-0 px-1 border border-solid border-gray"
+                ref="fieldRef4"
+                :onclick="handleClick4"
                 v-model="containerForm.return_qty"
                 :formatter="formatter"
                 type="digit"
