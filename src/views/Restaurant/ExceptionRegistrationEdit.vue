@@ -170,7 +170,7 @@ const onClickRight = () => {}
       </div>
       <div class="m-auto mb-5 w-full">
         <Button
-          :loading="true"
+          :loading="restaurantStore.isLoading"
           loading-text="傳送中"
           class="w-full bg-success border-0 text-white rounded-full"
           @click="confirm"
