@@ -1,22 +1,8 @@
 import { defineStore } from 'pinia'
 import { StatusType, StorageKeys } from '@/views/Login/helper'
-import { login, postSecurityCode } from '@/views/Login/service'
+import { login, postSecurityCode, loginWithSecurityCode } from '@/views/Login/service'
 import { getItem, setItem, removeItem } from '@/utils/storage.js'
-const mockAccount = {
-  id: 'DM605b050589e38',
-  fleet: '夏暉車隊',
-  fleet_id: 'FM5fdc96995092e', //車隊id
-  name: '威寶456',
-  number: '456',
-  car_id: '',
-  container_id: '',
-  dc: [
-    { code: 'NDC', tel: '(03)322-3550' },
-    { code: 'CDC', tel: '(04)894-1868' },
-    { code: 'VDC', tel: '' },
-  ],
-}
-
+import { useAlertModal } from '@/components/store/AlertModalStore'
 const useAccountInfo = defineStore('account', {
   state: () => ({
     account: getItem(StorageKeys.ACCOUNT),
@@ -25,7 +11,7 @@ const useAccountInfo = defineStore('account', {
     error: {
       times: 0,
       message: '',
-      seconds: 0,
+      minutes: 0,
     },
   }),
   actions: {
@@ -37,6 +23,11 @@ const useAccountInfo = defineStore('account', {
           this.account = response.data
           // this.status = StatusType.LOGIN_SUCCESS
           setItem(StorageKeys.ACCOUNT, this.account)
+          this.error = {
+            times: 0,
+            message: '',
+            minutes: 0,
+          }
           cb()
         }
       } catch (err) {
@@ -44,14 +35,48 @@ const useAccountInfo = defineStore('account', {
         this.error = {
           message: err.message,
           times: err.times,
-          seconds: err.seconds,
+          secodes: err.seconds,
+          minutes: Number(err.seconds / 60).toFixed(0),
         }
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async handleLoginWithSecurityCode(account, password, cb) {
+      this.isLoading = true
+      const modal = useAlertModal()
+      try {
+        const response = await loginWithSecurityCode(account, password)
+        if (response.status === 'success') {
+          this.account = response.data
+          setItem(StorageKeys.ACCOUNT, this.account)
+          this.error = {
+            times: 0,
+            message: '',
+            minutes: 0,
+          }
+          cb()
+        }
+      } catch (err) {
+        this.status = StatusType.LOGIN_FAIL
+        this.error = {
+          message: err.message,
+          times: this.error.times,
+          secodes: err.seconds,
+          minutes: Number(err.seconds / 60).toFixed(0),
+        }
+        modal.open({
+          type: 'error', //required
+          title: '錯誤',
+          content: err.message,
+        })
       } finally {
         this.isLoading = false
       }
     },
     async handlePostSecurityCode(securityCode) {
       this.isLoading = true
+      const modal = useAlertModal()
       try {
         const response = await postSecurityCode(securityCode)
         if (response.status === 'success') {
@@ -64,12 +89,11 @@ const useAccountInfo = defineStore('account', {
           }
         }
       } catch (err) {
-        this.status = StatusType.CODE_FAIL
-        this.error = {
-          message: err.message,
-          times: err.times,
-          seconds: err.seconds,
-        }
+        modal.open({
+          type: 'error', //required
+          title: '錯誤',
+          content: err.message,
+        })
       } finally {
         this.isLoading = false
       }

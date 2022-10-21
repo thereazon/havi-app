@@ -4,11 +4,14 @@ import { ref } from 'vue'
 import { StatusType } from '@/views/Login/helper'
 import useAccountInfo from '@/views/Login/store'
 import { useRoute, useRouter } from 'vue-router'
-
+import usePreCoolInfo from '@/views/PreCool/store'
+import SecurityCodeDialog from '@/components/SecurityCodeDialog.vue'
 const route = useRoute()
 const router = useRouter()
 
+const isSecurityCodeDialog = ref(false)
 const store = useAccountInfo()
+const preCoolStore = usePreCoolInfo()
 const securityCode = ref('')
 const showKeyboard = ref(false)
 const username = ref('')
@@ -16,10 +19,10 @@ const password = ref('')
 
 const onSubmit = (values) => {
   const cb = () => router.push('/cars')
-  if (store.status === StatusType.INIT || store.status === StatusType.LOGIN_FAIL) {
+  if ((store.status === StatusType.INIT || store.status === StatusType.LOGIN_FAIL) && store.error.times < 5) {
     store.handleLogin(values.Username, values.Password, cb)
-  } else if (store.status === StatusType.LOGIN_SUCCESS || store.status === StatusType.CODE_FAIL) {
-    store.handlePostSecurityCode(securityCode.value)
+  } else if (store.error.times >= 5) {
+    store.handleLoginWithSecurityCode(values.Username, `000${securityCode.value}`, cb)
   }
 }
 </script>
@@ -41,7 +44,7 @@ const onSubmit = (values) => {
           :rules="[{ required: true, message: '帳號必填' }]"
         />
         <Field
-          v-if="store.status === StatusType.INIT || store.status === StatusType.LOGIN_FAIL"
+          v-if="store.error.times < 5"
           class="rounded-full mt-5"
           v-model="password"
           type="password"
@@ -52,7 +55,7 @@ const onSubmit = (values) => {
         />
         <div class="mt-2">
           <PasswordInput
-            v-if="store.status === StatusType.LOGIN_SUCCESS || store.status === StatusType.CODE_FAIL"
+            v-if="store.error.times >= 5"
             :value="securityCode"
             :length="3"
             :gutter="10"
@@ -62,14 +65,26 @@ const onSubmit = (values) => {
           />
           <NumberKeyboard maxlength="3" v-model="securityCode" :show="showKeyboard" @blur="showKeyboard = false" />
         </div>
-        <div class="mt-2 text-center text-warning main w-full">{{ store.error?.message }}</div>
+        <div v-if="store.error.times < 5" class="mt-2 text-center text-warning main w-full">
+          {{ store.error?.message }}
+        </div>
 
         <!-- need to check designer-->
 
         <!-- <div class="mt-9 text-white main w-full">
           <Checkbox class="text-white" checked-color="#6dbe5b" v-model="isLocked"> 記住我 </Checkbox>
         </div> -->
-        <Button loading-type="spinner" class="mt-[70px]" round block type="success" native-type="submit"> 登入 </Button>
+        <Button
+          :disabled="store.error.minutes > 0"
+          loading-type="spinner"
+          class="mt-[70px]"
+          round
+          block
+          type="success"
+          native-type="submit"
+        >
+          登入
+        </Button>
         <div
           class="mt-3 text-center text-white main w-full"
           v-if="store.error.times < 5 && store.status === StatusType.LOGIN_FAIL"
@@ -80,10 +95,20 @@ const onSubmit = (values) => {
         </div>
         <div
           class="mt-3 text-center text-white main w-full"
-          v-if="store.error.times === 5 && store.status === StatusType.LOGIN_FAIL"
+          v-if="store.error.times === 5 && store.status === StatusType.LOGIN_FAIL && store.error.minutes == 0"
         >
-          您已鎖定登入
-          <span class="text-warning">30</span>
+          請確認您的帳號
+          <br />
+          並與值班人員確認安全碼
+        </div>
+        <div class="mt-3 text-center text-white main w-full" v-if="store.error.minutes > 0">
+          驗證碼輸入錯誤超過
+          <span class="text-warning">5</span>
+          次
+        </div>
+        <div class="mt-0 text-center text-white main w-full" v-if="store.error.minutes > 0">
+          鎖定帳號剩餘
+          <span class="text-warning">{{ store.error?.minutes }}</span>
           分鐘
         </div>
       </div>

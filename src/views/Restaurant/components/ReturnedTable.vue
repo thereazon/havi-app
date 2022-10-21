@@ -170,10 +170,10 @@ const handleUpdateStatus = (type) => {
         </div>
       </div>
       <div class="flex">
-        <button class="text-warning border-0 bg-white rounded-[5px] text-[12px]" @click="() => handleUpdateStatus('2')">
+        <!-- <button class="text-warning border-0 bg-white rounded-[5px] text-[12px]" @click="() => handleUpdateStatus('2')">
           <Icon name="cross" color="#eb5e55" size="30" />
           <div>全部不提</div>
-        </button>
+        </button> -->
         <button class="border-0 bg-white text-gray text-[12px]" @click="() => handleUpdateStatus('1')">
           <Icon name="replay" color="#707070" size="30" />
           <div>重新填寫</div>

@@ -34,6 +34,18 @@ import axios from 'axios'
 //     }, 2000)
 //   })
 
+export const loginWithSecurityCode = async (account, password) => {
+  return await axios
+    .post(`/api/user/login`, {
+      account: account,
+      password: password,
+      type: 1,
+      token: 'havi-token',
+      method: 'web',
+    })
+    .then((res) => res.data)
+    .catch((err) => Promise.reject(err.response.data))
+}
 export const login = async (account, password) => {
   return await axios
     .post(`/api/user/login`, {
