@@ -44,7 +44,7 @@ onMounted(() => {
       },
     })
   } else {
-    restaurantStore.getExceptionAction(currentException.uid, '1').then((res) => {
+    restaurantStore.getExceptionAction(currentException.uid, currentException.type).then((res) => {
       info.total_qty = res.total_qty
       info.batch_no = res.batch_no
       info.qty = res.qty
@@ -81,8 +81,7 @@ const deleteReason = (id) => () => (exRegistration.value = exRegistration.value.
 
 const confirm = () => {
   readyToPush.value = true
-  exRegistration.value.forEach((v) => console.log(v))
-  restaurantStore.postExceptionAction(currentException.uid, exRegistration.value, 1)
+  restaurantStore.postExceptionAction(currentException.uid, exRegistration.value, currentException.type)
 }
 
 const onClickLeft = () => {

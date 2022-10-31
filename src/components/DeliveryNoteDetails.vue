@@ -294,8 +294,13 @@ const handleShow = (v) => {
               <div class="w-[10%]">
                 <Checkbox v-model="product.checked" @click.stop></Checkbox>
               </div>
-              <div class="w-[30%] flex flex-col leading-snug">
-                <Popper :show="showTootip === product.wrin" arrow placement="right" :content="product.item_desc">
+              <div class="w-[50%] flex flex-col leading-snug">
+                <Popper
+                  offsetDistance="-20"
+                  :show="showTootip === product.wrin"
+                  placement="bottom"
+                  :content="product.item_desc"
+                >
                   <div
                     :onClick="() => handleShow(product.wrin)"
                     class="ellipsis text-[#044d80] text-[0.875rem] font-bold truncate"
@@ -307,7 +312,7 @@ const handleShow = (v) => {
                   <span class="text-gray text-[0.75rem] truncate">{{ product.wrin }}</span>
                 </div>
               </div>
-              <div class="w-[60%] flex items-center text-[0.875rem] font-bold text-[#044d80] justify-end">
+              <div class="w-[40%] flex items-center text-[0.875rem] font-bold text-[#044d80] justify-end">
                 <div class="min-w-[40%] flex justify-between items-center">
                   <span>{{ product.qty }}</span>
                   <span>{{ product.uom }}</span>
@@ -393,6 +398,15 @@ const handleShow = (v) => {
 .tab-active {
   border: 2px solid #eb5e55;
 }
+
+.van-cell {
+  align-items: center;
+}
+
+:deep(.van-cell) {
+  align-items: center;
+}
+
 :deep(.van-cell__right-icon) {
   display: none;
 }

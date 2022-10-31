@@ -395,7 +395,7 @@ const useRestaurant = defineStore('restaurant', {
         .filter((v) => encoder[v])
         .forEach((key) => formData.append(key, encoder[key]))
       try {
-        const response = await ApiCaller.postException(itemId, formData, 1)
+        const response = await ApiCaller.postException(itemId, formData, type)
         if (response.status === 'success') {
           modal.open({
             type: 'success',
