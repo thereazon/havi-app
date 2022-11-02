@@ -330,7 +330,7 @@ const useRestaurant = defineStore('restaurant', {
       this.currentException.item_desc = product.item_desc
       this.currentException.qty = product.qty
       this.currentException.type = product.type
-      this.currentException.uid = product.uid
+      this.currentException.uid = currentItem.uid
       this.currentException.uom = product.uom
       this.currentException.wrin = product.wrin
     },

@@ -115,7 +115,13 @@ const handleRejectType = (rejectType) => {
 
 const openConfirmDialog = () => {
   if (isPreviewMode) return
-  rejectData.ids = currentDelivery.value.items.filter((item) => item.checked).map((item) => item.uid)
+  rejectData.ids = currentDelivery.value.items
+    .filter((item) => item.checked)
+    .map((item) => item.data)
+    .reduce((v, curr) => {
+      const uids = curr.map((v) => v.uid)
+      return [...v, ...uids]
+    }, [])
   if (rejectData.ids.length === 0) {
     return
   }
@@ -361,7 +367,6 @@ const handleShow = (v) => {
             @click="handleRejectType(item)"
           >
             {{ item.code }}
-            <Radio :name="item.code" />
           </li>
         </ul>
         <div class="flex justify-center items-center text-gray text-[0.8125rem] font-bold">是否確認拒收？</div>
