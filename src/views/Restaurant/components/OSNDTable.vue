@@ -199,10 +199,10 @@ const handleToAbnormalOPage = (item) => () => {
         <li
           v-for="subitem in item.data"
           :key="subitem.id"
-          class="detail-list list-none mx-4 leading-snug h-11 flex items-center text-gray"
+          class="detail-list list-none mx-4 leading-snug flex items-center text-gray"
           :onClick="handleToAbnormalPage(subitem, item)"
         >
-          <div class="bg-[#f2f2f2] w-full" v-for="(subitem, index) in item.data" :key="subitem.id">
+          <div class="bg-[#f2f2f2] w-full">
             <div class="flex">
               <div class="text-[12px] py-5 px-5">
                 <div
@@ -230,11 +230,6 @@ const handleToAbnormalOPage = (item) => () => {
                 </div>
               </div>
             </div>
-
-            <div
-              v-show="!(item.data.length - 1 == index)"
-              class="w-[90%] border-solid border-x-0 border-t-0 mx-auto"
-            ></div>
           </div>
         </li>
       </CollapseItem>

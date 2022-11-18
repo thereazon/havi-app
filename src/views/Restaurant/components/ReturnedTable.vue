@@ -200,7 +200,7 @@ const handleUpdateStatus = (type) => {
                   <div class="text-gray text-[12px]">{{ item.no }}</div>
                   <div class="flex justify-between text-[12px] pr-5">
                     <div class="font-bold" :class="item.m_qty !== item.qty ? 'text-warning' : 'text-primary '">
-                      {{ item.m_qty > 0 ? item.m_qty : item.qty }}
+                      {{ item.m_qty === item.qty ? item.qty : item.m_qty }}
                     </div>
                     <div>{{ item.unit }}</div>
                     <div class="font-bold" :class="item.m_set_qty !== item.set_qty ? 'text-warning' : 'text-primary'">

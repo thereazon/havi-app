@@ -129,7 +129,7 @@ const onClickRight = () => {}
                   <span class="text-[#044d80] text-[0.875rem] font-bold truncate">
                     {{ currentException.item_desc }}
                   </span>
-                  <span class="text-gray text-[0.75rem] truncate"> {{ info.name }} </span>
+                  <span class="text-gray text-[0.75rem] truncate"> {{ currentException.deliveryNo }} </span>
                 </div>
                 <div class="w-[40%] flex items-center text-[0.875rem] font-bold text-[#044d80]">
                   <div class="min-w-[40%] flex justify-between items-center">

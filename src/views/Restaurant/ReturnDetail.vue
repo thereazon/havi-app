@@ -119,15 +119,25 @@ const showDialog = () => {
                     <div class="text-gray text-[12px]">{{ currentReturned.return_no }}</div>
                     <div class="flex justify-between text-[12px] pr-5">
                       <div class="text-primary font-bold">
-                        {{ currentReturned.m_qty > 0 ? currentReturned.m_qty : currentReturned.qty }}
+                        {{
+                          currentReturned.m_qty === currentReturned.qty ? currentReturned.qty : currentReturned.m_qty
+                        }}
                       </div>
                       <div>{{ currentReturned.unit }}</div>
                       <div class="text-primary font-bold">
-                        {{ currentReturned.m_set_qty > 0 ? currentReturned.m_set_qty : currentReturned.set_qty }}
+                        {{
+                          currentReturned.m_set_qty === currentReturned.set_qty
+                            ? currentReturned.set_qty
+                            : currentReturned.m_set_qty
+                        }}
                       </div>
                       <div>{{ currentReturned.set_unit }}</div>
                       <div class="text-primary font-bold">
-                        {{ currentReturned.m_pcs_qty > 0 ? currentReturned.m_pcs_qty : currentReturned.pcs_qty }}
+                        {{
+                          currentReturned.m_pcs_qty === currentReturned.pcs_qty
+                            ? currentReturned.pcs_qty
+                            : currentReturned.m_pcs_qty
+                        }}
                       </div>
                       <div>{{ currentReturned.pcs_unit }}</div>
                     </div>
