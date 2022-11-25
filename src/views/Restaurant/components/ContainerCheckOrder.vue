@@ -297,8 +297,9 @@ const handleClick4 = () => {
           <div>是否要發送容器值到店家？</div>
         </template>
         <div class="px-10 text-warning text-[0.8125rem] font-bold mt-3 mb-5">
-          發送後將無法再修改『容器值』數值，<br />
-          發送後需等待1～5分鐘才會完成傳送！
+          發送後需等待1~5分鐘才會完成傳送!
+          <br />
+          若有調整，請手動修改［手機與店家平板］內『容器數值』
         </div>
         <template v-slot:footer>
           <div class="px-[10%] flex justify-between items-center font-bold text-white text-[1rem]">
@@ -318,8 +319,10 @@ const handleClick4 = () => {
       <ConfirmDialog v-model:isShowDialog="isConfirmDialog2" :isCloseOnClickOverlay="true">
         <template v-slot:title>
           <div className="mb-20">
-            請確認是否完成容器對點單，點 <br />擊確認後將
-            <span class="text-warning"> 『無法再異動』</span>
+            請確認是否完成容器對點單， <br />完成後點擊
+            <span class="text-warning"> 「發送」</span>
+            <br />
+            將數值至店家平板
           </div>
         </template>
         <template v-slot:footer>

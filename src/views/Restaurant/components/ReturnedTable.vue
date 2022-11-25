@@ -240,14 +240,16 @@ const handleUpdateStatus = (type) => {
                     </div>
                     <div class="mb-4">{{ subitem.note }}</div>
                     <div class="flex justify-between text-[12px] mr-5">
-                      <div class="text-primary font-bold">{{ subitem.m_qty > 0 ? subitem.m_qty : subitem.qty }}</div>
+                      <div class="text-primary font-bold">
+                        {{ subitem.m_qty === subitem.qty ? subitem.qty : subitem.m_qty }}
+                      </div>
                       <div>{{ subitem.unit }}</div>
                       <div class="text-primary font-bold">
-                        {{ subitem.m_set_qty > 0 ? subitem.m_set_qty : subitem.set_qty }}
+                        {{ subitem.m_set_qty === subitem.set_qty ? subitem.set_qty : subitem.m_set_qty }}
                       </div>
                       <div>{{ subitem.set_unit }}</div>
                       <div class="text-primary font-bold">
-                        {{ subitem.m_pcs_qty > 0 ? subitem.m_pcs_qty : subitem.pcs_qty }}
+                        {{ subitem.m_pcs_qty === subitem.pcs_qty ? subitem.pcs_qty : subitem.m_pcs_qty }}
                       </div>
                       <div>{{ subitem.pcs_unit }}</div>
                     </div>
