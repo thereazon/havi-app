@@ -19,6 +19,7 @@ const isNormal = dispatchStore?.dispatch?.isNormal
 const confirm = () => {
   preCoolStore.postTemperature(dispatchStore.dispatch, () => router.back())
 }
+
 onMounted(() => {
   if (!dispatchStore.dispatch) {
     router.back()
@@ -31,7 +32,7 @@ const onClickLeft = () => {
 
 const handleFetchTemp = () => {
   if (route.query.car_id) {
-    preCoolStore.getTemperatureAction(route.query.car_id).then(() => {
+    preCoolStore.getTemperatureAction(route.query.car_id, route.query.container_id).then(() => {
       const v = preCoolStore.temperature ? validTempC(preCoolStore.temperature.c.frozen) : false
       preCoolStore.setIsValidTemp(v)
     })
