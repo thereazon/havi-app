@@ -203,20 +203,22 @@ const handleClick4 = () => {
       </div>
 
       <div class="w-full pt-9 pb-9 flex justify-between items-center font-bold text-white text-[1rem]">
-        <button
+        <Button
           :disabled="isPreviewMode"
-          class="w-[48%] h-[43px] bg-success rounded-full border-0"
+          class="w-[48%] h-[43px] bg-success rounded-full border-0 text-white"
           @click="isConfirmDialog2 = true"
         >
           完成
-        </button>
-        <button
+        </Button>
+        <Button
+          loading-type="spinner"
+          :loading="isLoading"
           :disabled="isPreviewMode"
-          class="w-[48%] h-[43px] bg-warning rounded-full border-0"
+          class="w-[48%] h-[43px] bg-warning rounded-full border-0 text-white"
           @click="isConfirmDialog = true"
         >
           發送
-        </button>
+        </Button>
       </div>
 
       <!-- 輸入容器數量的彈窗 -->
