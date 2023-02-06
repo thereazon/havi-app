@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import { NavBar, Loading } from 'vant'
 import useContainers from '@/views/Containers/store'
 import DispatchListTable from '@/components/DispatchListTable.vue'
+import ContainerDetail from '@/components/ContainerDetail.vue'
 import router from '@/router'
 import { StatusType } from '@/views/Containers/helper'
 
@@ -22,12 +23,30 @@ const handleOnChange = (e) => {
   const currentDispatchNo = e.target.value
   currentContainer.value = containersStore.findContainerGetter(currentDispatchNo)
 }
-
 const onClickLeft = () => {
   router.back()
 }
+const showContainerDetail = ref(false)
+
+const currentItem = ref(null)
+
+const openDetailModal = () => {
+  showContainerDetail.value = true
+}
+
+const handleShowDetail = (item) => {
+  if (!item) return
+  currentItem.value = item
+  console.log(item)
+  openDetailModal()
+}
+const confirm = () => {
+  showContainerDetail.value = false
+}
 </script>
+
 <template>
+  <ContainerDetail :item="currentItem" title="testing" v-model:isShow="showContainerDetail" @confirm="confirm" />
   <div class="bg-[#F2F8FB] h-screen">
     <NavBar safe-area-inset-top fixed left-arrow @click-left="onClickLeft" title="容器對點單數量" />
     <div class="flex flex-col justify-center items-center bg-[#F2F8FB]">
@@ -50,6 +69,7 @@ const onClickLeft = () => {
         :dispatchNo="currentContainer?.no"
         :dispatchListData="currentContainer?.data"
         :dispatchDate="currentContainer?.date"
+        :handleShowDetail="handleShowDetail"
       />
       <div
         v-if="containersStore.status === StatusType.FAIL || containersStore.status === StatusType.CAR_ID_MISSING"

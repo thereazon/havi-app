@@ -5,6 +5,7 @@ defineProps({
   dispatchListData: Array,
   dispatchDate: String,
   dispatchNo: String,
+  handleShowDetail: Function,
 })
 </script>
 <template>
@@ -21,7 +22,7 @@ defineProps({
     </div>
     <div v-for="item in dispatchListData" :key="item.id">
       <Divider class="m-0" />
-      <div class="grid grid-cols-11 gap-1 p-3">
+      <div class="grid grid-cols-11 gap-1 p-3" :onclick="() => handleShowDetail(item)">
         <div class="col-span-3">
           <div class="text-[#044d80] text-[12px]">{{ item.name }}</div>
           <div class="mt-1 text-gray text-[8px]">訂貨：{{ item.qty }}</div>
