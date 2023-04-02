@@ -149,8 +149,8 @@ const formatter = (value) => value.replace(/[^\w./]/gi, '')
             class="input-wrap flex flex-col bg-zinc-100 px-2 py-3 text-neutral-500 rounded"
             @click="handleToDeliveryDetail"
           >
-            <Field :formatter="formatter" v-model="exReason.name" type="text" placeholder="輸入品號" class="input" />
-            <Field v-model="exReason.no" type="text" placeholder="輸入產品名稱" class="input" />
+            <Field :formatter="formatter" v-model="exReason.no" type="text" placeholder="輸入品號" class="input" />
+            <Field v-model="exReason.name" type="text" placeholder="輸入產品名稱" class="input" />
           </div>
         </section>
       </div>
