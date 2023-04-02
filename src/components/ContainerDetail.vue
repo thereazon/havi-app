@@ -66,7 +66,7 @@ const handleFinish = () => {
           <div class="mt-1 text-[8px]">餐廳退回</div>
         </div>
         <div class="col-span-2 text-center text-[#1bc5bd]">
-          <div class="text-[13px]">{{ detail.resource_qty }}</div>
+          <div class="text-[13px]">{{ detail.qty }}</div>
           <div class="mt-1 text-[8px]">訂貨</div>
         </div>
       </div>
@@ -78,11 +78,11 @@ const handleFinish = () => {
         </div>
         <div class="col-span-4 flex">
           <div class="text-success">回收</div>
-          <div class="w-[46px] text-center bg-white ml-[5px]">{{ detail.return_qty }}</div>
+          <div class="w-[46px] text-center bg-white ml-[5px]">{{ detail.resource_qty }}</div>
         </div>
         <div class="col-span-4 flex">
           <div class="text-warning">退貨</div>
-          <div class="w-[46px] text-center bg-white ml-[5px]">{{ detail.backing_qty }}</div>
+          <div class="w-[46px] text-center bg-white ml-[5px]">{{ detail.return_qty }}</div>
         </div>
       </div>
     </div>
