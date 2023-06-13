@@ -88,6 +88,7 @@ const useDispatchInfo = defineStore('dispatch', {
             is_container: !!response.data.is_container,
             is_returned: !!response.data.is_returned,
             is_finish: !!response.data.is_finish,
+            is_signature: !!response.data.is_signature,
             lock_temp_type: LockTempNumberToType[response.data.lock_temp_type],
           }
           this.status = response.status

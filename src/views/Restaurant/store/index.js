@@ -571,11 +571,15 @@ const useRestaurant = defineStore('restaurant', {
         this.isLoading = false
       }
     },
-    async postStoreFinish(restaurantId, data, cb) {
+    async postStoreFinish(restaurantId, data1, data2, cb) {
       this.isLoading = true
       const modal = useAlertModal()
       const formData = new FormData()
-      const signImageBlob = await fetch(data).then((r) => r.blob())
+      const signImageBlob = await fetch(data1).then((r) => r.blob())
+      if (data2) {
+        const signImageBlob2 = await fetch(data2).then((r) => r.blob())
+        formData.append('store_photo', signImageBlob2)
+      }
       formData.append('driver_photo', signImageBlob)
       try {
         const response = await ApiCaller.postStoreFinish(restaurantId, formData)

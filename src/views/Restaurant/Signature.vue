@@ -50,7 +50,7 @@ const onClickRight = () => {
 const handleFinish = () => {
   esign.value
     .generate()
-    .then((sign) => {
+    .then(async (sign) => {
       const cb = async () => {
         await getDispatchDetailAction(dispatch.id).then(() => {
           setCurrentRestaurant(null)
@@ -63,7 +63,22 @@ const handleFinish = () => {
           store.$reset()
         })
       }
-      store.postStoreFinish(currentRestaurant.id, sign, cb)
+      if (currentRestaurant.is_signature) {
+        esign2.value
+          .generate()
+          .then((sign2) => {
+            store.postStoreFinish(currentRestaurant.id, sign, sign2, cb)
+          })
+          .catch(() => {
+            modal.open({
+              type: 'error',
+              title: '錯誤',
+              content: '客戶簽名不可為空',
+            })
+          })
+      } else {
+        store.postStoreFinish(currentRestaurant.id, sign, null, cb)
+      }
     })
     .catch(() => {
       modal.open({
@@ -75,9 +90,13 @@ const handleFinish = () => {
 }
 
 let esign = ref(null)
+let esign2 = ref(null)
 
 const handleReset = () => {
   esign.value.reset()
+}
+const handleReset2 = () => {
+  esign2.value.reset()
 }
 </script>
 
@@ -95,6 +114,22 @@ const handleReset = () => {
         :restaurant="currentRestaurant"
       />
       <div class="w-full">
+        <div v-if="dispatch && currentRestaurant && currentRestaurant.is_signature">
+          <div class="mt-8 mb-[5px] text-[#959595] flex items-center justify-between relative">
+            <div class="text-center text-[0.8125rem] font-bold invisible">客戶簽名</div>
+            <div class="text-center text-[0.8125rem] font-bold">客戶簽名</div>
+            <div
+              class="w-[16%] text-center text-[#eb5e55] text-[0.75rem] border border-solid border-[#eb5e55] rounded-full"
+              :onClick="handleReset2"
+            >
+              清除
+            </div>
+          </div>
+
+          <div class="divide w-full h-[280px] border-1 border-solid border-transparent">
+            <vueEsign ref="esign2" height="600" :lineWidth="3" :lineColor="lineColor" />
+          </div>
+        </div>
         <div class="mt-8 mb-[5px] text-[#959595] flex items-center justify-between relative">
           <div class="text-center text-[0.8125rem] font-bold invisible">司機簽名</div>
           <div class="text-center text-[0.8125rem] font-bold">司機簽名</div>
