@@ -163,8 +163,9 @@ const useRestaurant = defineStore('restaurant', {
       const modal = useAlertModal()
       const dispatchStore = useDispatchStore()
       this.isLoading = true
-
-      if (dispatchStore.dispatch.isNormal) {
+      const tempZones = dispatchStore.currentRestaurant.temp_zone.split(',')
+      const isNormal = tempZones ? tempZones.find((v) => v === 'D') && tempZones.length === 1 : null
+      if (isNormal) {
         this.isGetCurrentTemp = true
       } else {
         try {

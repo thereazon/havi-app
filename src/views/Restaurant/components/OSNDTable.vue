@@ -5,9 +5,9 @@ import useDispatchInfo from '@/views/Dispatch/store'
 import useRestaurant from '@/views/Restaurant/store'
 import { useRouter, useRoute } from 'vue-router'
 
-const { dispatch, currentRestaurant } = useDispatchInfo()
+const { currentRestaurant } = useDispatchInfo()
 const restaurantStore = useRestaurant()
-const { isPreviewMode, setCurrentDelivery, currentDelivery } = restaurantStore
+const { isPreviewMode, setCurrentDelivery } = restaurantStore
 const router = useRouter()
 const route = useRoute()
 const props = defineProps({
@@ -138,7 +138,8 @@ const handleToAbnormalOPage = (item) => () => {
     </div>
   </div>
   <!-- 過濾資料按鈕 -->
-  <div class="flex justify-center items-center">
+  <!-- 先隱藏 OSND溫度-->
+  <!-- <div class="flex justify-center items-center">
     <ul class="w-full h-7 mb-5 flex items-center justify-between">
       <li
         v-for="tab in state.tabList"
@@ -151,7 +152,7 @@ const handleToAbnormalOPage = (item) => () => {
         {{ tab.title }}
       </li>
     </ul>
-  </div>
+  </div> -->
 
   <!-- table內容 -->
   <div class="rounded-[20px] border border-solid border-gray-300 overflow-hidden">
