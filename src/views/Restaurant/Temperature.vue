@@ -251,7 +251,7 @@ const postTemperatureFinish = async () => {
 
 const frozenTemp = computed(() => {
   if (restaurantStore.isGetCurrentTemp) {
-    return dispatch.isNormal
+    return currentRestaurant.isNormal
       ? '常溫'
       : `${restaurantStore.temperature.c.frozen}°C / ${restaurantStore.temperature.f.frozen}°F`
   } else {
@@ -261,7 +261,7 @@ const frozenTemp = computed(() => {
 
 const coldTemp = computed(() => {
   if (restaurantStore.isGetCurrentTemp) {
-    return dispatch.isNormal
+    return currentRestaurant.isNormal
       ? '常溫'
       : `${restaurantStore.temperature.c.cold}°C / ${restaurantStore.temperature.f.cold}°F`
   } else {
@@ -295,8 +295,8 @@ const coldTemp = computed(() => {
             <span class="mr-[5px]">餐廳溫度確認</span>
           </div>
           <div class="text-[0.75rem] font-bold">
-            <span class="mr-[10px]">11/23/2020</span>
-            <span>10:12</span>
+            <span class="mr-[10px]"></span>
+            <span></span>
           </div>
         </div>
 

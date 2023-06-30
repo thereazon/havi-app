@@ -46,7 +46,9 @@ const useDispatchInfo = defineStore('dispatch', {
       }
     },
     async setCurrentRestaurant(restaurant) {
-      this.currentRestaurant = restaurant
+      const tempZones = restaurant.temp_zone.split(',')
+      const isNormal = tempZones ? tempZones.find((v) => v === 'D') && tempZones.length === 1 : null
+      this.currentRestaurant = { ...restaurant, isNormal }
     },
     async setCurrentDispatch(dispatch) {
       const tempZones = dispatch.temp_zone.split(',')
